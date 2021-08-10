@@ -1,0 +1,20 @@
+
+1. It's easy to show that to write 2PN part of Hamiltonian we don't have to use the flows along J^2 and Jz.
+It can be shown easiy. Try to see how does S1.n change under these two flows. Answer: it does not change.
+
+2. How to write S1.n and S2.n as a function of flow parameters? It's not too complicated.
+Cho-Lee-2019 has got the the polar and azimuthal angles of S1/S2 (kappa_1, kappa_2, \xi_3) in the 
+frame centered around L vector. In the same frame r vector's angles are easy (polar = pi/2 and azimuthal is phi in Cho-Lee).
+
+If we know the polar and azimuthal angles of 2 vectors in a frame, then there is a simple formula to find the angle b/w them (their dot product).
+Hence, it's easy to write the dot product in terms of 4 action-3 angles.
+
+3. How to average? 
+	-- Taylor expand in the angle variable (conjugate tio action) and integrate. This expansion has a radius of convergence before 2 pi.
+	   So, expansion works only for a sub-interval (maybe 0 < angle < pi/2). But this 0 --> pi/2 info can be used to replicate the info from 
+	   pi/2 --> 2 pi. Simple! 
+	-- Fourier expand and then integrate (Leo's idea). Unsure about how exactly to do it.
+
+
+
+

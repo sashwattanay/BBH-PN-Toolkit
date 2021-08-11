@@ -14,6 +14,9 @@ Hence, it's easy to write the dot product in terms of 4 action-3 angles.
 	   So, expansion works only for a sub-interval (maybe 0 < angle < pi/2). But this 0 --> pi/2 info can be used to replicate the info from 
 	   pi/2 --> 2 pi. Simple! 
 	-- Fourier expand and then integrate (Leo's idea). Unsure about how exactly to do it.
+	
+4. There is no need to root-find to get (R,P,S1,S2). Get 1.5PN AAV from 2PN AAV. Then get (R,P,S1,S2) from 1.5PN AAV because we have derived
+(R,P,S1,S2) in terms of 1.5PN AAV.
 
 
 

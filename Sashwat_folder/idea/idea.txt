@@ -22,3 +22,6 @@ Then get (R,P,S1,S2) from 1.5PN AAV because we have derived (R,P,S1,S2) in terms
 terms (x_dot and e_dot). May be integrable by series expanding in e. See MMA notebook
 alongside.
 
+Then do V (V0, action, angles) via dynamical renormalization group idea. action-angles in the parenthesis will be got by numerical integration.
+Also, V0 has to be updated by V at (radiation-reaction time step of integration). V = R, P, S1, S2. So, V0 gets updated after every step size of radiation reaction time step 
+of integration.

@@ -20,8 +20,55 @@ Then get (R,P,S1,S2) from 1.5PN AAV because we have derived (R,P,S1,S2) in terms
 
 5. Radiation reaction: can be handled (probably) by considering only the leadng order
 terms (x_dot and e_dot). May be integrable by series expanding in e. See MMA notebook
-alongside.
+alongside. More useful are n_dot and et_dot (found in Damour-Gopakumar-Iyer-2004) since n is connected to Hamiltonian straigforwardly (see 4PN IMR paper with Gihyuk).
 
 Then do V (V0, action, angles) via dynamical renormalization group idea. action-angles in the parenthesis will be got by numerical integration.
 Also, V0 has to be updated by V at (radiation-reaction time step of integration). V = R, P, S1, S2. So, V0 gets updated after every step size of radiation reaction time step 
 of integration.
+
+6. Maybe we can neglect oscillatory terms just like in the 4PN paper. That way, we won't have to compute the generating function which involves infinite
+Fourier components. 
+
+
+==================================================
+
+POINTS OF CONCERN:
+
+1. Writing V(V_0, angles) involves V0 vector. The above implicit way of expressing the angles V(V_0, angles)
+is only for a single torus, not for the entire phase space. Is the presence of V_0 a point of concern?
+
+-- I don't think so. Transformation b/w canonical coordinates can be like (Q,P) --> (J, \theta) or (J, \theta) --> (Q,P).
+V(V_0, J, theta) is almost like the former. "Almost" because of the presence of V0. Now let's talk about avergaing over theta's.
+When we try to write V(V_0, J, theta), it will have 2PN Hamiltonian = H_{2PN} containing terms like sin/cos (theta - theta_0 (V0))
+and we have to avergae over theta. Now, set theta_0 = 0 (just ignore it). Why can we do that? Because H_{2PN} is periodic in
+theta with period = 2 pi. The integral will only be a function of the J's, as a naive student might expect, as if they
+averaged V(J, theta) which does not (purportedly) have V_0. 
+
+As an example, take a 1 DOF case: q = J cos(phi + phi_0); p = J sin(phi + phi_0); phi_0 = arctan(p_0/q_0). Then set phi_0 = 0
+before integrating.
+
+But we have to be careful since our 1.5PN work is perturbative. J_4 is perturbative. Flow under H is perturbatively known (Gihyuk's paper).
+
+Is there a way to get V(J, theta) from V(V_0, J, theta)? I think yes. Take inspiration from the 1 DOF example above. Put phi_0 = 0
+and write q = J cos(phi); p = J sin(phi). This gives a legit V(J, theta). Similarly find the equivalent of phi_0 in the spinning
+BBH scenario and put that = 0. That should do it. The result should satisfy the criterion that a small change in J (keeping phi constant)
+should lead to an infinitesimal change in the spacetime point. Once a legit V(J, theta) is obtained, then there are no conceptual issues with averaging.
+
+
+2. The problem can be worked on in increasing levels of sophistication: 
+	-- ignore 1PN and 2PN orbital Hamiltonian
+	-- ignore the oscillatory parts from perturbation theory
+	-- ignore the radiation reaction effects
+	-- don't compute h(R,P,S1,S2)
+
+
+
+
+
+
+
+
+
+
+
+ 

@@ -30,6 +30,7 @@ of integration.
 Fourier components. 
 
 
+
 ==================================================
 
 POINTS OF CONCERN:
@@ -60,6 +61,8 @@ should lead to an infinitesimal change in the spacetime point. Once a legit V(J,
 	-- ignore the oscillatory parts from perturbation theory
 	-- ignore the radiation reaction effects
 	-- don't compute h(R,P,S1,S2)
+	-- perform the angular average of the perturbing Hamiltonian numerically after having differentiated wrt. the actions analytically (to get the frequencies).
+	   Once done, it does not have to be performed again since J's are constant.
 
 
 

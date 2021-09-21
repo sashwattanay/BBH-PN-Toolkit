@@ -18,9 +18,11 @@ Hence, it's easy to write the dot product in terms of 4 action-3 angles.
 4. There is no need to root-find to get (R,P,S1,S2). Get 1.5PN AAV from 2PN AAV. How? See the enote and first 4 eqns on pg 346 of Jose-Saletan.
 Then get (R,P,S1,S2) from 1.5PN AAV because we have derived (R,P,S1,S2) in terms of 1.5PN AAV.
 
-5. Radiation reaction: can be handled (probably) by considering only the leadng order
+5. Radiation reaction: Take basic inspiration from DGI-2004. It says that they go beyond the usual 'adiabatic' approach to combine the
+thee time-scales consistently (orbital, periastron-precession and radiation).
+can be handled (probably) by considering only the leadng order
 terms (x_dot and e_dot). May be integrable by series expanding in e. See MMA notebook
-alongside. More useful are n_dot and et_dot (found in Damour-Gopakumar-Iyer-2004) since n is connected to Hamiltonian straigforwardly (see 4PN IMR paper with Gihyuk).
+alongside. More useful are n_dot and et_dot (found in Damour-Gopakumar-Iyer-2004) since n is connected to Hamiltonian straightforwardly (see 4PN IMR paper with Gihyuk).
 
 Then do V (V0, action, angles) via dynamical renormalization group idea. action-angles in the parenthesis will be got by numerical integration.
 Also, V0 has to be updated by V at (radiation-reaction time step of integration). V = R, P, S1, S2. So, V0 gets updated after every step size of radiation reaction time step 

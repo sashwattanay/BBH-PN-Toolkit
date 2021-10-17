@@ -33,7 +33,7 @@ Fourier components.
 
 7. HOW TO INCLUDE ALL TERMS (orbital and spins) METHODICALLY: Get the 1.5PN AAs and (R,P,S1,S2) as functions of AAs with 3PN orbital terms included. 
 This should be doable because Damour-Jaranowski-Schafer computed the 3PN actions (dynamical invariants) and Cho-Lee commented that orbital terms can be easily incorporated
-in their solution (VERIFY IT! NOT SURE). Then, perform canonical perturbation with including higher and higher spin terms. Why should this work?
+in their solution (I verified it in the MMA notebook alongside). Then, perform canonical perturbation with including higher and higher spin terms. Why should this work?
 
 Because I checked in MMA that power series solution from two sources are linearly independent, i.e. they can be added together. So, the canonical perturbation results
 
@@ -44,8 +44,6 @@ omega = omega_0 + omega_1 + omega_2
 can be added from the two sources of perturbations (orbital and spins). VVI: It does simply mean that the orbital will be QKP orbit rotating in space since for a QKP
 orbit L^2 is constant and 2PN spinning Hamiltonian makes L^2 non-constant. BE CAREFUL regarding the meaning of linear independence. Here it is used in regard to
 the above three additive expressions.
-
-VVI: do check as to how to include 1PN and higher PN orbital terms in Cho-Lee.
 
 
 ==================================================
@@ -80,6 +78,10 @@ should lead to an infinitesimal change in the spacetime point. Once a legit V(J,
 	-- don't compute h(R,P,S1,S2)
 	-- perform the angular average of the perturbing Hamiltonian numerically after having differentiated wrt. the actions analytically (to get the frequencies).
 	   Once done, it does not have to be performed again since J's are constant.
+	   
+    -- do Newtonian + 1.5PN
+    -- add 1PN and 2PN orbital Hamiltonian; give h(R,P,S1,S2)
+    -- add radiation reaction; we may now want to perform the angular average analytically using wrap-around properties of elliptic functions/integrals (as discussed above)
 
 
 

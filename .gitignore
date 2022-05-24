@@ -13,7 +13,6 @@
 *.cb
 *.cb2
 .*.lb
-.DS_Store
 
 ## Intermediate documents:
 *.dvi
@@ -267,3 +266,5 @@ TSWLatexianTemp*
 # standalone packages
 *.sta
 /manuscript_for_paper/version_2/5th_action_v2.pdf
+
+.DS_Store

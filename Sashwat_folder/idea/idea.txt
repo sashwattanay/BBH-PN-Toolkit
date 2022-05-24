@@ -1,6 +1,5 @@
 
 
-
 1. It's easy to show that to write 2PN part of Hamiltonian we don't have to use the flows along J^2 and Jz.
 It can be shown easiy. Try to see how does S1.n change under these two flows. Answer: it does not change.
 

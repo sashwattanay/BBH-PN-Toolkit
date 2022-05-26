@@ -1,0 +1,3 @@
+1) Make the convention of (Q1,Q2) and SeffL consistent in all files
+2) Generalize the SeffL code for arbitrary orientation of J
+3) Make the algorithm for finding subspin (R1,P1), (R2,P2) for a user supplied S1, S2 more compact (currently we have a solve routine which picks one solution from an infinite number of solutions)

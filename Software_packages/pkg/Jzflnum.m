@@ -1,13 +1,13 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`Jzfl`"]
+BeginPackage[ "pkg`Jzflnum`"]
 
-     Jzflow::usage = 
-	"Jzflow implements flow along Jz in phase space"
+     NmJzflow::usage = 
+	"NmJzflow implements flow along Jz in phase space numerically"
 
             Begin[ "`Private`"]
 
-            Jzflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_]:=
+            NmJzflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_]:=
                Module[{Linit,Jinit,zhat,R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
                         sol,\[Lambda],finalvec},
 
@@ -37,7 +37,7 @@ BeginPackage[ "pkg`Jzfl`"]
                            S2x[\[Lambda]0] == S2init[[1]], S2y[\[Lambda]0] ==S2init[[2]], 
                            S2z[\[Lambda]0] == S2init[[3]]}  ;
                            
-                           sol=DSolve[   system0~Join~initCond,{Rx, Ry, Rz, Px, Py,Pz,S1x, S1y, S1z,S2x, S2y, S2z},\[Lambda]][[1]];
+                           sol=NDSolve[system0~Join~initCond,{Rx, Ry, Rz, Px, Py,Pz,S1x, S1y, S1z,S2x, S2y, S2z},{\[Lambda],\[Lambda]0,\[Lambda]max}][[1]];
 
                             finalvec=Re[{{Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]}/.sol/.{\[Lambda]->\[Lambda]max},
                                          {Px[\[Lambda]],Py[\[Lambda]],Pz[\[Lambda]]}/.sol/.{\[Lambda]->\[Lambda]max},
@@ -46,9 +46,9 @@ BeginPackage[ "pkg`Jzfl`"]
                            
                            Print[finalvec];
                            (*Print[Plot[{Rx[\[Lambda]]/.sol,Ry[\[Lambda]]/.sol,Rz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
-                           Print[Plot[{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
-                           Print[Plot[{S1x[\[Lambda]]/.sol,S1y[\[Lambda]]/.sol,S1z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
-                           Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                             Print[Plot[{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                             Print[Plot[{S1x[\[Lambda]]/.sol,S1y[\[Lambda]]/.sol,S1z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                             Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
 
 
                           Show[Graphics3D[{{Red,Arrowheads[0.03],Arrow[{{0,0,0},zhat}]},

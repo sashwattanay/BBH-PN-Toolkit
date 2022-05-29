@@ -16,3 +16,7 @@ Get["pkg`Jsqfl`"];
 Get["pkg`Lsqfl`"];
 Get["pkg`Jzfl`"];
 Get["pkg`SeffLfl`"];
+Get["pkg`Jsqflnum`"];
+Get["pkg`Lsqflnum`"];
+Get["pkg`Jzflnum`"];
+Get["pkg`SeffLflnum`"];

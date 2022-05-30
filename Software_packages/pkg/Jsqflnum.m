@@ -19,13 +19,21 @@ BeginPackage[ "pkg`Jsqflnum`"]
 
                 R={Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]}; P={Px[\[Lambda]],Py[\[Lambda]],Pz[\[Lambda]]};
                 S1={S1x[\[Lambda]],S1y[\[Lambda]],S1z[\[Lambda]]}; S2={S2x[\[Lambda]],S2y[\[Lambda]],S2z[\[Lambda]]};
+                
+                L=Cross[R, P];
+                J=L+S1+S2;
 
 
 
-                eqa=D[R,\[Lambda]]-( Cross[2 Jinit,R]);
-                eqb=D[P,\[Lambda]]-( Cross[2 Jinit,P]);
-                eqc=D[S1,\[Lambda]]-( Cross[2 Jinit,S1]);
-                eqd=D[S2,\[Lambda]]-( Cross[2 Jinit,S2]);
+
+                 eqa=D[R,\[Lambda]]-( Cross[2 J(*Jinit*),R]);
+                 eqb=D[P,\[Lambda]]-( Cross[2 J (*Jinit*),P]);
+                 eqc=D[S1,\[Lambda]]-( Cross[2 J(*Jinit*),S1]);
+                 eqd=D[S2,\[Lambda]]-( Cross[2 J(*Jinit*),S2]);
+
+
+
+                
 
                 system0={eqa[[1]]==0,eqa[[2]]==0,eqa[[3]]==0, eqb[[1]]==0,eqb[[2]]==0,eqb[[3]]==0,eqc[[1]]==0,
                 eqc[[2]]==0,eqc[[3]]==0,eqd[[1]]==0,eqd[[2]]==0,eqd[[3]]==0}//Simplify;

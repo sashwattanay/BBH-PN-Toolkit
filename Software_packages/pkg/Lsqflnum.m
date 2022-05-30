@@ -19,11 +19,11 @@ BeginPackage[ "pkg`Lsqflnum`"]
 
               R={Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]};P={Px[\[Lambda]],Py[\[Lambda]],Pz[\[Lambda]]};
               S1={S1x[\[Lambda]],S1y[\[Lambda]],S1z[\[Lambda]]};S2={S2x[\[Lambda]],S2y[\[Lambda]],S2z[\[Lambda]]};
+              L=Cross[R, P];
 
 
-
-              eqa=D[R,\[Lambda]]-( Cross[2 Linit,R]);
-              eqb=D[P,\[Lambda]]-( Cross[2 Linit,P]);
+              eqa=D[R,\[Lambda]]-( Cross[2 L(*Linit*),R]);
+              eqb=D[P,\[Lambda]]-( Cross[2 L(*Linit*),P]);
               eqc=D[S1,\[Lambda]];
               eqd=D[S2,\[Lambda]];
 

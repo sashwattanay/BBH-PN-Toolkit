@@ -12,8 +12,8 @@ G=1; \[Epsilon]= 3/1000; spinSuppressFac = \[Epsilon]^(1/2);    c = 1/spinSuppre
 M= m1+m2;MN=m1N+m2N; 
 \[Mu] =m1  m2 /(m1+m2);\[Mu]N =m1N  m2N /(m1N+m2N);
  \[Nu]= \[Mu]/M;\[Nu]N= \[Mu]N/MN;
-Q1=(2+3 m2/(2 m1));Q2=(2+3 m1/(2 m2));
-Q1N=(2+3 m2N/(2 m1N));Q2N=(2+3 m1N/(2 m2N));
+Q1=(1+3 m2/(4 m1));Q2=(1+3 m1/(4 m2));
+Q1N=(1+3 m2N/(4 m1N));Q2N=(1+3 m1N/(4 m2N));
 
 Linit=Cross[Rinit, Pinit];
 Jinit=Linit+S1init+S2init (*check Jinit is along z axis*);

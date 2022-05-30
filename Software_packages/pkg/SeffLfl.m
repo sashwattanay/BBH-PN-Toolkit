@@ -12,9 +12,9 @@ BeginPackage[ "pkg`SeffLfl`"]
    R2init,P2init,R2N,P2N,\[Phi]S20,\[Phi]R20, \[Phi]P20, En,H,\[CapitalDelta]1,\[CapitalDelta]2,\[CapitalDelta]21,\[CapitalSigma]1,\[CapitalSigma]2,a3,a2,a1,a0,A,p,q,f1,f2,f3,k,\[Alpha],B1,B2,D1,D2,\[Alpha]1sq,\[Alpha]2sq,
    B1s1,B2s1,D1s1,D2s1,\[Alpha]1s1sq,\[Alpha]2s1sq,B1s2,B2s2,D1s2,D2s2,\[Alpha]1s2sq,\[Alpha]2s2sq,f,\[Phi]L,\[Phi]R,\[Phi]P,Emat,Rfinal,Pfinal,Lfinal,\[Phi]S1,\[Phi]R1,
    \[Phi]P1,EmatS1,R1final,P1final,S1final,S2final,\[Lambda]},
-    G=1; \[Epsilon]= 3/1000; spinSuppressFac = \[Epsilon]^(1/2);    c = 1/spinSuppressFac   ;
+  
      \[Mu] =m1  m2 /(m1+m2); M=m1+m2;
-     Q1=(2+3 m2/(2 m1)); Q2=(2+3 m1/(2 m2));
+     Q1=(1+(3 m2)/(4 m1)); Q2=(1+(3 m1)/(4 m2));
 
 
 
@@ -66,7 +66,7 @@ R2N=Norm[R2init];  P2N=Norm[P2init];
 \[Phi]R20=acos[S2init, X2,R2init];
 \[Phi]P20=acos[S2init, X2,P2init];
 
-En=\[Mu] ((Pinit . Pinit)/(2 \[Mu]^2)-(G M)/Norm[Rinit]) + ( G \[Epsilon] SeffLN)/(Norm[Rinit])^3 ;
+(*En=\[Mu] ((Pinit . Pinit)/(2 \[Mu]^2)-(G M)/Norm[Rinit]) + (2 G \[Epsilon] SeffLN)/(Norm[Rinit])^3 ;*)
 (*Print["The energy for the initial data is"];Print[En];*)
 
 

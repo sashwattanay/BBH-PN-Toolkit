@@ -28,6 +28,7 @@ BeginPackage[ "pkg`SeffLfl`"]
           LN=Norm[Linit] ;
           JN=Norm[Jinit];
           SeffLN=(Q1 S1init+ Q2 S2init) . Linit;
+          sign=If[Linit . Cross[S1init,S2init]>0,1,-1];
 
 
 
@@ -89,7 +90,7 @@ f2=-a2/(3 a3)+2 Sqrt[-p/3]Cos[1/3 ArcCos[(3 q)/(2p) Sqrt[-3/p]]+(2*2 \[Pi] )/3] 
 f3=-a2/(3 a3)+2 Sqrt[-p/3]Cos[1/3 ArcCos[(3 q)/(2p) Sqrt[-3/p]]+(3*2 \[Pi] )/3];
 
 k=(f2-f1)/(f3-f1);
-\[Alpha]=2/Sqrt[A(f3-f1)] EllipticF[ArcSin[Sqrt[(f0-f1)/(f2-f1)]],k];
+\[Alpha]=sign 2/Sqrt[A(f3-f1)] EllipticF[ArcSin[Sqrt[(f0-f1)/(f2-f1)]],k];
 
 
 

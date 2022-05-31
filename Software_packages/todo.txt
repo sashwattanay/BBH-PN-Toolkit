@@ -1,5 +1,4 @@
 
 1) Generalize the SeffL code for arbitrary orientation of J
 2) Make the algorithm for finding spin solutions without going to subspin space
-3) fix the p<0 issue in seffL
-4) Make the convention of (Q1,Q2) and spins consistent in all files
+3) Make the convention of (Q1,Q2) and spins consistent in all files

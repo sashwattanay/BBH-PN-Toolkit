@@ -45,10 +45,10 @@ BeginPackage[ "pkg`SeffLflnum`"]
               (*Print[Plot[{Rx[\[Lambda]]/.sol,Ry[\[Lambda]]/.sol,Rz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{S1x[\[Lambda]]/.sol,S1y[\[Lambda]]/.sol,S1z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
-                Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];*)
 
 
-Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
+(*Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
 {Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0},S1init}]},
 {Magenta,Arrowheads[0.03],Arrow[{{0,0,0},S2init}]}}],ParametricPlot3D[Evaluate[{Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]}/. sol],{\[Lambda],\[Lambda]0,\[Lambda]max},
 PlotStyle->Blue],ParametricPlot3D[Evaluate[{Px[\[Lambda]],Py[\[Lambda]],Pz[\[Lambda]]}/. sol],{\[Lambda],\[Lambda]0,\[Lambda]max},PlotStyle->Green],

@@ -207,9 +207,9 @@ Print[finalvec];
 (*Print[Plot[{Rfinal[[1]],Rfinal[[2]],Rfinal[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];
 Print[Plot[{Pfinal[[1]],Pfinal[[2]],Pfinal[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];
 Print[Plot[{S1final[[1]],S1final[[2]],S1final[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];
-Print[Plot[{S2final[[1]],S2final[[2]],S2final[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];
+Print[Plot[{S2final[[1]],S2final[[2]],S2final[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];*)
 
-Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
+(*Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
 {Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0},S1init}]},
 {Magenta,Arrowheads[0.03],Arrow[{{0,0,0},S2init}]}}],ParametricPlot3D[{Rfinal[[1]],Rfinal[[2]],Rfinal[[3]]},{\[Lambda],0,\[Lambda]max},
 PlotStyle->Blue],ParametricPlot3D[{Pfinal[[1]],Pfinal[[2]],Pfinal[[3]]},{\[Lambda],0,\[Lambda]max},

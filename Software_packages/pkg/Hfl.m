@@ -17,7 +17,7 @@ BeginPackage[ "pkg`Hfl`"]
                S1\[Xi]10 ,\[Alpha]1S1, \[Alpha]2S1, \[Beta]1S1, \[Beta]2S1,solPiece1S1,solPiece2S1, S1\[Xi]1sol, cos\[Gamma], S1vecAzimuthAngle, S1vecPolarAngle,
                S1sol, LsolJframe, S2sol, JtoLframeEulMat, EulMatJtoL, rinitLframe,r\[Phi]0, IntReciOfr2,IntReciOfr3,IntReciOfr4,
                IntReciOfr5, \[Alpha]1r,\[Alpha]2r,\[Beta]1r,\[Beta]2r, solPiece1r,solPiece2r,solPiece3r,solPiece4r, r\[Phi]solLframe,rvecAzimuthAngleLframe,
-               Rsol, rMagnitude, \[Phi]OffsetPvecNIFTemp, pdn, pMagnitude, \[Phi]OffsetPvecNIF,pvecAzimuthAngleLframe,
+               Rsol, rMagnitude, \[Phi]OffsetPvecNIFTemp, pdn, pMagnitude, \[Phi]OffsetPvecNIF,pvecAzimuthAngleLframe, spmg,
                Psol,t0, t,finalvec},
 
 
@@ -241,20 +241,22 @@ Return[ \[Mu](Inverse[EulMat] . Inverse[JtoLframeEulMat[t]] . {px,py,pz}) ]; ];
                 Print[finalvec];
 
 
-(*Print[Plot[{Rfinal[[1]],Rfinal[[2]],Rfinal[[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
-Print[Plot[{Pfinal[[1]],Pfinal[[2]],Pfinal[[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
-Print[Plot[{S1final[[1]],S1final[[2]],S1final[[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
-Print[Plot[{S2final[[1]],S2final[[2]],S2final[[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];*)
+(*Print[Plot[{Rsol[\[Lambda]][[1]],Rsol[\[Lambda]][[2]],Rsol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
+Print[Plot[{Psol[\[Lambda]][[1]],Psol[\[Lambda]][[2]],Psol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
+Print[Plot[{S1sol[\[Lambda]][[1]],S1sol[\[Lambda]][[2]],S1sol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
+Print[Plot[{S2sol[\[Lambda]][[1]],S2sol[\[Lambda]][[2]],S2sol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
+*)
+(*spmg=50;
 
-           (*     Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
-{Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0},S1init}]},
-{Magenta,Arrowheads[0.03],Arrow[{{0,0,0},S2init}]}}],
+            Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
+{Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0}, spmg S1in}]},
+{Magenta,Arrowheads[0.03],Arrow[{{0,0,0}, spmg S2in}]}}],
 ParametricPlot3D[{Rsol[t][[1]],Rsol[t][[2]],Rsol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
 PlotStyle->Blue],ParametricPlot3D[{Psol[t][[1]],Psol[t][[2]],Psol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
 PlotStyle->Green],
-ParametricPlot3D[{S1sol[t][[1]],S1sol[t][[2]],S1sol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
+ParametricPlot3D[spmg {S1sol[t][[1]],S1sol[t][[2]],S1sol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
 PlotStyle->Brown],
-ParametricPlot3D[{S2sol[t][[1]],S2sol[t][[2]],S2sol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
+ParametricPlot3D[ spmg {S2sol[t][[1]],S2sol[t][[2]],S2sol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
 PlotStyle->Magenta],Boxed->False]*)
                  ]
   End[]

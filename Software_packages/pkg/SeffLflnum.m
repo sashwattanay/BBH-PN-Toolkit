@@ -7,12 +7,12 @@ BeginPackage[ "pkg`SeffLflnum`"]
 
   Begin[ "`Private`"]
 
-    NmSeffLflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_]:=
-    Module[{Q1,Q2,R,P,S1,S2, Seff,L,eqa,eqb,eqc,eqd,system0,initCond,
+    NmSeffLflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_,\[Epsilon]_]:=
+    Module[{G,c,Q1,Q2,R,P,S1,S2, Seff,L,eqa,eqb,eqc,eqd,system0,initCond,
             sol,\[Lambda],finalvec},
 
                   
-
+                 G=1 ;    c = 1/Sqrt[\[Epsilon]]   ;
                  Q1=(1+3 m2/(4 m1)); Q2=(1+3 m1/(4 m2));
 
 

@@ -7,13 +7,16 @@ BeginPackage[ "pkg`freq`"]
 
   Begin[ "`Private`"]
 
-    frequency[m1N_, m2N_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]_,\[Lambda]0_]:=Module[{m1,m2,M,MN,\[Mu],\[Mu]N,\[Nu],\[Nu]N,Q1,Q2,Q1N,Q2N,Linit,Jinit,RN,PN,Rn,Pn,S1N,S2N,S1n,S2n,LN,Ln,JN,Jn,Jz,Seffinit,SeffLN,SeffL,En,H,\[CapitalDelta]1,\[CapitalDelta]2,\[CapitalDelta]21,\[CapitalSigma]1,\[CapitalSigma]2,a3,a2,a1,a0,A,p,q,f1,f2,f3,k,B1,B2,D1,D2,\[Alpha]1sq,\[Alpha]2sq,B1s1,B2s1,D1s1,D2s1,\[Alpha]1s1sq,\[Alpha]2s1sq,B1s2,B2s2,D1s2,D2s2,\[Alpha]1s2sq,\[Alpha]2s2sq,\[CapitalDelta]\[Lambda]1,\[CapitalDelta]\[Lambda]2,\[CapitalDelta]\[Lambda]3,\[CapitalDelta]\[Lambda]4,\[CapitalDelta]\[Lambda]5,CC,J1,J2,J3,J4,J5,Jac,JCmat,JCmatN,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z,CJmat,freqN},
-G=1; \[Epsilon]= 3/1000; spinSuppressFac = \[Epsilon]^(1/2);    c = 1/spinSuppressFac   ;
-M= m1+m2;MN=m1N+m2N; 
-\[Mu] =m1  m2 /(m1+m2);\[Mu]N =m1N  m2N /(m1N+m2N);
- \[Nu]= \[Mu]/M;\[Nu]N= \[Mu]N/MN;
-Q1=(1+3 m2/(4 m1));Q2=(1+3 m1/(4 m2));
-Q1N=(1+3 m2N/(4 m1N));Q2N=(1+3 m1N/(4 m2N));
+    frequency[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]_,\[Lambda]0_,\[Epsilon]_]:=Module[{G,c,M, \[Mu], \[Nu], Q1,Q2,Linit,Jinit,RN,PN,Rn,
+    Pn,S1N,S2N,S1n,S2n,LN,Ln,JN,Jn,Jz,Seffinit,SeffLN,SeffL,En,H,\[CapitalDelta]1,\[CapitalDelta]2,\[CapitalDelta]21,\[CapitalSigma]1,\[CapitalSigma]2,a3,a2,a1,a0,A,p,q,f1,f2,f3,k,B1,B2,
+    D1,D2,\[Alpha]1sq,\[Alpha]2sq,B1s1,B2s1,D1s1,D2s1,\[Alpha]1s1sq,\[Alpha]2s1sq,B1s2,B2s2,D1s2,D2s2,\[Alpha]1s2sq,\[Alpha]2s2sq,\[CapitalDelta]\[Lambda]1,\[CapitalDelta]\[Lambda]2,\[CapitalDelta]\[Lambda]3,\[CapitalDelta]\[Lambda]4,\[CapitalDelta]\[Lambda]5,
+    CC,J1,J2,J3,J4,J5,Jac,JCmat,JCmatN,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z,CJmat,freqN},
+G=1;     c = 1/Sqrt[\[Epsilon]]   ;
+M= m1+m2;
+\[Mu] =m1  m2 /(m1+m2);
+ \[Nu]= \[Mu]/M;
+Q1=(1+3 m2/(4 m1)); Q2=(1+3 m1/(4 m2));
+
 
 Linit=Cross[Rinit, Pinit];
 Jinit=Linit+S1init+S2init (*check Jinit is along z axis*);
@@ -23,9 +26,9 @@ S1N = Norm[S1init] ;
 S2N = Norm[S2init] ;
 LN=Norm[Linit] ;
 JN=Norm[Jinit];
-Seffinit= Q1N S1init + Q2N S2init;
-SeffLN= (Q1N S1init+ Q2N S2init) . Linit;
-En=\[Mu]N ((Pinit . Pinit)/(2 \[Mu]N^2)-(G MN)/Norm[Rinit]) + ( G \[Epsilon] SeffLN)/(Norm[Rinit])^3 ;
+Seffinit= Q1 S1init + Q2 S2init;
+SeffLN= (Q1 S1init+ Q2 S2init) . Linit;
+En=\[Mu] ((Pinit . Pinit)/(2 \[Mu]^2)-(G M)/Norm[Rinit]) + ( G \[Epsilon] SeffLN)/(Norm[Rinit])^3 ;
 Print["The energy for the initial data is"];
 Print[En];
 \[CapitalDelta]1=(1/(Q1-Q2))((1/2)(Jn^2-Ln^2-S1n^2-S2n^2)-SeffL/Q2 );
@@ -94,7 +97,7 @@ JCmat= Table[\!\(
 {Px,Py,Pz}=Pinit  ;
 {S1x,S1y,S1z} = S1init ; 
 {S2x,S2y,S2z} = S2init  ;
-m1=m1N;m2=m2N;\[Nu]=\[Nu]N;M=MN;\[Mu]=\[Mu]N; Rn=RN; Pn=PN;S1n=S1N;S2n=S2N; Ln=LN;Jn=JN;SeffL=SeffLN; H=En; 
+ Rn=RN; Pn=PN;S1n=S1N;S2n=S2N; Ln=LN;Jn=JN;SeffL=SeffLN; H=En; 
 
 JCmatN=JCmat;
 CJmat=Inverse[JCmatN];

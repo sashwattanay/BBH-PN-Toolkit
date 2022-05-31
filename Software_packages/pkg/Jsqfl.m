@@ -7,10 +7,10 @@ BeginPackage[ "pkg`Jsqfl`"]
 
               Begin[ "`Private`"]
 
-               Jsqflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_]:=
-               Module[{Linit,Jinit,R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
+               Jsqflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_,\[Epsilon]_]:=
+               Module[{G,c,Linit,Jinit,R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
                         sol,\[Lambda],finalvec},
-                
+                G=1 ;    c = 1/Sqrt[\[Epsilon]]   ;
 
                  Linit=Cross[Rinit, Pinit];
                  Jinit=Linit+S1init+S2init;(* J  stays conserved *)

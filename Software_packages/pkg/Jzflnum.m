@@ -9,7 +9,7 @@ BeginPackage[ "pkg`Jzflnum`"]
 
             NmJzflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_,\[Epsilon]_]:=
                Module[{G,c,Linit,Jinit,zhat,R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
-                        sol,\[Lambda],finalvec},
+                        sol,\[Lambda],finalvec,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z},
                            G=1 ;    c = 1/Sqrt[\[Epsilon]]   ;
                            Linit=Cross[Rinit, Pinit];
                            Jinit=Linit+S1init+S2init; (* J  stays conserved *)

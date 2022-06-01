@@ -1,0 +1,238 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      8493,        230]
+NotebookOptionsPosition[      8072,        214]
+NotebookOutlinePosition[      8538,        232]
+CellTagsIndexPosition[      8495,        229]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"H", " ", "=", " ", 
+   RowBox[{"H", 
+    RowBox[{"(", 
+     RowBox[{"J1", ",", " ", "J2"}], ")"}]}]}], " ", 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"{", 
+   RowBox[{"V", ",", " ", 
+    RowBox[{"J", " ", 
+     RowBox[{"(", 
+      RowBox[{"C1", ",", " ", "C2"}], ")"}]}]}], "}"}], " ", "=", "  ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"V", ",", " ", "C1"}], "}"}], " ", 
+    FractionBox[
+     RowBox[{"\[PartialD]", "J"}], 
+     RowBox[{"\[PartialD]", " ", "C1"}]], 
+    RowBox[{"(", "C", ")"}]}], " ", "+", "  ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"V", ",", " ", "C2"}], "}"}], " ", 
+    FractionBox[
+     RowBox[{"\[PartialD]", "J"}], 
+     RowBox[{"\[PartialD]", " ", "C2"}]], 
+    RowBox[{"(", "C", ")"}]}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"{", 
+   RowBox[{"V", ",", " ", "H"}], "}"}], " ", "=", " ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", "J1"}], "}"}], " ", 
+     FractionBox[
+      RowBox[{"\[PartialD]", "H"}], 
+      RowBox[{"\[PartialD]", " ", "J1"}]]}], " ", "+", " ", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", "J2"}], "}"}], " ", 
+     FractionBox[
+      RowBox[{"\[PartialD]", "H"}], 
+      RowBox[{"\[PartialD]", " ", "J2"}]]}]}], "    ", "=", "  ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", "J1"}], "}"}], " ", "\[Omega]1"}], " ", "+", " ", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", "J2"}], "}"}], 
+     "\[Omega]2"}]}]}]}], "\[IndentingNewLine]", 
+ RowBox[{"               ", 
+  RowBox[{"=", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", "C1"}], "}"}], " ", "SF1"}], " ", "+", " ", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", "C2"}], "}"}], "SF2"}]}]}], 
+  "  "}], "\[IndentingNewLine]", 
+ RowBox[{"               ", 
+  RowBox[{"=", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", 
+       RowBox[{"C1", "=", "H"}]}], "}"}], " ", 
+     RowBox[{"(", 
+      RowBox[{"SF1", "=", 
+       RowBox[{"1", "+", " ", "\[Epsilon]"}]}], ")"}]}], "+", " ", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", "C2"}], "}"}], " ", 
+     RowBox[{"(", 
+      RowBox[{"SF2", "=", " ", "\[Epsilon]"}], ")"}], "               ", 
+     RowBox[{"(", 
+      RowBox[{"Eq", ".", " ", "1"}], ")"}]}]}]}], "\[IndentingNewLine]", 
+  "                ", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Final", " ", "amount", " ", "of", " ", 
+     RowBox[{"flow", ":", " ", "\[IndentingNewLine]", "J1"}]}], " ", "->", 
+    RowBox[{"\[Omega]1", " ", "\[CapitalDelta]t"}]}], ";", "   ", 
+   RowBox[{"J2", " ", "->", 
+    RowBox[{"\[Omega]2", " ", "\[CapitalDelta]t"}]}], ";", "                ", 
+   RowBox[{"(", 
+    RowBox[{
+    "less", " ", "safe", " ", "because", " ", "sanity", " ", "check", " ", 
+     "is", " ", "not", " ", 
+     RowBox[{"robust", ".", " ", "J"}], " ", "flows", " ", "can", " ", "be", 
+     " ", "verified", " ", "but", " ", 
+     RowBox[{"\[Omega]", "'"}], "s", " ", 
+     RowBox[{"can", "'"}], "t", " ", 
+     RowBox[{"be", ".", " ", "But"}], " ", "easier", " ", "to", " ", 
+     "promote", " ", "to", " ", "2", "PN", " ", "via", " ", "CPT", " ", "by", 
+     " ", "updating", " ", "the", " ", 
+     RowBox[{"frequencies", "."}]}], ")"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"OR", " ", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Final", " ", "amount", " ", "of", " ", 
+     RowBox[{"flow", ":", " ", "\[IndentingNewLine]", "C1"}]}], " ", "->", 
+    RowBox[{"SF1", " ", "\[CapitalDelta]t"}]}], ";", "   ", 
+   RowBox[{"C2", " ", "->", 
+    RowBox[{"SF2", " ", "\[CapitalDelta]t"}]}], ";", "              ", 
+   RowBox[{"(", 
+    RowBox[{
+    "safer", " ", "because", " ", "sanity", " ", "check", " ", "available"}], 
+    ")"}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ NamespaceBox["LinguisticAssistant",
+  DynamicModuleBox[{Typeset`query$$ = "THE WAY TO CODE", Typeset`boxes$$ = 
+   "None", Typeset`allassumptions$$ = {}, Typeset`assumptions$$ = {}, 
+   Typeset`open$$ = {1, 2}, Typeset`querystate$$ = {
+   "Online" -> True, "Allowed" -> True, "mparse.jsp" -> 
+    0.943406`6.426243627498729, "query.jsp" -> 2.21876`6.797655321274311, 
+    "Messages" -> {}}}, 
+   DynamicBox[ToBoxes[
+     AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+      Dynamic[Typeset`query$$], 
+      Dynamic[Typeset`boxes$$], 
+      Dynamic[Typeset`allassumptions$$], 
+      Dynamic[Typeset`assumptions$$], 
+      Dynamic[Typeset`open$$], 
+      Dynamic[Typeset`querystate$$]], StandardForm],
+    ImageSizeCache->{321., {40.5, 27.5}},
+    TrackedSymbols:>{
+     Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+      Typeset`assumptions$$, Typeset`open$$, Typeset`querystate$$}],
+   DynamicModuleValues:>{},
+   UndoTrackedVariables:>{Typeset`open$$}],
+  BaseStyle->{"Deploy"},
+  DeleteWithContents->True,
+  Editable->False,
+  SelectWithContents->True], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SF1", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"\[Omega]1", " ", 
+     FractionBox[
+      RowBox[{"\[PartialD]", "J1"}], 
+      RowBox[{"\[PartialD]", " ", "C1"}]]}], " ", "+", 
+    RowBox[{"\[Omega]2", " ", 
+     FractionBox[
+      RowBox[{"\[PartialD]", "J2"}], 
+      RowBox[{"\[PartialD]", " ", "C1"}]]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SF2", " ", "=", " ", 
+    RowBox[{
+     RowBox[{"\[Omega]1", " ", 
+      FractionBox[
+       RowBox[{"\[PartialD]", "J1"}], 
+       RowBox[{"\[PartialD]", " ", "C2"}]]}], " ", "+", 
+     RowBox[{"\[Omega]2", " ", 
+      FractionBox[
+       RowBox[{"\[PartialD]", "J2"}], 
+       RowBox[{"\[PartialD]", " ", "C2"}]]}]}]}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"0.", " ", "Make", " ", "frequency", " ", "code", " ", "spit", "  ", 
+  
+  RowBox[{
+   FractionBox[
+    RowBox[{"\[PartialD]", "Ji"}], 
+    RowBox[{"\[PartialD]", " ", "Cj"}]], ".", "\[IndentingNewLine]", "1."}], 
+  " ", "Check", " ", "the", " ", "frequency", " ", "code", " ", 
+  "thoroughly"}], "\[IndentingNewLine]", 
+ RowBox[{"2.", " ", "check", " ", "if", " ", "all", " ", "action", " ", 
+  "flows", " ", "make", " ", "a", " ", 
+  RowBox[{"loop", ".", "\[IndentingNewLine]", "3."}], " ", "check", " ", "if",
+   " ", 
+  RowBox[{"SF1", " ", "~", "1"}], " ", "and", " ", 
+  RowBox[{"SF2", " ", "~", "0."}]}]}], "Input",
+ CellChangeTimes->{{3.8630861154975452`*^9, 3.863086158166502*^9}, {
+   3.8630861959858627`*^9, 3.863086215663713*^9}, {3.863086251254828*^9, 
+   3.8630862671735287`*^9}, {3.863086362517694*^9, 3.863086420873166*^9}, {
+   3.863086479739232*^9, 3.863086544796014*^9}, {3.8630866013015547`*^9, 
+   3.8630866315499763`*^9}, {3.8630866805357723`*^9, 3.863086721926201*^9}, {
+   3.863086784512884*^9, 3.863086821896263*^9}, {3.8630869223116617`*^9, 
+   3.863086985598935*^9}, {3.8630870356533546`*^9, 3.863087043466063*^9}, {
+   3.863087119289559*^9, 3.863087130551997*^9}, {3.863087184625938*^9, 
+   3.863087186728651*^9}, {3.863087263901105*^9, 3.863087265255643*^9}, {
+   3.863087376585702*^9, 3.8630876474021387`*^9}, 3.8630876963247747`*^9, {
+   3.8630878367454147`*^9, 3.8630878559255323`*^9}, {3.863087903207246*^9, 
+   3.863087917149992*^9}},ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-\
+002020bcca24"]
+},
+WindowSize->{1728, 987},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+TaggingRules-><|"TryRealOnly" -> False|>,
+Magnification:>2. Inherited,
+FrontEndVersion->"13.0 for Mac OS X ARM (64-bit) (February 4, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"f14baa2c-a490-4471-89da-c5c851c2a32c"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 7510, 192, 1401, "Input",ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-002020bcca24"]
+}
+]
+*)
+

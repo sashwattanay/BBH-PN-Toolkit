@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      8493,        230]
-NotebookOptionsPosition[      8072,        214]
-NotebookOutlinePosition[      8538,        232]
-CellTagsIndexPosition[      8495,        229]
+NotebookDataLength[     12296,        319]
+NotebookOptionsPosition[     11868,        303]
+NotebookOutlinePosition[     12340,        321]
+CellTagsIndexPosition[     12297,        318]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -192,12 +192,95 @@ Cell[BoxData[{
     RowBox[{"\[PartialD]", " ", "Cj"}]], ".", "\[IndentingNewLine]", "1."}], 
   " ", "Check", " ", "the", " ", "frequency", " ", "code", " ", 
   "thoroughly"}], "\[IndentingNewLine]", 
- RowBox[{"2.", " ", "check", " ", "if", " ", "all", " ", "action", " ", 
-  "flows", " ", "make", " ", "a", " ", 
-  RowBox[{"loop", ".", "\[IndentingNewLine]", "3."}], " ", "check", " ", "if",
-   " ", 
-  RowBox[{"SF1", " ", "~", "1"}], " ", "and", " ", 
-  RowBox[{"SF2", " ", "~", "0."}]}]}], "Input",
+ RowBox[{
+  RowBox[{
+  "2.", " ", "check", " ", "if", " ", "all", " ", "action", " ", "flows", " ",
+    "make", " ", "a", " ", 
+   RowBox[{"loop", ".", "\[IndentingNewLine]", "3."}], " ", "check", " ", 
+   "if", " ", 
+   RowBox[{"SF1", " ", "~", "1"}], " ", "and", " ", 
+   RowBox[{"SF2", " ", "~", "0."}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"4.", " ", "Check", " ", "frequency", " ", "code", " ", 
+    RowBox[{"again", ".", "\[IndentingNewLine]", "5."}], " ", "Module", " ", 
+    "to", " ", "generate", " ", "SF", " ", 
+    RowBox[{"array", ".", "  ", "Keep"}], " ", "a", " ", "separate", " ", 
+    "module", " ", "for", " ", "\[Omega]", " ", "array", " ", "and", " ", "a",
+     " ", "separate", " ", "one", " ", "for", " ", "SF", " ", 
+    RowBox[{"array", ".", "\[IndentingNewLine]", "6."}], " ", "FINAL", " ", 
+    "Module", " ", "for", " ", "successive", " ", "flow", " ", "along", " ", 
+    "CCs", " ", "by", " ", "Sf", " ", 
+    RowBox[{
+     RowBox[{"(", "\[CapitalDelta]t", ")"}], ".", " ", "This"}], " ", "gives",
+     " ", "the", " ", "AA"}], "-", 
+   RowBox[{"based", " ", 
+    RowBox[{"solution", ".", "\[IndentingNewLine]", "7."}], 
+    RowBox[{"NOTE", ":", " ", "CCs", ":", " ", "J"}]}]}], ",", " ", "L", ",", 
+  " ", "SeffdL", ",", " ", "H", ",", " ", 
+  RowBox[{"Jz", ";", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Why", "?", " ", "Because"}], " ", "they", " ", "correspond", " ",
+     "more", " ", "closely", " ", "to", " ", "actions", " ", "rather", " ", 
+    "than", " ", 
+    SuperscriptBox["J", "2"]}]}], ",", " ", 
+  RowBox[{
+   SuperscriptBox["L", "2"], "."}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"FIX", " ", "CC", " ", "flow", " ", 
+     RowBox[{"module", ":", " ", 
+      FractionBox["dV", 
+       SubscriptBox["dt", 
+        SuperscriptBox["J", "2"]]]}]}], " ", "=", " ", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"V", ",", " ", 
+       SuperscriptBox["J", "2"]}], "}"}], " ", "=", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"V", ",", "J"}], "}"}], " ", "2", "J"}], "  ", "==", ">", 
+       "   ", 
+       FractionBox["dV", 
+        SubscriptBox["dt", "J"]]}], " ", "=", " ", 
+      FractionBox[
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"V", ",", " ", 
+          SuperscriptBox["J", "2"]}], "}"}], " "}], 
+       RowBox[{"2", " ", "J"}]]}]}]}], " ", ";"}], 
+  "                          "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Similarly", ":", "  ", 
+   FractionBox["dV", 
+    SubscriptBox["dt", "L"]]}], " ", "=", " ", 
+  RowBox[{
+   RowBox[{
+    FractionBox[
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"V", ",", " ", 
+        SuperscriptBox["L", "2"]}], "}"}], " "}], 
+     RowBox[{"2", " ", "L"}]], ".", "\[IndentingNewLine]", "10."}], " ", 
+   "VVI", " ", "VVI", " ", "VVI", " ", 
+   RowBox[{"VVI", ":", " ", 
+    RowBox[{
+    "Recheck", " ", "for", " ", "the", " ", "order", " ", "of", " ", "CCs", 
+     " ", "in", " ", "all", " ", "relevant", " ", 
+     RowBox[{"modules", ".", "\[IndentingNewLine]", "11."}], " ", "Verify", 
+     " ", "all", " ", "analytical", " ", "flows", " ", "with", " ", 
+     "numerical", " ", 
+     RowBox[{"ones", ".", "\[IndentingNewLine]", "12."}], " ", 
+     RowBox[{"Don", "'"}], "t", " ", "use", " ", 
+     RowBox[{"DSolve", ".", " ", "Use"}], " ", "explicit", " ", 
+     RowBox[{"solution", ".", "\[IndentingNewLine]", "13."}], " ", "Check", 
+     " ", "the", " ", "issues", " ", "in", " ", "the", " ", "text", " ", 
+     RowBox[{"file", ".", " ", "Address"}], " ", 
+     RowBox[{"them", ".", "\[IndentingNewLine]"}]}]}]}]}]}], "Input",
  CellChangeTimes->{{3.8630861154975452`*^9, 3.863086158166502*^9}, {
    3.8630861959858627`*^9, 3.863086215663713*^9}, {3.863086251254828*^9, 
    3.8630862671735287`*^9}, {3.863086362517694*^9, 3.863086420873166*^9}, {
@@ -209,11 +292,17 @@ Cell[BoxData[{
    3.863087186728651*^9}, {3.863087263901105*^9, 3.863087265255643*^9}, {
    3.863087376585702*^9, 3.8630876474021387`*^9}, 3.8630876963247747`*^9, {
    3.8630878367454147`*^9, 3.8630878559255323`*^9}, {3.863087903207246*^9, 
-   3.863087917149992*^9}},ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-\
+   3.863087917149992*^9}, {3.863172537181656*^9, 3.8631726875086937`*^9}, {
+   3.863172732389057*^9, 3.863172774404598*^9}, {3.8631728778955708`*^9, 
+   3.8631729573922787`*^9}, {3.863173108916944*^9, 3.863173177570333*^9}, {
+   3.863173222252138*^9, 3.863173252385695*^9}, {3.863173324672756*^9, 
+   3.863173341000503*^9}, {3.863173382749177*^9, 3.863173529434538*^9}, {
+   3.863174697263809*^9, 
+   3.86317480415705*^9}},ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-\
 002020bcca24"]
 },
-WindowSize->{1728, 987},
-WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowSize->{1920, 1027},
+WindowMargins->{{1728, Automatic}, {Automatic, -13}},
 TaggingRules-><|"TryRealOnly" -> False|>,
 Magnification:>2. Inherited,
 FrontEndVersion->"13.0 for Mac OS X ARM (64-bit) (February 4, 2022)",
@@ -231,7 +320,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 7510, 192, 1401, "Input",ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-002020bcca24"]
+Cell[558, 20, 11306, 281, 2092, "Input",ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-002020bcca24"]
 }
 ]
 *)

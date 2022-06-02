@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     12296,        319]
-NotebookOptionsPosition[     11868,        303]
-NotebookOutlinePosition[     12340,        321]
-CellTagsIndexPosition[     12297,        318]
+NotebookDataLength[     11377,        296]
+NotebookOptionsPosition[     10949,        280]
+NotebookOutlinePosition[     11421,        298]
+CellTagsIndexPosition[     11378,        295]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -135,31 +135,7 @@ Cell[BoxData[{
     "safer", " ", "because", " ", "sanity", " ", "check", " ", "available"}], 
     ")"}]}], "\[IndentingNewLine]", 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- NamespaceBox["LinguisticAssistant",
-  DynamicModuleBox[{Typeset`query$$ = "THE WAY TO CODE", Typeset`boxes$$ = 
-   "None", Typeset`allassumptions$$ = {}, Typeset`assumptions$$ = {}, 
-   Typeset`open$$ = {1, 2}, Typeset`querystate$$ = {
-   "Online" -> True, "Allowed" -> True, "mparse.jsp" -> 
-    0.943406`6.426243627498729, "query.jsp" -> 2.21876`6.797655321274311, 
-    "Messages" -> {}}}, 
-   DynamicBox[ToBoxes[
-     AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
-      Dynamic[Typeset`query$$], 
-      Dynamic[Typeset`boxes$$], 
-      Dynamic[Typeset`allassumptions$$], 
-      Dynamic[Typeset`assumptions$$], 
-      Dynamic[Typeset`open$$], 
-      Dynamic[Typeset`querystate$$]], StandardForm],
-    ImageSizeCache->{321., {40.5, 27.5}},
-    TrackedSymbols:>{
-     Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
-      Typeset`assumptions$$, Typeset`open$$, Typeset`querystate$$}],
-   DynamicModuleValues:>{},
-   UndoTrackedVariables:>{Typeset`open$$}],
-  BaseStyle->{"Deploy"},
-  DeleteWithContents->True,
-  Editable->False,
-  SelectWithContents->True], "\[IndentingNewLine]", 
+ RowBox[{"THE", " ", "WAY", " ", "TO", " ", "CODE"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"SF1", " ", "=", " ", 
    RowBox[{
@@ -219,40 +195,41 @@ Cell[BoxData[{
     RowBox[{"solution", ".", "\[IndentingNewLine]", "7."}], 
     RowBox[{"NOTE", ":", " ", "CCs", ":", " ", "J"}]}]}], ",", " ", "L", ",", 
   " ", "SeffdL", ",", " ", "H", ",", " ", 
-  RowBox[{"Jz", ";", "\[IndentingNewLine]", 
+  RowBox[{"Jz", ";"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{
     RowBox[{"Why", "?", " ", "Because"}], " ", "they", " ", "correspond", " ",
      "more", " ", "closely", " ", "to", " ", "actions", " ", "rather", " ", 
     "than", " ", 
-    SuperscriptBox["J", "2"]}]}], ",", " ", 
-  RowBox[{
-   SuperscriptBox["L", "2"], "."}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
+    SuperscriptBox["J", "2"]}], ",", " ", 
    RowBox[{
-    RowBox[{"FIX", " ", "CC", " ", "flow", " ", 
-     RowBox[{"module", ":", " ", 
-      FractionBox["dV", 
-       SubscriptBox["dt", 
-        SuperscriptBox["J", "2"]]]}]}], " ", "=", " ", 
     RowBox[{
-     RowBox[{"{", 
-      RowBox[{"V", ",", " ", 
-       SuperscriptBox["J", "2"]}], "}"}], " ", "=", " ", 
+     SuperscriptBox["L", "2"], ".", "\[IndentingNewLine]", 
      RowBox[{
+      RowBox[{"FIX", " ", "CC", " ", "flow", " ", 
+       RowBox[{"module", ":", " ", 
+        FractionBox["dV", 
+         SubscriptBox["dt", 
+          SuperscriptBox["J", "2"]]]}]}], " ", "=", " ", 
       RowBox[{
+       RowBox[{"{", 
+        RowBox[{"V", ",", " ", 
+         SuperscriptBox["J", "2"]}], "}"}], " ", "=", " ", 
        RowBox[{
-        RowBox[{"{", 
-         RowBox[{"V", ",", "J"}], "}"}], " ", "2", "J"}], "  ", "==", ">", 
-       "   ", 
-       FractionBox["dV", 
-        SubscriptBox["dt", "J"]]}], " ", "=", " ", 
-      FractionBox[
-       RowBox[{
-        RowBox[{"{", 
-         RowBox[{"V", ",", " ", 
-          SuperscriptBox["J", "2"]}], "}"}], " "}], 
-       RowBox[{"2", " ", "J"}]]}]}]}], " ", ";"}], 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"V", ",", "J"}], "}"}], " ", "2", "J"}], "  ", "==", ">", 
+         "   ", 
+         FractionBox["dV", 
+          SubscriptBox["dt", "J"]]}], " ", "=", " ", 
+        FractionBox[
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"V", ",", " ", 
+            SuperscriptBox["J", "2"]}], "}"}], " "}], 
+         RowBox[{"2", " ", "J"}]]}]}]}]}], " ", ";"}]}], 
   "                          "}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Similarly", ":", "  ", 
@@ -297,8 +274,8 @@ Cell[BoxData[{
    3.8631729573922787`*^9}, {3.863173108916944*^9, 3.863173177570333*^9}, {
    3.863173222252138*^9, 3.863173252385695*^9}, {3.863173324672756*^9, 
    3.863173341000503*^9}, {3.863173382749177*^9, 3.863173529434538*^9}, {
-   3.863174697263809*^9, 
-   3.86317480415705*^9}},ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-\
+   3.863174697263809*^9, 3.86317480415705*^9}, {3.863184866894659*^9, 
+   3.8631848710336123`*^9}},ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-\
 002020bcca24"]
 },
 WindowSize->{1920, 1027},
@@ -320,7 +297,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 11306, 281, 2092, "Input",ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-002020bcca24"]
+Cell[558, 20, 10387, 258, 2047, "Input",ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-002020bcca24"]
 }
 ]
 *)

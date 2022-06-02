@@ -97,11 +97,15 @@ JCmat= Table[\!\(
  Rn=RN; Pn=PN;S1n=S1N;S2n=S2N; Ln=LN;Jn=JN;SeffL=SeffLN; H=En; 
 
 JCmatN=JCmat;
+Print["The JC matrix is"];
+Print[JCmatN];
 CJmat=Inverse[JCmatN];
 
 freqN= CJmat[[4]];
 Print["The frequencies are"];
 Print[freqN];
+Print["The SFlist is"];
+Print[Table[Sum[freqN[[i]] JCmatN[[i]][[j]],{i,1,5}],{j,1,5}]];
 ListPlot[(Tooltip[{Re[#1],Im[#1]}]&)/@freqN,AspectRatio->1]
 
 

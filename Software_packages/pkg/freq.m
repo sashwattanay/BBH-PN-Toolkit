@@ -28,7 +28,7 @@ LN=Norm[Linit] ;
 JN=Norm[Jinit];
 Seffinit= Q1 S1init + Q2 S2init;
 SeffLN= (Q1 S1init+ Q2 S2init) . Linit;
-En=\[Mu] ((Pinit . Pinit)/(2 \[Mu]^2)-(G M)/Norm[Rinit]) + ( G \[Epsilon] SeffLN)/(Norm[Rinit])^3 ;
+En=\[Mu] ((PN/\[Mu])^2/2-1/(RN/(G M))) +\[Mu]/c^2 (1/8 (3 \[Nu]-1)(PN/\[Mu])^4 +1/(2 (RN/(G M))^2)-1/(2 (RN/(G M))) ((3+\[Nu])(PN/\[Mu])^2 +\[Nu] ((Rinit/RN) . ( Pinit/\[Mu]))^2)) + ( (2 G)/(c^2 RN^3)  SeffLN)  ;
 Print["The energy for the initial data is"];
 Print[En];
 \[CapitalDelta]1=(1/(Q1-Q2))((1/2)(Jn^2-Ln^2-S1n^2-S2n^2)-SeffL/Q2 );
@@ -93,10 +93,7 @@ JCmat= Table[\!\(
 
 
 
-{Rx,Ry,Rz} = Rinit  ;
-{Px,Py,Pz}=Pinit  ;
-{S1x,S1y,S1z} = S1init ; 
-{S2x,S2y,S2z} = S2init  ;
+
  Rn=RN; Pn=PN;S1n=S1N;S2n=S2N; Ln=LN;Jn=JN;SeffL=SeffLN; H=En; 
 
 JCmatN=JCmat;

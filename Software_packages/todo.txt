@@ -6,3 +6,6 @@ revisit during action flows)
 3) Check expressions in frequency code.
 
 4) by Sashwat: make the package handle both m1 > m2 and m1 < m2. It's very easy.
+
+5. change the package name to PNspinningBBHtoolkit or PN-spinning-BBH-Toolkit or something.
+I don't know if hyphen is sllowed in the name or not.

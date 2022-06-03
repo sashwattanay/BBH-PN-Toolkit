@@ -49,8 +49,8 @@ If [ \[Delta]2/(c^2 Norm[rinit]^3 S1ninit Lninit) Linit . Cross[S1init, S2init] 
 Jvec= Linit + S1init + S2init  ;  J = Norm[Jvec] ;
 
 sphericalAngles[V_]:=Module[{polarAngJ,azimuthAngJ},
-polarAngJ = ToSphericalCoordinates[V][[2]];
-azimuthAngJ =  ToSphericalCoordinates[V][[3]];
+polarAngJ = ToSphericalCoordinates[Re[V]][[2]];
+azimuthAngJ =  ToSphericalCoordinates[Re[V]][[3]];
 Return[{polarAngJ,azimuthAngJ}] ; ];
 
 vectorComponents[{V_, \[Theta]_, \[Phi]_}]:=Module[{Vx,Vy,Vz},

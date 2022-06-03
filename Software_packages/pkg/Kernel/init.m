@@ -12,13 +12,13 @@ If[$VersionNumber < 10.,
 
 
 Get["pkg`freq`"];
-Get["pkg`Jsqfl`"];
-Get["pkg`Lsqfl`"];
+Get["pkg`Jfl`"];
+Get["pkg`Lfl`"];
 Get["pkg`Jzfl`"];
 Get["pkg`SeffLfl`"];
 Get["pkg`Hfl`"];
-Get["pkg`Jsqflnum`"];
-Get["pkg`Lsqflnum`"];
+Get["pkg`Jflnum`"];
+Get["pkg`Lflnum`"];
 Get["pkg`Jzflnum`"];
 Get["pkg`SeffLflnum`"];
 Get["pkg`Hflnum`"];

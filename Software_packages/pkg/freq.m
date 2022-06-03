@@ -98,7 +98,7 @@ JCmat= Table[\!\(
 
 JCmatN=JCmat;
 Print["The JC matrix is"];
-Print[JCmatN];
+Print[JCmatN//N];
 CJmat=Inverse[JCmatN];
 
 freqN= CJmat[[4]];

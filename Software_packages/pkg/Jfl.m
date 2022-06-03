@@ -1,39 +1,32 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`Jsqflnum`"]
+BeginPackage[ "pkg`Jfl`"]
 
-     NmJsqflow::usage = 
-	"NmJsqflow implements flow along Jsquared in phase space numerically"
+     Jflow::usage = 
+	"Jflow implements flow along J in phase space"
 
               Begin[ "`Private`"]
 
-               NmJsqflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_,\[Epsilon]_]:=
-               Module[{G,c,Linit,Jinit,R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
+               Jflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Lambda]0_,\[Epsilon]_]:=
+               Module[{G,c,Linit,Jinit,JN, R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
                         sol,\[Lambda],finalvec,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z},
-                
-                 G=1 ;    c = 1/Sqrt[\[Epsilon]]   ;
+                G=1 ;    c = 1/Sqrt[\[Epsilon]]   ;
+
                  Linit=Cross[Rinit, Pinit];
                  Jinit=Linit+S1init+S2init;(* J  stays conserved *)
+                 JN= Norm [Jinit];
 
 
 
                 R={Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]}; P={Px[\[Lambda]],Py[\[Lambda]],Pz[\[Lambda]]};
                 S1={S1x[\[Lambda]],S1y[\[Lambda]],S1z[\[Lambda]]}; S2={S2x[\[Lambda]],S2y[\[Lambda]],S2z[\[Lambda]]};
-                
-                L=Cross[R, P];
-                J=L+S1+S2;
 
 
 
-
-                 eqa=D[R,\[Lambda]]-( Cross[2 J(*Jinit*),R]);
-                 eqb=D[P,\[Lambda]]-( Cross[2 J (*Jinit*),P]);
-                 eqc=D[S1,\[Lambda]]-( Cross[2 J(*Jinit*),S1]);
-                 eqd=D[S2,\[Lambda]]-( Cross[2 J(*Jinit*),S2]);
-
-
-
-                
+                eqa=D[R,\[Lambda]]-1/(2 JN) ( Cross[2 Jinit, R]);
+                eqb=D[P,\[Lambda]]- 1/(2 JN) ( Cross[2 Jinit, P]);
+                eqc=D[S1,\[Lambda]]- 1/(2 JN) ( Cross[2 Jinit, S1]);
+                eqd=D[S2,\[Lambda]]- 1/(2 JN) ( Cross[2 Jinit, S2]);
 
                 system0={eqa[[1]]==0,eqa[[2]]==0,eqa[[3]]==0, eqb[[1]]==0,eqb[[2]]==0,eqb[[3]]==0,eqc[[1]]==0,
                 eqc[[2]]==0,eqc[[3]]==0,eqd[[1]]==0,eqd[[2]]==0,eqd[[3]]==0}//Simplify;
@@ -41,13 +34,12 @@ BeginPackage[ "pkg`Jsqflnum`"]
                 Py[\[Lambda]0] == Pinit[[2]], Pz[\[Lambda]0] == Pinit[[3]] , S1x[\[Lambda]0] ==S1init[[1]], S1y[\[Lambda]0] ==S1init[[2]], 
                 S1z[\[Lambda]0] == S1init[[3]], S2x[\[Lambda]0] == S2init[[1]], S2y[\[Lambda]0] ==S2init[[2]], S2z[\[Lambda]0] == S2init[[3]]}  ;
                 
-                sol=NDSolve[   system0~Join~initCond  ,  {Rx, Ry, Rz, Px, Py,Pz,S1x, S1y, S1z,S2x, S2y, S2z},{\[Lambda],\[Lambda]0,\[Lambda]max}][[1]];
+                sol=DSolve[   system0~Join~initCond  ,  {Rx, Ry, Rz, Px, Py,Pz,S1x, S1y, S1z,S2x, S2y, S2z},\[Lambda]][[1]];
 
                 finalvec=Re[{{Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]}/.sol/.{\[Lambda]->\[Lambda]max},{Px[\[Lambda]],Py[\[Lambda]],Pz[\[Lambda]]}/.sol/.{\[Lambda]->\[Lambda]max},
                 {S1x[\[Lambda]],S1y[\[Lambda]],S1z[\[Lambda]]}/.sol/.{\[Lambda]->\[Lambda]max},{S2x[\[Lambda]],S2y[\[Lambda]],S2z[\[Lambda]]}/. sol/.{\[Lambda]->\[Lambda]max}}]//N;
                 
                 Print[finalvec];
-                
                 (*Print[Plot[{Rx[\[Lambda]]/.sol,Ry[\[Lambda]]/.sol,Rz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{S1x[\[Lambda]]/.sol,S1y[\[Lambda]]/.sol,S1z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];

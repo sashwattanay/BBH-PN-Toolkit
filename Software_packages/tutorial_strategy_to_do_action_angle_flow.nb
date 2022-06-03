@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     11377,        296]
-NotebookOptionsPosition[     10949,        280]
-NotebookOutlinePosition[     11421,        298]
-CellTagsIndexPosition[     11378,        295]
+NotebookDataLength[     11441,        297]
+NotebookOptionsPosition[     11035,        282]
+NotebookOutlinePosition[     11486,        299]
+CellTagsIndexPosition[     11443,        296]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -168,7 +168,7 @@ Cell[BoxData[{
     RowBox[{"\[PartialD]", " ", "Cj"}]], ".", "\[IndentingNewLine]", "1."}], 
   " ", "Check", " ", "the", " ", "frequency", " ", "code", " ", 
   "thoroughly"}], "\[IndentingNewLine]", 
- RowBox[{
+ RowBox[{"     ", 
   RowBox[{
   "2.", " ", "check", " ", "if", " ", "all", " ", "action", " ", "flows", " ",
     "make", " ", "a", " ", 
@@ -177,25 +177,26 @@ Cell[BoxData[{
    RowBox[{"SF1", " ", "~", "1"}], " ", "and", " ", 
    RowBox[{"SF2", " ", "~", "0."}]}], "\[IndentingNewLine]", 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
+ RowBox[{"       ", 
   RowBox[{
-   RowBox[{"4.", " ", "Check", " ", "frequency", " ", "code", " ", 
-    RowBox[{"again", ".", "\[IndentingNewLine]", "5."}], " ", "Module", " ", 
-    "to", " ", "generate", " ", "SF", " ", 
-    RowBox[{"array", ".", "  ", "Keep"}], " ", "a", " ", "separate", " ", 
-    "module", " ", "for", " ", "\[Omega]", " ", "array", " ", "and", " ", "a",
-     " ", "separate", " ", "one", " ", "for", " ", "SF", " ", 
-    RowBox[{"array", ".", "\[IndentingNewLine]", "6."}], " ", "FINAL", " ", 
-    "Module", " ", "for", " ", "successive", " ", "flow", " ", "along", " ", 
-    "CCs", " ", "by", " ", "Sf", " ", 
-    RowBox[{
-     RowBox[{"(", "\[CapitalDelta]t", ")"}], ".", " ", "This"}], " ", "gives",
-     " ", "the", " ", "AA"}], "-", 
-   RowBox[{"based", " ", 
-    RowBox[{"solution", ".", "\[IndentingNewLine]", "7."}], 
-    RowBox[{"NOTE", ":", " ", "CCs", ":", " ", "J"}]}]}], ",", " ", "L", ",", 
-  " ", "SeffdL", ",", " ", "H", ",", " ", 
-  RowBox[{"Jz", ";"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"4.", " ", "Check", " ", "frequency", " ", "code", " ", 
+     RowBox[{"again", ".", "\[IndentingNewLine]", "5."}], " ", "Module", " ", 
+     "to", " ", "generate", " ", "SF", " ", 
+     RowBox[{"array", ".", "  ", "Keep"}], " ", "a", " ", "separate", " ", 
+     "module", " ", "for", " ", "\[Omega]", " ", "array", " ", "and", " ", 
+     "a", " ", "separate", " ", "one", " ", "for", " ", "SF", " ", 
+     RowBox[{"array", ".", "\[IndentingNewLine]", "6."}], " ", "FINAL", " ", 
+     "Module", " ", "for", " ", "successive", " ", "flow", " ", "along", " ", 
+     "CCs", " ", "by", " ", "Sf", " ", 
+     RowBox[{
+      RowBox[{"(", "\[CapitalDelta]t", ")"}], ".", " ", "This"}], " ", 
+     "gives", " ", "the", " ", "AA"}], "-", 
+    RowBox[{"based", " ", 
+     RowBox[{"solution", ".", "\[IndentingNewLine]", "7."}], 
+     RowBox[{"NOTE", ":", " ", "CCs", ":", " ", "J"}]}]}], ",", " ", "L", ",",
+    " ", "SeffdL", ",", " ", "H", ",", " ", 
+   RowBox[{"Jz", ";"}]}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{
@@ -205,31 +206,31 @@ Cell[BoxData[{
     SuperscriptBox["J", "2"]}], ",", " ", 
    RowBox[{
     RowBox[{
-     SuperscriptBox["L", "2"], ".", "\[IndentingNewLine]", 
      RowBox[{
+      SuperscriptBox["L", "2"], ".", "\[IndentingNewLine]", 
       RowBox[{"FIX", " ", "CC", " ", "flow", " ", 
        RowBox[{"module", ":", " ", 
         FractionBox["dV", 
          SubscriptBox["dt", 
-          SuperscriptBox["J", "2"]]]}]}], " ", "=", " ", 
+          SuperscriptBox["J", "2"]]]}]}]}], " ", "=", " ", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"V", ",", " ", 
+        SuperscriptBox["J", "2"]}], "}"}], " ", "=", " ", 
       RowBox[{
-       RowBox[{"{", 
-        RowBox[{"V", ",", " ", 
-         SuperscriptBox["J", "2"]}], "}"}], " ", "=", " ", 
        RowBox[{
         RowBox[{
-         RowBox[{
-          RowBox[{"{", 
-           RowBox[{"V", ",", "J"}], "}"}], " ", "2", "J"}], "  ", "==", ">", 
-         "   ", 
-         FractionBox["dV", 
-          SubscriptBox["dt", "J"]]}], " ", "=", " ", 
-        FractionBox[
-         RowBox[{
-          RowBox[{"{", 
-           RowBox[{"V", ",", " ", 
-            SuperscriptBox["J", "2"]}], "}"}], " "}], 
-         RowBox[{"2", " ", "J"}]]}]}]}]}], " ", ";"}]}], 
+         RowBox[{"{", 
+          RowBox[{"V", ",", "J"}], "}"}], " ", "2", "J"}], "  ", "==", ">", 
+        "   ", 
+        FractionBox["dV", 
+         SubscriptBox["dt", "J"]]}], " ", "=", " ", 
+       FractionBox[
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"V", ",", " ", 
+           SuperscriptBox["J", "2"]}], "}"}], " "}], 
+        RowBox[{"2", " ", "J"}]]}]}]}], " ", ";"}]}], 
   "                          "}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Similarly", ":", "  ", 
@@ -275,14 +276,14 @@ Cell[BoxData[{
    3.863173222252138*^9, 3.863173252385695*^9}, {3.863173324672756*^9, 
    3.863173341000503*^9}, {3.863173382749177*^9, 3.863173529434538*^9}, {
    3.863174697263809*^9, 3.86317480415705*^9}, {3.863184866894659*^9, 
-   3.8631848710336123`*^9}},ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-\
+   3.8631848710336123`*^9}, {3.8632604522654104`*^9, 
+   3.863260464787093*^9}},ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-\
 002020bcca24"]
 },
-WindowSize->{1920, 1027},
-WindowMargins->{{1728, Automatic}, {Automatic, -13}},
-TaggingRules-><|"TryRealOnly" -> False|>,
-Magnification:>2. Inherited,
-FrontEndVersion->"13.0 for Mac OS X ARM (64-bit) (February 4, 2022)",
+WindowSize->{949, 474},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+TaggingRules->Association["TryRealOnly" -> False],
+FrontEndVersion->"12.2 for Microsoft Windows (64-bit) (December 12, 2020)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"f14baa2c-a490-4471-89da-c5c851c2a32c"
 ]
@@ -297,7 +298,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 10387, 258, 2047, "Input",ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-002020bcca24"]
+Cell[558, 20, 10473, 260, 972, "Input",ExpressionUUID->"0e1c2d67-2cb7-40a9-b93c-002020bcca24"]
 }
 ]
 *)

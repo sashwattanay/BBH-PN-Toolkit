@@ -238,7 +238,7 @@ Return[ \[Mu](Inverse[EulMat] . Inverse[JtoLframeEulMat[t]] . {px,py,pz}) ]; ];
                 finalvec=Re[{Rsol[\[Lambda]max-\[Lambda]0],Psol[\[Lambda]max-\[Lambda]0],
                 S1sol[\[Lambda]max-\[Lambda]0],S2sol[\[Lambda]max-\[Lambda]0]}]//N;
                 (*Print["The final state is"];*)
-                Print[finalvec];
+                Return[finalvec];
 
 
 (*Print[Plot[{Rsol[\[Lambda]][[1]],Rsol[\[Lambda]][[2]],Rsol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];

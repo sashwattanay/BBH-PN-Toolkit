@@ -10,7 +10,7 @@ BeginPackage[ "pkg`freq`"]
     frequency[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]_,\[Lambda]0_,\[Epsilon]_]:=Module[{G,c,M, \[Mu], \[Nu], Q1,Q2,Linit,Jinit,RN,PN,Rn,
     Pn,S1N,S2N,S1n,S2n,LN,Ln,JN,Jn,Jz,Seffinit,SeffLN,SeffL,En,H,\[CapitalDelta]1,\[CapitalDelta]2,\[CapitalDelta]21,\[CapitalSigma]1,\[CapitalSigma]2,a3,a2,a1,a0,A,p,q,f1,f2,f3,k,B1,B2,
     D1,D2,\[Alpha]1sq,\[Alpha]2sq,B1s1,B2s1,D1s1,D2s1,\[Alpha]1s1sq,\[Alpha]2s1sq,B1s2,B2s2,D1s2,D2s2,\[Alpha]1s2sq,\[Alpha]2s2sq,\[CapitalDelta]\[Lambda]1,\[CapitalDelta]\[Lambda]2,\[CapitalDelta]\[Lambda]3,\[CapitalDelta]\[Lambda]4,\[CapitalDelta]\[Lambda]5,
-    CC,J1,J2,J3,J4,J5,Jac,JCmat,JCmatN,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z,CJmat,freqN},
+    CC,J1,J2,J3,J4,J5,Jac,JCmat,JCmatN,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z,CJmat,freqN,SFlist},
 G=1;     c = 1/Sqrt[\[Epsilon]]   ;
 M= m1+m2;
 \[Mu] =m1  m2 /(m1+m2);
@@ -29,8 +29,8 @@ JN=Norm[Jinit];
 Seffinit= Q1 S1init + Q2 S2init;
 SeffLN= (Q1 S1init+ Q2 S2init) . Linit;
 En=\[Mu] ((PN/\[Mu])^2/2-1/(RN/(G M))) +\[Mu]/c^2 (1/8 (3 \[Nu]-1)(PN/\[Mu])^4 +1/(2 (RN/(G M))^2)-1/(2 (RN/(G M))) ((3+\[Nu])(PN/\[Mu])^2 +\[Nu] ((Rinit/RN) . ( Pinit/\[Mu]))^2)) + ( (2 G)/(c^2 RN^3)  SeffLN)  ;
-Print["The energy for the initial data is"];
-Print[En];
+(*Print["The energy for the initial data is"];
+Print[En];*)
 \[CapitalDelta]1=(1/(Q1-Q2))((1/2)(Jn^2-Ln^2-S1n^2-S2n^2)-SeffL/Q2 );
 \[CapitalDelta]2=(1/(Q1-Q2))((1/2)(Jn^2-Ln^2-S1n^2-S2n^2)-SeffL/Q1 );
 \[CapitalDelta]21=SeffL/(Q1 Q2 );
@@ -96,17 +96,17 @@ JCmat= Table[\!\(
 
  Rn=RN; Pn=PN;S1n=S1N;S2n=S2N; Ln=LN;Jn=JN;SeffL=SeffLN; H=En; 
 
-JCmatN=JCmat;
-Print["The JC matrix is"];
-Print[JCmatN//N];
+JCmatN=N[JCmat];
+
 CJmat=Inverse[JCmatN];
 
 freqN= CJmat[[4]];
-Print["The frequencies are"];
-Print[freqN];
-Print["The SFlist is"];
-Print[Table[Sum[freqN[[i]] JCmatN[[i]][[j]],{i,1,5}],{j,1,5}]];
-ListPlot[(Tooltip[{Re[#1],Im[#1]}]&)/@freqN,AspectRatio->1]
+SFlist=Table[Sum[freqN[[i]] JCmatN[[i]][[j]],{i,1,5}],{j,1,5}];
+
+Return[{En,freqN, JCmatN, SFlist}];
+
+
+(*ListPlot[(Tooltip[{Re[#1],Im[#1]}]&)/@freqN,AspectRatio->1]*)
 
 
 ]

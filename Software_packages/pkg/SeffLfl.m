@@ -202,7 +202,7 @@ S1final=Cross[R1final,P1final];
 S2final=Inverse[EulMat] . Jinit-Lfinal-S1final;
 
 finalvec={Rfinal, Pfinal, S1final, S2final}/.{\[Lambda]->\[Lambda]max}//N;
-Print[finalvec];
+Return[finalvec];
 
 (*Print[Plot[{Rfinal[[1]],Rfinal[[2]],Rfinal[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];
 Print[Plot[{Pfinal[[1]],Pfinal[[2]],Pfinal[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];

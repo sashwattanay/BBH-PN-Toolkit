@@ -7,7 +7,7 @@ BeginPackage[ "pkg`Hfl`"]
 
   Begin[ "`Private`"]
 
-   Hflow[m1_, m2_, Rinit_,Pinit_,S1in_, S2in_,\[Lambda]max_,\[Lambda]0_,\[Epsilon]_]:=
+   Hflow[m1_, m2_, Rinit_,Pinit_,S1in_, S2in_,\[Lambda]max_,\[Epsilon]_]:=
                Module[{G,c, precisionGoal,kGoldstein, M, \[Mu], \[Nu],spinScalingFactor, S1init, S2init,S1ninit,S2ninit,
                rinit,pinit,Linit,Lninit,\[Delta]1,\[Delta]2,rminit, SeffdLinit, Hinit,m1N,m2N, sign, Jvec, sphericalAngles,
                vectorComponents, \[Xi]2, \[Xi]1, EulMat, R, Rx, Ry, Rz, P, Px, Py,Pz,S1, S1x, S1y, S1z, S2, S2x, S2y, S2z,
@@ -21,7 +21,7 @@ BeginPackage[ "pkg`Hfl`"]
                Psol,t0, t,finalvec},
 
 
-G=1 ;   c = 1/Sqrt[\[Epsilon]]   ;
+G=1 ;   c = 1/Sqrt[\[Epsilon]]   ;   \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
 
 precisionGoal=Automatic (* 50*)  ;
  kGoldstein = G M \[Mu] ;  M = m1+m2 ;  \[Mu] = m1 m2/M ; \[Nu]=\[Mu]/M; spinScalingFactor = G M \[Mu] ;
@@ -126,7 +126,7 @@ t0 =- (t0/.Solve[n2 t0 == u0 - et2 Sin[u0], t0] [[1]]   );          (*This is t0
 
 
 v2 = u2 + 2 ArcTan[ (\[Beta]et Sin[u2])/(1-\[Beta]et Cos[u2])];            (* PN extension of v= 2 ArcTan[Sqrt[(1+e)/(1-e)] Tan[u/2]] but without the ArcTan issues*)
-findu2[t_]:=FindRoot[n2 (t-t0) == u2 - et2 Sin[u2],{u2,n2 (t-t0), n2 (t-t0) - 2 \[Pi], n2 (t-t0)+2 \[Pi]}, PrecisionGoal->precisionGoal];
+findu2[t_]:=FindRoot[n2 (t-t0) == u2 - et2 Sin[u2],{u2, n2 (t-t0), n2 (t-t0) - 2 \[Pi], n2 (t-t0)+2 \[Pi]}, PrecisionGoal->precisionGoal];
 
 \[Beta] = ((x3-x2)/(x1-x2))^(1/2);
 \[Alpha] =  sign 2/Sqrt[A(x1-x2)] EllipticF[ArcSin[Sqrt[( S1init . Linit/(Lninit S1ninit)-x2)/(x3-x2)]],\[Beta]^2]   ;

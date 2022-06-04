@@ -3,11 +3,11 @@
 BeginPackage[ "pkg`freq`"]
 
      frequency::usage = 
-	"frequency is a simple function."
+	"frequency gives the fourth row of Inverse [del J/ del C]  matrix"
 
   Begin[ "`Private`"]
 
-    frequency[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]_,\[Lambda]0_,\[Epsilon]_]:=Module[{G,c,M, \[Mu], \[Nu], Q1,Q2,Linit,Jinit,RN,PN,Rn,
+    frequency[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Epsilon]_]:=Module[{G,c,M, \[Mu], \[Nu], Q1,Q2,Linit,Jinit,RN,PN,Rn,
     Pn,S1N,S2N,S1n,S2n,LN,Ln,JN,Jn,Jz,Seffinit,SeffLN,SeffL,En,H,\[CapitalDelta]1,\[CapitalDelta]2,\[CapitalDelta]21,\[CapitalSigma]1,\[CapitalSigma]2,a3,a2,a1,a0,A,p,q,f1,f2,f3,k,B1,B2,
     D1,D2,\[Alpha]1sq,\[Alpha]2sq,B1s1,B2s1,D1s1,D2s1,\[Alpha]1s1sq,\[Alpha]2s1sq,B1s2,B2s2,D1s2,D2s2,\[Alpha]1s2sq,\[Alpha]2s2sq,\[CapitalDelta]\[Lambda]1,\[CapitalDelta]\[Lambda]2,\[CapitalDelta]\[Lambda]3,\[CapitalDelta]\[Lambda]4,\[CapitalDelta]\[Lambda]5,
     CC,J1,J2,J3,J4,J5,Jac,JCmat,JCmatN,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z,CJmat,freqN,SFlist},
@@ -19,7 +19,7 @@ Q1=(1+3 m2/(4 m1)); Q2=(1+3 m1/(4 m2));
 
 
 Linit=Cross[Rinit, Pinit];
-Jinit=Linit+S1init+S2init (*check Jinit is along z axis*);
+Jinit=Linit+S1init+S2init ;
 RN=Norm[Rinit];
 PN=Norm[Pinit];
 S1N = Norm[S1init] ;    
@@ -35,15 +35,20 @@ Print[En];*)
 \[CapitalDelta]2=(1/(Q1-Q2))((1/2)(Jn^2-Ln^2-S1n^2-S2n^2)-SeffL/Q1 );
 \[CapitalDelta]21=SeffL/(Q1 Q2 );
 \[CapitalSigma]1=((Q1-Q2) \[CapitalDelta]1)/(S1n * S2n);
-\[CapitalSigma]2= SeffL/( Q2 * Ln* S2n );a3 =2 Q1 Q2(Q2-Q1);a2=2(\[CapitalDelta]1+\[CapitalDelta]2)(Q1-Q2)Q1 Q2- Ln^2 (Q1-Q2)^2 -Q1^2 S1n^2-Q2^2 S2n^2;
+\[CapitalSigma]2= SeffL/( Q2 * Ln* S2n );
+
+a3 =2 Q1 Q2(Q2-Q1);
+a2=2(\[CapitalDelta]1+\[CapitalDelta]2)(Q1-Q2)Q1 Q2- Ln^2 (Q1-Q2)^2 -Q1^2 S1n^2-Q2^2 S2n^2;
 a1=2(Q1^2 S1n^2 \[CapitalDelta]2+Q2^2 S2n^2 \[CapitalDelta]1+Q1 Q2 \[CapitalDelta]1 \[CapitalDelta]2 (Q2-Q1));
 a0=Ln^2 S1n^2 S2n^2-Q1^2 S1n^2 \[CapitalDelta]2^2-Q2^2 S2n^2 \[CapitalDelta]1^2;
 
 
-A=2 Q1 Q2(Q2-Q1);
+A=a3;
 p=(3 a1 a3 -a2^2)/(3 a3^2); 
 q=(2 a2^3-9 a1 a2 a3+27 a0 a3^2)/(27 a3^3);
-f1=-a2/(3 a3)+2 Sqrt[-p/3]Cos[1/3 ArcCos[(3 q)/(2p) Sqrt[-3/p]]+(2 \[Pi] )/3];f2=-a2/(3 a3)+2 Sqrt[-p/3]Cos[1/3 ArcCos[(3 q)/(2p) Sqrt[-3/p]]+(2*2 \[Pi] )/3] ;f3=-a2/(3 a3)+2 Sqrt[-p/3]Cos[1/3 ArcCos[(3 q)/(2p) Sqrt[-3/p]]+(3*2 \[Pi] )/3];
+f1=-a2/(3 a3)+2 Sqrt[-p/3]Cos[1/3 ArcCos[(3 q)/(2p) Sqrt[-3/p]]+(2 \[Pi] )/3];
+f2=-a2/(3 a3)+2 Sqrt[-p/3]Cos[1/3 ArcCos[(3 q)/(2p) Sqrt[-3/p]]+(2*2 \[Pi] )/3] ;
+f3=-a2/(3 a3)+2 Sqrt[-p/3]Cos[1/3 ArcCos[(3 q)/(2p) Sqrt[-3/p]]+(3*2 \[Pi] )/3];
 
 k=(f2-f1)/(f3-f1);
 
@@ -85,7 +90,9 @@ D2s2= (-Jn S2n-S2n^2-\[CapitalDelta]2 Q1);
 
 
 CC={Jn,Jz,Ln,H, SeffL}; (* Commuting constants*)
-J1=Jn; J2=Jz; J3=Ln;J4=-Ln +(G M \[Mu]^(3/2))/Sqrt[-2 H]+( G M)/c^2 ((3 G M \[Mu]^2)/Ln+ (Sqrt[-H] \[Mu]^(1/2) (\[Nu]-15))/Sqrt[32]-(2 G \[Mu]^3)/Ln^3 SeffL); J5=1/\[Pi] (SeffL  \[CapitalDelta]\[Lambda]1 + Jn^2 \[CapitalDelta]\[Lambda]2 + Ln^2  \[CapitalDelta]\[Lambda]3  +S1n^2 \[CapitalDelta]\[Lambda]4 +S2n^2 \[CapitalDelta]\[Lambda]5);
+J1=Jn; J2=Jz; J3=Ln;
+J4=-Ln +(G M \[Mu]^(3/2))/Sqrt[-2 H]+( G M)/c^2 ((3 G M \[Mu]^2)/Ln+ (Sqrt[-H] \[Mu]^(1/2) (\[Nu]-15))/Sqrt[32]-(2 G \[Mu]^3)/Ln^3 SeffL); 
+J5=1/\[Pi] (SeffL  \[CapitalDelta]\[Lambda]1 + Jn^2 \[CapitalDelta]\[Lambda]2 + Ln^2  \[CapitalDelta]\[Lambda]3  +S1n^2 \[CapitalDelta]\[Lambda]4 +S2n^2 \[CapitalDelta]\[Lambda]5);
 Jac={J1,J2,J3,J4,J5};
 JCmat= Table[\!\(
 \*SubscriptBox[\(\[PartialD]\), \(CC[\([j]\)]\)]\(Jac[\([i]\)]\)\),{i,1,Length[Jac]},{j,1,Length[CC]}];

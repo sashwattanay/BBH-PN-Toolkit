@@ -110,7 +110,7 @@ JCmat= Table[\!\(
 
 
 
- Rn=RN; Pn=PN;S1n=S1N;S2n=S2N; Ln=LN;Jn=JN;SeffL=SeffLN; H=En; 
+Rn=RN; Pn=PN;S1n=S1N;S2n=S2N; Ln=LN;Jn=JN;SeffL=SeffLN; H=En; 
 
 JCmatN=N[JCmat];
 

@@ -18,7 +18,7 @@ BeginPackage[ "pkg`Hfl`"]
                S1sol, LsolJframe, S2sol, JtoLframeEulMat, EulMatJtoL, rinitLframe,r\[Phi]0, IntReciOfr2,IntReciOfr3,IntReciOfr4,
                IntReciOfr5, \[Alpha]1r,\[Alpha]2r,\[Beta]1r,\[Beta]2r, solPiece1r,solPiece2r,solPiece3r,solPiece4r, r\[Phi]solLframe,rvecAzimuthAngleLframe,
                Rsol, rMagnitude, \[Phi]OffsetPvecNIFTemp, pdn, pMagnitude, \[Phi]OffsetPvecNIF,pvecAzimuthAngleLframe, spmg,
-               Psol,t0, t,finalvec},
+               Psol,t0, t,finalvec,\[Lambda]0},
 
 
 G=1 ;   c = 1/Sqrt[\[Epsilon]]   ;   \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 

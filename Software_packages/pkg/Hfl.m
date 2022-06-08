@@ -69,32 +69,15 @@ Gives components: Basic frame --> J-vector centered frame
 *)
 
 
-(*rescaled/unrescaled qunatities*)
-R = {Rx, Ry,Rz} ; P ={Px,Py,Pz};
-S1= {S1x, S1y,S1z} ;    S2= {S2x, S2y,S2z} ;
-S1n = Norm[S1init] ;     S2n = Norm[S2init] ;
-
-Seff= (\[Delta]1 S1+ \[Delta]2 S2);
-     r=R/(G M);       p=P/\[Mu];
-L=Cross[r,p] ;
-Ln=Norm[Linit] ;
-Jn=Norm[Linit+S1init+S2init];
-SeffL= Seff . L ;
 
 
 (*Evaluating \[Sigma]1 and \[Sigma]2*)
-{Rx,Ry,Rz} = Rinit  ;
-{Px,Py,Pz}=Pinit  ;
-{S1x,S1y,S1z} = S1init ; 
-{S2x,S2y,S2z} = S2init  ;
-
-\[Sigma]1=S1 . S2/(S1n S2n) -Ln/S2n (\[Delta]1-\[Delta]2)/\[Delta]2  S1 . L/(Ln S1n) ;   (*\[Sigma]1=Cos \[Gamma] -L/S2(Q1-Q2)/Q2Cos \[Kappa]1 *)
-\[Sigma]2=  S2 . L/(Ln S2n) + (\[Delta]1 S1n)/(\[Delta]2 S2n)  S1 . L/(Ln S1n) ;           (*\[Sigma]2= Cos \[Kappa]2 +(Q1 S1)/(Q2 S2) Cos \[Kappa]1*)
-Clear[Rx, Ry, Rz, Px, Py, Pz, S1x,S1y,S1z,S2x,S2y,S2z];
+\[Sigma]1=N[S1init . S2init/(S1ninit S2ninit) -Lninit/S2ninit (\[Delta]1-\[Delta]2)/\[Delta]2  S1init . Linit/(Lninit S1ninit) ];   (*\[Sigma]1=Cos \[Gamma] -L/S2(Q1-Q2)/Q2Cos \[Kappa]1 *)
+\[Sigma]2=N[  S2init . Linit/(Lninit  S2ninit) + (\[Delta]1 S1ninit)/(\[Delta]2 S2ninit)  S1init . Linit/(Lninit S1ninit) ];           (*\[Sigma]2= Cos \[Kappa]2 +(Q1 S1)/(Q2 S2) Cos \[Kappa]1*)
 
 
 (*finding roots of cubic*)
-A=2 Ln S1n \[Delta]1 (\[Delta]2-\[Delta]1);cubiceq=A x^3 -(Ln^2 (\[Delta]1-\[Delta]2)^2+2 \[Delta]2 Ln \[Sigma]2 S2n  (\[Delta]2-\[Delta]1)+S1n^2 \[Delta]1^2+2 \[Delta]1 \[Delta]2 \[Sigma]1 S1n S2n +\[Delta]2^2  S2n^2  )x^2+ (2  \[Delta]2 S2n (Ln \[Sigma]1(\[Delta]2-\[Delta]1) +\[Sigma]2( \[Delta]1 S1n+ \[Delta]2 \[Sigma]1 S2n) )) x+-S2n^2 \[Delta]2^2 (\[Sigma]1^2+\[Sigma]2^2-1);(*=A(x -x1)(x -x2)(x -x3)*)
+A=2 Lninit S1ninit \[Delta]1 (\[Delta]2-\[Delta]1);cubiceq=A x^3 -(Lninit^2 (\[Delta]1-\[Delta]2)^2+2 \[Delta]2 Lninit \[Sigma]2 S2ninit  (\[Delta]2-\[Delta]1)+S1ninit^2 \[Delta]1^2+2 \[Delta]1 \[Delta]2 \[Sigma]1 S1ninit S2ninit +\[Delta]2^2  S2ninit^2  )x^2+ (2  \[Delta]2 S2ninit (Lninit \[Sigma]1(\[Delta]2-\[Delta]1) +\[Sigma]2( \[Delta]1 S1ninit+ \[Delta]2 \[Sigma]1 S2ninit) )) x+-S2ninit^2 \[Delta]2^2 (\[Sigma]1^2+\[Sigma]2^2-1);(*=A(x -x1)(x -x2)(x -x3)*)
  
 (*evaluate the cubic and find the roots*)
 rtsol=Solve[cubiceq==0,x] ;
@@ -102,7 +85,6 @@ x2=x/.rtsol[[1]] ;
 x3=x/.rtsol[[2]] ;
 x1=x/.rtsol[[3]];
 {x2, x3, x1} = Sort[{x2, x3, x1}] ;
-
 
 
 (*cos \[Kappa]1 solution*)
@@ -241,12 +223,12 @@ Return[ \[Mu](Inverse[EulMat] . Inverse[JtoLframeEulMat[t]] . {px,py,pz}) ]; ];
                 Return[finalvec];
 
 
-(*Print[Plot[{Rsol[\[Lambda]][[1]],Rsol[\[Lambda]][[2]],Rsol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
-Print[Plot[{Psol[\[Lambda]][[1]],Psol[\[Lambda]][[2]],Psol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
-Print[Plot[{S1sol[\[Lambda]][[1]],S1sol[\[Lambda]][[2]],S1sol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
-Print[Plot[{S2sol[\[Lambda]][[1]],S2sol[\[Lambda]][[2]],S2sol[\[Lambda]][[3]]},{\[Lambda],0,\[Lambda]max-\[Lambda]0}]];
-*)
-(*spmg=50;
+(*Return[{Plot[Rsol[\[Lambda]][[1]],{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)},PlotStyle->Red],
+Plot[Lsol[\[Lambda]][[3]],{\[Lambda],0,3000(*\[Lambda]max-\[Lambda]0*)},PlotStyle->Red],
+Plot[S1sol[\[Lambda]][[1]],{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)},PlotStyle->Red],
+Plot[S2sol[\[Lambda]][[1]],{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)},PlotStyle->Red]}]*)
+
+(*spmg=40;
 
             Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
 {Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0}, spmg S1in}]},

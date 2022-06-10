@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
-BeginPackage["pkg`action5`", 
-  {"pkg`freq`", "pkg`Jfl`","pkg`Jzfl`","pkg`Lfl`","pkg`Hfl`","pkg`SeffLfl`"}];
+BeginPackage["BBHpnToolkit`action5`", 
+  {"BBHpnToolkit`freq`", "BBHpnToolkit`Jfl`","BBHpnToolkit`Jzfl`","BBHpnToolkit`Lfl`","BBHpnToolkit`Hfl`","BBHpnToolkit`SeffLfl`"}];
   Jac5::usage = 
 	"Jac5 implements flow along fifth action J5 in phase space"
 

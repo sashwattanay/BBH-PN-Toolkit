@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`Hflnum`"]
+BeginPackage[ "BBHpnToolkit`Hflnum`"]
 
      NmHflow::usage = 
 	"NmHflow implements flow induced by H in phase space numerically"
@@ -40,14 +40,17 @@ sol=NDSolve[   system0~Join~initCond  ,  {Rx, Ry, Rz, Px, Py,Pz,S1x, S1y, S1z,S2
                 {S1x[\[Lambda]],S1y[\[Lambda]],S1z[\[Lambda]]}/.sol/.{\[Lambda]->\[Lambda]max},{S2x[\[Lambda]],S2y[\[Lambda]],S2z[\[Lambda]]}/. sol/.{\[Lambda]->\[Lambda]max}}]//N;
                 (*Print["The final state is"];*)
                 Return[finalvec];
-
+              (* Return[{Plot[Rx[\[Lambda]]/.sol,{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)}],
+                Plot[(*Lz=*)Cross[{Rx[\[Lambda]]/.sol,Ry[\[Lambda]]/.sol,Rz[\[Lambda]]/.sol},{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol}][[3]],{\[Lambda],0,3000(*\[Lambda]max-\[Lambda]0*)}],
+                Plot[S1x[\[Lambda]]/.sol,{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)}],
+                Plot[S2x[\[Lambda]]/.sol,{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)}]}]*)
 
                            (*Print[Plot[{Rx[\[Lambda]]/.sol,Ry[\[Lambda]]/.sol,Rz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{S1x[\[Lambda]]/.sol,S1y[\[Lambda]]/.sol,S1z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];*)
 
-              (* spmg=50;
+               (*spmg=40;
                 Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
                 {Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0},spmg S1init}]},
                 {Magenta,Arrowheads[0.03],Arrow[{{0,0,0},spmg S2init}]}}],ParametricPlot3D[Evaluate[{Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]}/. sol],

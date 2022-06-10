@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
-BeginPackage["pkg`nmac5`", 
-  {"pkg`freq`", "pkg`Jflnum`","pkg`Jzflnum`","pkg`Lflnum`","pkg`Hflnum`","pkg`SeffLflnum`"}];
+BeginPackage["BBHpnToolkit`nmac5`", 
+  {"BBHpnToolkit`freq`", "BBHpnToolkit`Jflnum`","BBHpnToolkit`Jzflnum`","BBHpnToolkit`Lflnum`","BBHpnToolkit`Hflnum`","BBHpnToolkit`SeffLflnum`"}];
   NmJac5::usage = 
 	"NmJac5 implements flow along first action J5 in phase space numerically"
 

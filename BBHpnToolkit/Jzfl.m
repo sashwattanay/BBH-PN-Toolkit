@@ -1,16 +1,16 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`Jzflnum`"]
+BeginPackage[ "BBHpnToolkit`Jzfl`"]
 
-     NmJzflow::usage = 
-	"NmJzflow implements flow along Jz in phase space numerically"
+     Jzflow::usage = 
+	"Jzflow implements flow along Jz in phase space"
 
             Begin[ "`Private`"]
 
-            NmJzflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Epsilon]_]:=
+            Jzflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Epsilon]_]:=
                Module[{G,c,Linit,Jinit,zhat,R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
                         sol,\[Lambda],finalvec,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z,\[Lambda]0},
-                           G=1 ;    c = 1/Sqrt[\[Epsilon]]   ;    \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
+                           G=1 ;    c = 1/Sqrt[\[Epsilon]]   ;   \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
                            Linit=Cross[Rinit, Pinit];
                            Jinit=Linit+S1init+S2init; (* J  stays conserved *)
                            zhat={0,0,1};
@@ -37,7 +37,7 @@ BeginPackage[ "pkg`Jzflnum`"]
                            S2x[\[Lambda]0] == S2init[[1]], S2y[\[Lambda]0] ==S2init[[2]], 
                            S2z[\[Lambda]0] == S2init[[3]]}  ;
                            
-                           sol=NDSolve[system0~Join~initCond,{Rx, Ry, Rz, Px, Py,Pz,S1x, S1y, S1z,S2x, S2y, S2z},{\[Lambda],\[Lambda]0,\[Lambda]max}][[1]];
+                           sol=DSolve[   system0~Join~initCond,{Rx, Ry, Rz, Px, Py,Pz,S1x, S1y, S1z,S2x, S2y, S2z},\[Lambda]][[1]];
 
                             finalvec=Re[{{Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]}/.sol/.{\[Lambda]->\[Lambda]max},
                                          {Px[\[Lambda]],Py[\[Lambda]],Pz[\[Lambda]]}/.sol/.{\[Lambda]->\[Lambda]max},
@@ -45,13 +45,13 @@ BeginPackage[ "pkg`Jzflnum`"]
                                          {S2x[\[Lambda]],S2y[\[Lambda]],S2z[\[Lambda]]}/. sol/.{\[Lambda]->\[Lambda]max}}]//N;
                            
                            Return[finalvec];
-                           (*Print[Plot[{Rx[\[Lambda]]/.sol,Ry[\[Lambda]]/.sol,Rz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
-                             Print[Plot[{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
-                             Print[Plot[{S1x[\[Lambda]]/.sol,S1y[\[Lambda]]/.sol,S1z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
-                             Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                        (* Print[Plot[{Rx[\[Lambda]]/.sol,Ry[\[Lambda]]/.sol,Rz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                           Print[Plot[{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                           Print[Plot[{S1x[\[Lambda]]/.sol,S1y[\[Lambda]]/.sol,S1z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                           Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+*)
 
-
-                          Show[Graphics3D[{{Red,Arrowheads[0.03],Arrow[{{0,0,0},zhat}]},
+                          (*Show[Graphics3D[{{Red,Arrowheads[0.03],Arrow[{{0,0,0},zhat}]},
                                            {Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
                                            {Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},
                                            {Brown,Arrowheads[0.03],Arrow[{{0,0,0},S1init}]},
@@ -61,7 +61,6 @@ BeginPackage[ "pkg`Jzflnum`"]
                          PlotStyle->Green],ParametricPlot3D[Evaluate[{S1x[\[Lambda]],S1y[\[Lambda]],S1z[\[Lambda]]}/. sol], {\[Lambda],\[Lambda]0,\[Lambda]max},
                          PlotStyle->Brown], ParametricPlot3D[Evaluate[{S2x[\[Lambda]],S2y[\[Lambda]],S2z[\[Lambda]]}/. sol],{\[Lambda],\[Lambda]0,\[Lambda]max},
                          PlotStyle->Magenta],Boxed->False]*)
-
                             ]
                                End[]
 

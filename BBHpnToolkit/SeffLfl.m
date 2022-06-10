@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`SeffLfl`"]
+BeginPackage[ "BBHpnToolkit`SeffLfl`"]
 
      SeffLflow::usage = 
 	"SeffLflow implements flow along Seff.L in phase space"
@@ -211,8 +211,15 @@ Return[finalvec];
 Print[Plot[{Pfinal[[1]],Pfinal[[2]],Pfinal[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];
 Print[Plot[{S1final[[1]],S1final[[2]],S1final[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];
 Print[Plot[{S2final[[1]],S2final[[2]],S2final[[3]]},{\[Lambda],\[Lambda]0,\[Lambda]max}]];*)
+(* Initial vectors rotated back to standard frame for plotting purposes*)
 
-(*Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
+
+
+(*Rinit= Inverse[EulMat] . Rinit;
+Pinit= Inverse[EulMat] . Pinit;
+S1init= Inverse[EulMat] . S1init;
+S2init= Inverse[EulMat] . S2init;
+Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
 {Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0},S1init}]},
 {Magenta,Arrowheads[0.03],Arrow[{{0,0,0},S2init}]}}],ParametricPlot3D[{Rfinal[[1]],Rfinal[[2]],Rfinal[[3]]},{\[Lambda],0,\[Lambda]max},
 PlotStyle->Blue],ParametricPlot3D[{Pfinal[[1]],Pfinal[[2]],Pfinal[[3]]},{\[Lambda],0,\[Lambda]max},
@@ -220,8 +227,8 @@ PlotStyle->Green],
 ParametricPlot3D[{S1final[[1]],S1final[[2]],S1final[[3]]},{\[Lambda],0,\[Lambda]max},
 PlotStyle->Brown],
 ParametricPlot3D[{S2final[[1]],S2final[[2]],S2final[[3]]},{\[Lambda],0,\[Lambda]max},
-PlotStyle->Magenta],Boxed->False]*)
-
+PlotStyle->Magenta],Boxed->False]
+*)
 
 
 

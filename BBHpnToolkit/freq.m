@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`freq`"]
+BeginPackage[ "BBHpnToolkit`freq`"]
 
      frequency::usage = 
 	"frequency gives the fourth row of Inverse [del J/ del C]  matrix"

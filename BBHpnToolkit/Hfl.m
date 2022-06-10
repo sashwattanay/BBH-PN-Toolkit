@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`Hfl`"]
+BeginPackage[ "BBHpnToolkit`Hfl`"]
 
      Hflow::usage = 
 	"Hflow implements flow induced by H in phase space "

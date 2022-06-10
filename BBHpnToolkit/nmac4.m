@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
-BeginPackage["pkg`nmac4`", 
-  {"pkg`freq`", "pkg`Jflnum`","pkg`Jzflnum`","pkg`Lflnum`","pkg`Hflnum`","pkg`SeffLflnum`"}];
+BeginPackage["BBHpnToolkit`nmac4`", 
+  {"BBHpnToolkit`freq`", "BBHpnToolkit`Jflnum`","BBHpnToolkit`Jzflnum`","BBHpnToolkit`Lflnum`","BBHpnToolkit`Hflnum`","BBHpnToolkit`SeffLflnum`"}];
   NmJac4::usage = 
 	"NmJac4 implements flow along fourth action J4 in phase space numerically"
 

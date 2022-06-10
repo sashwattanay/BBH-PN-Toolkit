@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
-BeginPackage["pkg`nmac1`", 
-  {"pkg`Jflnum`"(*, "EccentricIMR`CircularMergerModel`"*)}];
+BeginPackage["BBHpnToolkit`nmac1`", 
+  {"BBHpnToolkit`Jflnum`"}];
   NmJac1::usage = 
 	"NmJac1 implements flow along first action J1=J in phase space numerically"
 

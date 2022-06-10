@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`SeffLflnum`"]
+BeginPackage[ "BBHpnToolkit`SeffLflnum`"]
 
      NmSeffLflow::usage = 
 	"NmSeffLflow implements flow along Seff.L in phase space numerically"

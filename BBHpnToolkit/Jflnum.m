@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage[ "pkg`Jflnum`"]
+BeginPackage[ "BBHpnToolkit`Jflnum`"]
 
      NmJflow::usage = 
 	"NmJflow implements flow along J in phase space numerically"
@@ -27,10 +27,10 @@ BeginPackage[ "pkg`Jflnum`"]
 
 
 
-                 eqa=D[R,\[Lambda]]- 1/(2 JN)( Cross[2 J(*Jinit*),R]);
-                 eqb=D[P,\[Lambda]]- 1/(2 JN)( Cross[2 J (*Jinit*),P]);
-                 eqc=D[S1,\[Lambda]]- 1/(2 JN)( Cross[2 J(*Jinit*),S1]);
-                 eqd=D[S2,\[Lambda]]- 1/(2 JN) ( Cross[2 J(*Jinit*),S2]);
+                 eqa=D[R,\[Lambda]]- 1/(2 JN)( Cross[2 (*J*)Jinit,R]);
+                 eqb=D[P,\[Lambda]]- 1/(2 JN)( Cross[2(* J*) Jinit,P]);
+                 eqc=D[S1,\[Lambda]]- 1/(2 JN)( Cross[2 (*J*)Jinit,S1]);
+                 eqd=D[S2,\[Lambda]]- 1/(2 JN) ( Cross[2 (*J*)Jinit,S2]);
 
 
 
@@ -52,10 +52,10 @@ BeginPackage[ "pkg`Jflnum`"]
                 (*Print[Plot[{Rx[\[Lambda]]/.sol,Ry[\[Lambda]]/.sol,Rz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{Px[\[Lambda]]/.sol,Py[\[Lambda]]/.sol,Pz[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
                 Print[Plot[{S1x[\[Lambda]]/.sol,S1y[\[Lambda]]/.sol,S1z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
-                Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];
+                Print[Plot[{S2x[\[Lambda]]/.sol,S2y[\[Lambda]]/.sol,S2z[\[Lambda]]/.sol},{\[Lambda],0,\[Lambda]max}]];*)
 
 
-                Show[Graphics3D[{{Red,Arrowheads[0.03],Arrow[{{0,0,0}, Jinit}]},{Blue,Arrowheads[0.03], Arrow[{{0,0,0},Rinit}]},
+               (* Show[Graphics3D[{{Red,Arrowheads[0.03],Arrow[{{0,0,0}, Jinit}]},{Blue,Arrowheads[0.03], Arrow[{{0,0,0},Rinit}]},
                 {Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0},S1init}]},
                 {Magenta,Arrowheads[0.03],Arrow[{{0,0,0},S2init}]}}],ParametricPlot3D[Evaluate[{Rx[\[Lambda]],Ry[\[Lambda]],Rz[\[Lambda]]}/. sol],
                 {\[Lambda],\[Lambda]0,\[Lambda]max},PlotStyle->Blue],ParametricPlot3D[Evaluate[{Px[\[Lambda]],Py[\[Lambda]],Pz[\[Lambda]]}/. sol],{\[Lambda],\[Lambda]0,\[Lambda]max},PlotStyle->Green],

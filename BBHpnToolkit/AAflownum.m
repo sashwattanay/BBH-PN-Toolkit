@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
-BeginPackage["pkg`AAflownum`", 
-  {"pkg`freq`", "pkg`nmac1`","pkg`nmac2`","pkg`nmac3`","pkg`nmac4`","pkg`nmac5`"}];
+BeginPackage["BBHpnToolkit`AAflownum`", 
+  {"BBHpnToolkit`freq`", "BBHpnToolkit`nmac1`","BBHpnToolkit`nmac2`","BBHpnToolkit`nmac3`","BBHpnToolkit`nmac4`","BBHpnToolkit`nmac5`"}];
   NmAcflow::usage = 
 	"NmAcflow numerically implements Hamiltonian flow by flowing along the 
             five actions by appropriate flow amounts dictated by frequency"

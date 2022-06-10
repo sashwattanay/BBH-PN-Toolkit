@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
-BeginPackage["pkg`AAflow`", 
-  {"pkg`freq`", "pkg`action1`","pkg`action2`","pkg`action3`","pkg`action4`","pkg`action5`"}];
+BeginPackage["BBHpnToolkit`AAflow`", 
+  {"BBHpnToolkit`freq`", "BBHpnToolkit`action1`","BBHpnToolkit`action2`","BBHpnToolkit`action3`","BBHpnToolkit`action4`","BBHpnToolkit`action5`"}];
   Acflow::usage = 
 	"Acflow implements Hamiltonian flow by flowing along the five actions by appropriate flow amounts dictated by frequency"
 

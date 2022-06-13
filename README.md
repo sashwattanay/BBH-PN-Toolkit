@@ -25,16 +25,23 @@ You can install EccentricIMR by downloading a zip file.
 - There is a directory 'BBHpnToolkit' inside 'BBH-PN-Toolkit'.
 - Move the 'BBHpnToolkit' directory into your Mathematica applications directory
 
-Linux:
-   - for all users (requires root priviledges): /usr/share/Mathematica/Applications/
-   - for one user: $HOME/.Mathematica/Applications/
+
+LINUX: 
+
+for all users (requires root priviledges): /usr/share/Mathematica/Applications/
+
+for one user: $HOME/.Mathematica/Applications/
    
-Mac OS:
-   - for all users (requires root priviledges): /Library/Mathematica/Applications/
-   - for one user: /Users/<user>/Library/Mathematica/Applications/
+MAC OS: 
+
+for all users (requires root priviledges): /Library/Mathematica/Applications/
+
+for one user: /Users/<user>/Library/Mathematica/Applications/
   
-Windows:
-   - for all users: C:\Program Files\Wolfram Research\Mathematica\<version>\AddOns\Applications\
-   - for one user: C:\Users\<user>\AppData\Roaming\Mathematica\Applications\
+WINDOWS: 
+   
+for all users: C:\Program Files\Wolfram Research\Mathematica\<version>\AddOns\Applications\
+   
+for one user: C:\Users\<user>\AppData\Roaming\Mathematica\Applications\
   
 - Now watch this YouTube video which shows how to install the package (to be added)

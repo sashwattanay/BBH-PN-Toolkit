@@ -28,9 +28,11 @@ You can install EccentricIMR by downloading a zip file.
 Linux:
    - for all users (requires root priviledges): /usr/share/Mathematica/Applications/
    - for one user: $HOME/.Mathematica/Applications/
+   
 Mac OS:
    - for all users (requires root priviledges): /Library/Mathematica/Applications/
    - for one user: /Users/<user>/Library/Mathematica/Applications/
+  
 MSWindows:
    - for all users: C:\Program Files\Wolfram Research\Mathematica\<version>\AddOns\Applications\
    - for one user: C:\Users\<user>\AppData\Roaming\Mathematica\Applications\

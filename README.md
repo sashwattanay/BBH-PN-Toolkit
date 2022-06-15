@@ -10,7 +10,7 @@ This Mathematica package does the following:
 
 2. implements the action-angle based closed-form solution for spinning BBHs (based on https://arxiv.org/abs/2110.15351 and https://arxiv.org/abs/2012.06586).
 
-For a pedagogical introduction to the above solutions of the BBH system, see the lecture notes at https://arxiv.org/abs/2206.05799.
+For a pedagogical introduction to the above solutions of the BBH system, see the lecture notes at https://arxiv.org/abs/2206.05799 or https://github.com/sashwattanay/lectures_integrability_action-angles_PN_BBH/blob/gh-action-result/pdflatex/lecture_notes/main.pdf (latest version).
 
 3. solves the above system numerically (via numerical integration of Hamilton's equations)
 

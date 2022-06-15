@@ -2,11 +2,15 @@
 
 ## About
 
+See this YouTube video (https://youtu.be/aoiCk5TtmvE) for a quick introduction to the package and how to use it.
+
 This Mathematica package does the following:
 
 1. implements closed-form solution for spinning binary black holes (BBHs) via directly integrating the Hamilton's equations (based on https://arxiv.org/abs/1908.02927).
 
 2. implements the action-angle based closed-form solution for spinning BBHs (based on https://arxiv.org/abs/2110.15351 and https://arxiv.org/abs/2012.06586).
+
+For a pedagogical introduction to the above solutions of the BBH system, see the lecture notes at https://arxiv.org/abs/2206.05799.
 
 3. solves the above system numerically (via numerical integration of Hamilton's equations)
 

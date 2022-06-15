@@ -1,8 +1,8 @@
 # BBH-PN-Toolkit
 
-## About
-
 See this YouTube video (https://youtu.be/aoiCk5TtmvE) for a quick introduction to the package and how to use it.
+
+## About
 
 This Mathematica package does the following:
 

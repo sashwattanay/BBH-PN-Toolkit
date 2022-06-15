@@ -48,4 +48,4 @@ for all users: C:\Program Files\Wolfram Research\Mathematica\<version>\AddOns\Ap
    
 for one user: C:\Users\<user>\AppData\Roaming\Mathematica\Applications\
   
-- Now watch this YouTube video (https://youtu.be/aoiCk5TtmvE) which shows how to install the package.
+- Now watch this YouTube video (https://youtu.be/aoiCk5TtmvE) which shows how to use the package.

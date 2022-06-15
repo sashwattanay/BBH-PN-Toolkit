@@ -223,23 +223,7 @@ Return[ \[Mu](Inverse[EulMat] . Inverse[JtoLframeEulMat[t]] . {px,py,pz}) ]; ];
                 Return[finalvec];
 
 
-(*Return[{Plot[Rsol[\[Lambda]][[1]],{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)},PlotStyle->Red],
-Plot[Lsol[\[Lambda]][[3]],{\[Lambda],0,3000(*\[Lambda]max-\[Lambda]0*)},PlotStyle->Red],
-Plot[S1sol[\[Lambda]][[1]],{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)},PlotStyle->Red],
-Plot[S2sol[\[Lambda]][[1]],{\[Lambda],3000,3200(*\[Lambda]max-\[Lambda]0*)},PlotStyle->Red]}]*)
 
-(*spmg=40;
-
-            Show[Graphics3D[{{Blue,Arrowheads[0.03],Arrow[{{0,0,0},Rinit}]},
-{Green,Arrowheads[0.03],Arrow[{{0,0,0},Pinit}]},{Brown,Arrowheads[0.03],Arrow[{{0,0,0}, spmg S1in}]},
-{Magenta,Arrowheads[0.03],Arrow[{{0,0,0}, spmg S2in}]}}],
-ParametricPlot3D[{Rsol[t][[1]],Rsol[t][[2]],Rsol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
-PlotStyle->Blue],ParametricPlot3D[{Psol[t][[1]],Psol[t][[2]],Psol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
-PlotStyle->Green],
-ParametricPlot3D[spmg {S1sol[t][[1]],S1sol[t][[2]],S1sol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
-PlotStyle->Brown],
-ParametricPlot3D[ spmg {S2sol[t][[1]],S2sol[t][[2]],S2sol[t][[3]]},{t,0,\[Lambda]max-\[Lambda]0},
-PlotStyle->Magenta],Boxed->False]*)
                  ]
   End[]
 

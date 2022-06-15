@@ -53,8 +53,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"-", "a"}], ",", 
      RowBox[{"-", "b"}]}], "]"}], ",", "PD", ",", 
-   RowBox[{"FlatMetric", "\[Rule]", "True"}]}], 
-  "]"}], "\[IndentingNewLine]", 
+   RowBox[{"FlatMetric", "\[Rule]", "True"}]}], "]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"PrintAs", "[", "epsilon\[Delta]", "]"}], "^=", 
@@ -137,7 +136,6 @@ Cell[BoxData[{
         RowBox[{
          RowBox[{"{", "}"}], ",", 
          RowBox[{"GenSet", "[", "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
-      
       RowBox[{
        RowBox[{"TensorID", "[", 
         RowBox[{"v", "[", "___", "]"}], "]"}], "^:=", 
@@ -152,8 +150,7 @@ Cell[BoxData[{
     RowBox[{"{", "S", "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"DefConstantSymbol", "[", "G", "]"}], 
-  ";"}], "\[IndentingNewLine]", 
+  RowBox[{"DefConstantSymbol", "[", "G", "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"DefConstantSymbol", "[", "\[Epsilon]", "]"}], 
   ";"}], "\[IndentingNewLine]", 
@@ -201,7 +198,6 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"2015", ",", "8", ",", "23"}], "}"}]}],
   SequenceForm["Package xAct`xPerm`  version ", "1.2.3", ", ", {2015, 8, 23}],
-  
   Editable->False]], "Print",
  CellChangeTimes->{3.804866453125359*^9, 3.80486651116765*^9, 
   3.8048666064449377`*^9, 3.804866696372394*^9, 3.804866737975494*^9, 
@@ -287,7 +283,6 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"2018", ",", "2", ",", "28"}], "}"}]}],
   SequenceForm["Package xAct`xPert`  version ", "1.0.6", ", ", {2018, 2, 28}],
-  
   Editable->False]], "Print",
  CellChangeTimes->{3.804866453125359*^9, 3.80486651116765*^9, 
   3.8048666064449377`*^9, 3.804866696372394*^9, 3.804866737975494*^9, 
@@ -510,7 +505,6 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"2021", ",", "2", ",", "28"}], "}"}]}],
   SequenceForm["Package xAct`xCoba`  version ", "0.8.6", ", ", {2021, 2, 28}],
-  
   Editable->False]], "Print",
  CellChangeTimes->{3.804866453125359*^9, 3.80486651116765*^9, 
   3.8048666064449377`*^9, 3.804866696372394*^9, 3.804866737975494*^9, 
@@ -849,7 +843,6 @@ Cell[BoxData[
   RowBox[{"\<\"** \"\>", "\[InvisibleSpace]", "DefTensor", 
    "\[InvisibleSpace]", "\<\": Defining \"\>", 
    "\[InvisibleSpace]", "\<\"antisymmetric tensor \"\>", "\[InvisibleSpace]", 
-   
    RowBox[{"epsilon\[Delta]", "[", 
     RowBox[{
      RowBox[{"-", "a"}], ",", 
@@ -1076,8 +1069,7 @@ Cell[BoxData[{
    RowBox[{
     RowBox[{
      RowBox[{"PB", "[", 
-      RowBox[{"#", ",", "b"}], "]"}], "&"}], "/@", "a"}]}], " ", 
-  ";"}], "\n", 
+      RowBox[{"#", ",", "b"}], "]"}], "&"}], "/@", "a"}]}], " ", ";"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"PB", "[", 
@@ -1228,8 +1220,7 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"PSVarQ", "[", "x_", "]"}], ":=", 
    RowBox[{"MemberQ", "[", 
-    RowBox[{"PSVariables", ",", "x"}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+    RowBox[{"PSVariables", ",", "x"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"PSVarQ", "[", 
@@ -1295,8 +1286,7 @@ Cell[BoxData[{
    3.769275034822994*^9, 3.769275054225766*^9}, {3.769363575034971*^9, 
    3.769363579578529*^9}, 3.769363671620778*^9, 3.7693639024737673`*^9, 
    3.7693641622272778`*^9, 3.769365496718666*^9},
- CellLabel->
-  "In[14]:=",ExpressionUUID->"56cb2c25-faa7-49c8-8b89-ff7c6cb473de"]
+ CellLabel->"In[14]:=",ExpressionUUID->"56cb2c25-faa7-49c8-8b89-ff7c6cb473de"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1733,8 +1723,7 @@ Cell[BoxData[{
    3.7696255715486917`*^9}, {3.769625688919808*^9, 3.7696256971248503`*^9}, {
    3.771687444355153*^9, 3.7716875232911882`*^9}, {3.804866788399372*^9, 
    3.804866788816841*^9}, {3.808787757054935*^9, 3.808787762918494*^9}},
- CellLabel->
-  "In[37]:=",ExpressionUUID->"8507980f-a607-43f5-8804-1b1d366b2e66"]
+ CellLabel->"In[37]:=",ExpressionUUID->"8507980f-a607-43f5-8804-1b1d366b2e66"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2314,17 +2303,16 @@ Cell[BoxData[""], "Input",
 Cell[BoxData[""], "Input",
  CellChangeTimes->{{3.771688722598524*^9, 3.77168873096307*^9}, 
    3.7716887932710533`*^9},
- CellLabel->
-  "In[69]:=",ExpressionUUID->"e20fea28-e010-4524-8ee0-f50b74a2b615"]
+ CellLabel->"In[69]:=",ExpressionUUID->"e20fea28-e010-4524-8ee0-f50b74a2b615"]
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{1728, 987},
+WindowSize->{949, 461},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 CellContext->Notebook,
-Magnification:>1.5 Inherited,
-FrontEndVersion->"13.0 for Mac OS X ARM (64-bit) (February 4, 2022)",
+Magnification->1.25,
+FrontEndVersion->"12.2 for Microsoft Windows (64-bit) (December 12, 2020)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -2337,8 +2325,9 @@ StyleDefinitions->Notebook[{
       TextData[{
         CounterBox["Subsection"], ".", 
         CounterBox["Subsubsection"], "."}]]]}, Visible -> False, 
-  FrontEndVersion -> "13.0 for Mac OS X ARM (64-bit) (February 4, 2022)", 
-  StyleDefinitions -> "PrivateStylesheetFormatting.nb"],
+  FrontEndVersion -> 
+  "12.2 for Microsoft Windows (64-bit) (December 12, 2020)", StyleDefinitions -> 
+  "PrivateStylesheetFormatting.nb"],
 ExpressionUUID->"5839af96-4987-4f1c-ae58-cfc0224d8fd7"
 ]
 

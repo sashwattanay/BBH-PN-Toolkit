@@ -18,7 +18,7 @@ This Mathematica package does the following:
 
 ## Installation
 
-You can install EccentricIMR by downloading a zip file.
+You can install BBHpnToolkit by downloading a zip file.
 
 - Download the zip file (https://github.com/sashwattanay/BBH-PN-Toolkit/archive/refs/heads/master.zip).
 - Extract the zip file

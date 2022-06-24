@@ -1,7 +1,9 @@
 # BBH-PN-Toolkit
 
 Authors: 
+
 Rickmoy Samanta (rickmoysamanta@gmail.com)
+
 Sashwat Tanay (sashwattanay@gmail.com, [website](https://sashwattanay.github.io/sashwat_site/))
 
 See this YouTube video (https://youtu.be/aoiCk5TtmvE) for a quick introduction to the package and how to use it.

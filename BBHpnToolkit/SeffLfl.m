@@ -7,7 +7,7 @@ BeginPackage[ "BBHpnToolkit`SeffLfl`"]
 
   Begin[ "`Private`"]
 
-   SeffLflow[G, m1_, m2_, Rin_,Pin_,S1in_, S2in_,\[Lambda]max_,\[Epsilon]_]:=Module[{c,\[Mu],M,Q1,Q2,Linit,Jinit,RN,PN,S1N,S2N,LN,JN,
+   SeffLflow[G_, m1_, m2_, Rin_,Pin_,S1in_, S2in_,\[Lambda]max_,\[Epsilon]_]:=Module[{c,\[Mu],M,Q1,Q2,Linit,Jinit,RN,PN,S1N,S2N,LN,JN,
    SeffLN,Rn,Pn,S1n,S2n,Ln,Jn,SeffL,sign,f0,\[Phi]L0,acos, \[Phi]R0, \[Phi]P0,X1,Y1,R1init,P1init,R1n,P1n,R1N,P1N,\[Phi]S10,\[Phi]R10, \[Phi]P10,X2,Y2,
    R2init,P2init,R2N,P2N,\[Phi]S20,\[Phi]R20, \[Phi]P20, En,H,\[CapitalDelta]1,\[CapitalDelta]2,\[CapitalDelta]21,\[CapitalSigma]1,\[CapitalSigma]2,a3,a2,a1,a0,A,p,q,f1,f2,f3,k,\[Alpha],B1,B2,D1,D2,\[Alpha]1sq,\[Alpha]2sq,
    B1s1,B2s1,D1s1,D2s1,\[Alpha]1s1sq,\[Alpha]2s1sq,B1s2,B2s2,D1s2,D2s2,\[Alpha]1s2sq,\[Alpha]2s2sq,f,\[Phi]L,\[Phi]R,\[Phi]P,Emat,Rfinal,Pfinal,Lfinal,\[Phi]S1,\[Phi]R1,

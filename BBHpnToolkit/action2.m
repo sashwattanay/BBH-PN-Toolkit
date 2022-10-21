@@ -11,7 +11,7 @@ BeginPackage["BBHpnToolkit`action2`",
                Module[{fvec},
                 
 
-                fvec=Re[Jzflow[m1,m2,Rinit,Pinit,S1init,S2init,\[Lambda]mx,\[Epsilon]]]//N;
+                fvec=Re[Jzflow[G,m1,m2,Rinit,Pinit,S1init,S2init,\[Lambda]mx,\[Epsilon]]]//N;
                 
                 Return[fvec];
                 

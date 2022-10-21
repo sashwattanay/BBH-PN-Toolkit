@@ -11,7 +11,7 @@ BeginPackage["BBHpnToolkit`nmac2`",
                Module[{fvec},
                 
 
-                fvec=Re[NmJzflow[m1,m2,Rinit,Pinit,S1init,S2init,\[Lambda]mx,\[Epsilon]]]//N;
+                fvec=Re[NmJzflow[G,m1,m2,Rinit,Pinit,S1init,S2init,\[Lambda]mx,\[Epsilon]]]//N;
                 
                 Return[fvec];
                 

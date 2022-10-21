@@ -7,8 +7,8 @@ BeginPackage[ "BBHpnToolkit`Hfl`"]
 
   Begin[ "`Private`"]
 
-   Hflow[m1_, m2_, Rinit_,Pinit_,S1in_, S2in_,\[Lambda]max_,\[Epsilon]_]:=
-               Module[{G,c, precisionGoal,kGoldstein, M, \[Mu], \[Nu],spinScalingFactor, S1init, S2init,S1ninit,S2ninit,
+   Hflow[G_,m1_, m2_, Rinit_,Pinit_,S1in_, S2in_,\[Lambda]max_,\[Epsilon]_]:=
+               Module[{c, precisionGoal,kGoldstein, M, \[Mu], \[Nu],spinScalingFactor, S1init, S2init,S1ninit,S2ninit,
                rinit,pinit,Linit,Lninit,\[Delta]1,\[Delta]2,rminit, SeffdLinit, Hinit,m1N,m2N, sign, Jvec, sphericalAngles,
                vectorComponents, \[Xi]2, \[Xi]1, EulMat, R, Rx, Ry, Rz, P, Px, Py,Pz,S1, S1x, S1y, S1z, S2, S2x, S2y, S2z,
                S1n, S2n, Seff, r, p, L, Ln, Jn, SeffL, \[Sigma]1, \[Sigma]2,A, rtsol, cubiceq, x2, x3,x1,x, er2, et2, ec,\[Beta]et, ar2, n2,
@@ -21,7 +21,7 @@ BeginPackage[ "BBHpnToolkit`Hfl`"]
                Psol,t0, t,finalvec,\[Lambda]0},
 
 
-G=1 ;   c = 1/Sqrt[\[Epsilon]]   ;   \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
+  c = 1/Sqrt[\[Epsilon]]   ;   \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
 
 precisionGoal=Automatic (* 50*)  ;
  kGoldstein = G M \[Mu] ;  M = m1+m2 ;  \[Mu] = m1 m2/M ; \[Nu]=\[Mu]/M; spinScalingFactor = G M \[Mu] ;

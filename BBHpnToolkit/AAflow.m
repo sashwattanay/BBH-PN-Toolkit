@@ -7,7 +7,7 @@ BeginPackage["BBHpnToolkit`AAflow`",
 
               Begin[ "`Private`"]
 
-               Acflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]mx_,\[Epsilon]_]:=
+               Acflow[G_,m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]mx_,\[Epsilon]_]:=
                Module[{j1out,j2out,j3out,j4out,j5out,fr, frq},
                 
                        fr= frequency[m1,m2,Rinit,Pinit,S1init,S2init,\[Epsilon]];

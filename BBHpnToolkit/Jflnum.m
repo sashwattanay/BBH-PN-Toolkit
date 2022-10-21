@@ -7,11 +7,11 @@ BeginPackage[ "BBHpnToolkit`Jflnum`"]
 
               Begin[ "`Private`"]
 
-               NmJflow[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Epsilon]_]:=
-               Module[{G,c,Linit,Jinit,JN, R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
+               NmJflow[G_,m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]max_,\[Epsilon]_]:=
+               Module[{c,Linit,Jinit,JN, R,P,S1,S2,eqa,eqb,eqc,eqd,system0,initCond,
                         sol,\[Lambda],finalvec,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z,\[Lambda]0},
                 
-                 G=1 ;    c = 1/Sqrt[\[Epsilon]]   ;    \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
+                    c = 1/Sqrt[\[Epsilon]]   ;    \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
                  Linit=Cross[Rinit, Pinit];
                  Jinit=Linit+S1init+S2init;(* J  stays conserved *)
                  JN=Norm[Jinit];

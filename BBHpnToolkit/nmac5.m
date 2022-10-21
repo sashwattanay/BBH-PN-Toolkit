@@ -7,7 +7,7 @@ BeginPackage["BBHpnToolkit`nmac5`",
 
               Begin[ "`Private`"]
 
-               NmJac5[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]mx_,\[Epsilon]_]:=
+               NmJac5[G_,m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]mx_,\[Epsilon]_]:=
                Module[{fvec,Jout,Jzout,Lout,Hout,Seffout,fr, jcm},
                 
                        fr= frequency[m1,m2,Rinit,Pinit,S1init,S2init,\[Epsilon]];

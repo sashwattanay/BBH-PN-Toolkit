@@ -7,7 +7,7 @@ BeginPackage["BBHpnToolkit`nmac2`",
 
               Begin[ "`Private`"]
 
-               NmJac2[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]mx_,\[Epsilon]_]:=
+               NmJac2[G_,m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]mx_,\[Epsilon]_]:=
                Module[{fvec},
                 
 

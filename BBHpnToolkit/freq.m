@@ -7,11 +7,11 @@ BeginPackage[ "BBHpnToolkit`freq`"]
 
   Begin[ "`Private`"]
 
-    frequency[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Epsilon]_]:=Module[{G,c,M, \[Mu], \[Nu], Q1,Q2,Linit,Jinit,RN,PN,Rn,
+    frequency[G_,m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Epsilon]_]:=Module[{c,M, \[Mu], \[Nu], Q1,Q2,Linit,Jinit,RN,PN,Rn,
     Pn,S1N,S2N,S1n,S2n,LN,Ln,JN,Jn,Jz,Seffinit,SeffLN,SeffL,En,H,\[CapitalDelta]1,\[CapitalDelta]2,\[CapitalDelta]21,\[CapitalSigma]1,\[CapitalSigma]2,a3,a2,a1,a0,A,p,q,f1,f2,f3,k,B1,B2,
     D1,D2,\[Alpha]1sq,\[Alpha]2sq,B1s1,B2s1,D1s1,D2s1,\[Alpha]1s1sq,\[Alpha]2s1sq,B1s2,B2s2,D1s2,D2s2,\[Alpha]1s2sq,\[Alpha]2s2sq,\[CapitalDelta]\[Lambda]1,\[CapitalDelta]\[Lambda]2,\[CapitalDelta]\[Lambda]3,\[CapitalDelta]\[Lambda]4,\[CapitalDelta]\[Lambda]5,
     CC,J1,J2,J3,J4,J5,Jac,JCmat,JCmatN,Rx,Ry,Rz,Px,Py,Pz,S1x,S1y,S1z,S2x,S2y,S2z,CJmat,freqN,SFlist},
-G=1;     c = 1/Sqrt[\[Epsilon]]   ;
+    c = 1/Sqrt[\[Epsilon]]   ;
 M= m1+m2;
 \[Mu] =m1  m2 /(m1+m2);
  \[Nu]= \[Mu]/M;

@@ -7,7 +7,7 @@ BeginPackage["BBHpnToolkit`action5`",
 
               Begin[ "`Private`"]
 
-               Jac5[m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]mx_,\[Epsilon]_]:=
+               Jac5[G_,m1_, m2_, Rinit_,Pinit_,S1init_, S2init_,\[Lambda]mx_,\[Epsilon]_]:=
                Module[{Jout,Jzout,Lout,Hout,Seffout,fr, jcm},
                 
                        fr= frequency[m1,m2,Rinit,Pinit,S1init,S2init,\[Epsilon]];

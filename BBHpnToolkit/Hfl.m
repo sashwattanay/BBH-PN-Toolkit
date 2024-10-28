@@ -1,3 +1,5 @@
+(* ::Package:: *)
+
 BeginPackage[ "BBHpnToolkit`Hfl`"]
 
      Hflow::usage = 
@@ -17,8 +19,10 @@ BeginPackage[ "BBHpnToolkit`Hfl`"]
                s2vecPolarAngle,S1sol,S2sol,LsolJframe,JtoLframeEulMat,EulMatJtoL,rLframe,r\[Phi]0,
                vN,e\[Theta],\[Beta]e\[Theta],v\[Theta],e\[Theta]prime,\[Beta]e\[Theta]prime,v\[Theta]prime,solPiece1r,solPiece2r,solPiece3r,solPiece4r,
                r\[Phi]solLframe,rvecAzimuthAngleLframe,rMagnitude,Rsol,pdn,pMagnitude,\[Phi]OffsetPvecNIFTemp,
-               \[Phi]OffsetPvecNIF,pvecAzimuthAngleLframe,Psol,t,finalvec,pdninit,periodpdn,findpdnsign,first0},
+               \[Phi]OffsetPvecNIF,pvecAzimuthAngleLframe,Psol,t,finalvec,pdninit,periodpdn,findpdnsign,first0,
+               k,e\[Phi],\[Beta]e\[Phi],v\[Phi],\[Beta]e,v2},
 
+(*Official corrceted 1.5PN Hflow with only 1.5 terms, nothing added*)
 c = 1/Sqrt[\[Epsilon]];   
 \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
 precisionGoal = Automatic (* 50*)  ;
@@ -39,6 +43,7 @@ l = Norm[lvec] ;
 dotlseff = lvec . (\[Delta]1  s1vec  +  \[Delta]2 s2vec);
 \[CapitalEpsilon] = -h;
 h = p^2/2 - 1/r + \[Epsilon]/r^3 dotlseff + \[Epsilon](1/8 (3\[Nu]-1)p^4+1/(2r^2)-1/(2r) ((3+\[Nu])p^2+\[Nu] Dot[rvec/r,pvec]^2))  ; 
+
 
 (*Prepare  a sign function for later use in solution*)
 
@@ -84,23 +89,23 @@ x1 = x/.rtsol[[3]];
 eN = Sqrt[1-2 l^2 \[CapitalEpsilon]];
 \[Beta]eN = eN/(1+(1-eN^2)^(1/2));
 arN = 1/(2 \[CapitalEpsilon]);
-nN = (2\[CapitalEpsilon])^(3/2)/(G M);
+nN = (2\[CapitalEpsilon])^(3/2);
 
 (*qkp 1.5PN*)
 ar = 1/(2\[CapitalEpsilon])+ (dotlseff \[Epsilon])/l^2+\[Epsilon]/4 (-7+\[Nu]);
 er = (1 - 2 l^2 \[CapitalEpsilon] + \[Epsilon](-((8 dotlseff \[CapitalEpsilon])/l^2) + 8dotlseff \[CapitalEpsilon]^2) + \[Epsilon](12 \[CapitalEpsilon]-15 l^2 \[CapitalEpsilon]^2-2 \[CapitalEpsilon] \[Nu]+5 l^2 \[CapitalEpsilon]^2 \[Nu]))^(1/2);
 et = (1 - 2 l^2 \[CapitalEpsilon] - (4 dotlseff \[Epsilon] \[CapitalEpsilon])/l^2 + \[Epsilon](l^2 \[CapitalEpsilon]^2 (17 - 7\[Nu]) + 4\[CapitalEpsilon](\[Nu]-1)))^(1/2);
 n = ((2\[CapitalEpsilon])^(3/2)+ \[Epsilon] \[CapitalEpsilon]^(5/2) (-(15/Sqrt[2])+\[Nu]/Sqrt[2]));
-nunscaled = ((2\[CapitalEpsilon])^(3/2)+ \[Epsilon] \[CapitalEpsilon]^(5/2) (-(15/Sqrt[2])+\[Nu]/Sqrt[2]))/(G M);  (*unscaled n*)
+nunscaled = ((2\[CapitalEpsilon])^(3/2)+ \[Epsilon] \[CapitalEpsilon]^(5/2) (-(15/Sqrt[2])+\[Nu]/Sqrt[2]))/(G M);  
 
-v = u + 2ArcTan[ (\[Beta]eN Sin[u])/(1-\[Beta]eN Cos[u])];            (* PN extension of v= 2 ArcTan[Sqrt[(1+e)/(1-e)] Tan[u/2]] but without the ArcTan issues*)
+v = u + 2ArcTan[ (\[Beta]eN Sin[u])/(1-\[Beta]eN Cos[u])];   (* PN extension of v= 2 ArcTan[Sqrt[(1+e)/(1-e)] Tan[u/2]] but without the ArcTan issues*)
 
 drMagnitudedtInit = Pinit . Rinit(2+\[Epsilon] (-1+3 \[Nu]) Norm[Pinit]^2-(2 \[Epsilon] (3+2 \[Nu]))/Norm[Rinit]);
 tempU0 = ArcCos[Cosu2/.(Solve[r == ar (1-er Cosu2),Cosu2]//N)[[1]]];
 If[drMagnitudedtInit  > 0,
 u0 = tempU0;,
 u0 = -tempU0;];
-t0 =- (t0/.Solve[ nunscaled t0 == u0 - et Sin[u0], t0] [[1]]);          (*This is t0 in n(t-t0) = u - et sin[u]*)
+t0 = -(t0/.Solve[ nunscaled t0 == u0 - et Sin[u0], t0] [[1]]);          (*This is t0 in n(t-t0) = u - et sin[u]*)
 
 findu[t_]:=FindRoot[nunscaled (t-t0) == u - et Sin[u],{u, nunscaled (t-t0), nunscaled (t-t0) - 2 \[Pi], nunscaled (t-t0)+2 \[Pi]}, PrecisionGoal->precisionGoal]; (*u is 1.5PN*)
 
@@ -180,16 +185,12 @@ Return[EulMatJtoL];];
 rLframe = JtoLframeEulMat[0] . EulMat . rvec ;
 r\[Phi]0 = sphericalAngles[rLframe][[2]] ;
 
-eN = Sqrt[1-2 l^2 \[CapitalEpsilon]];
-\[Beta]eN = eN/(1+(1-eN^2)^(1/2));
-vN = u + 2ArcTan[ (\[Beta]eN Sin[u])/(1-\[Beta]eN Cos[u])];
-
-e\[Theta]prime = (1 - 2 l^2 \[CapitalEpsilon] + \[Epsilon](-((12 dotlseff \[CapitalEpsilon])/l^2) + 16 dotlseff \[CapitalEpsilon]^2) + \[Epsilon](-4 (-3+\[Delta]1+\[Delta]2)\[CapitalEpsilon] + l^2 \[CapitalEpsilon]^2 (-15+8(\[Delta]1+\[Delta]2)+\[Nu])))^(1/2);
-\[Beta]e\[Theta]prime = e\[Theta]prime/(1+(1-e\[Theta]prime^2)^(1/2));
-v\[Theta]prime = u + 2ArcTan[ (\[Beta]e\[Theta]prime Sin[u])/(1-\[Beta]e\[Theta]prime Cos[u])];
+(*For l/r^2 : need to go to 1.5PN qkp*)
+v2 = u + 2ArcTan[ (\[Beta]e Sin[u])/(1-\[Beta]e Cos[u])]; 
+\[Beta]e = er/(1+(1-er^2)^(1/2));
 
 solPiece1r = (2/(A(x1-x2))^(1/2)) (( \[Beta]1 EllipticPi[(x2-x3)/(\[Alpha]1+x2),JacobiAmplitude[\[CapitalUpsilon],\[Beta]^2],\[Beta]^2])/(\[Alpha]1+x2)+( \[Beta]2 EllipticPi[(x2-x3)/(\[Alpha]2+x2),JacobiAmplitude[\[CapitalUpsilon],\[Beta]^2],\[Beta]^2])/(\[Alpha]2+x2));
-solPiece2r = v\[Theta]prime - (vN \[Epsilon])/l^4 (3 dotlseff+l^2 (-3 + \[Delta]1 + \[Delta]2 + l^2 \[CapitalEpsilon] + h l^2 (1-3\[Nu]) - 3l^2 \[CapitalEpsilon] \[Nu]));
+solPiece2r = -l \[Epsilon] (4+\[Delta]1+\[Delta]2-2\[Nu]) (v+eN Sin[v])/l^3 + -\[Epsilon] l \[CapitalEpsilon](\[Minus]1+3\[Nu]) v/(arN^2 nN Sqrt[1-eN^2]) + l (-(((-1+er et)v2)/(1-er^2)^(3/2))+((er-et) Sin[u])/((-1+er) (1+er) (-1+er Cos[u])))/(ar^2 n);
 solPiece3r = solPiece1r + solPiece2r;
 solPiece4r = r\[Phi]0 - (solPiece3r/.u->u0);
 r\[Phi]solLframe = solPiece3r + solPiece4r;
@@ -235,4 +236,3 @@ Return[ \[Mu](Inverse[EulMat] . Inverse[JtoLframeEulMat[t]] . {px,py,pz}) ]; ];
   EndPackage[]
   
   
-

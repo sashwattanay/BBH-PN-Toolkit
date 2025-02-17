@@ -20,14 +20,16 @@ BeginPackage[ "BBHpnToolkit`Hfl`"]
                vN,e\[Theta],\[Beta]e\[Theta],v\[Theta],e\[Theta]prime,\[Beta]e\[Theta]prime,v\[Theta]prime,solPiece1r,solPiece2r,solPiece3r,solPiece4r,
                r\[Phi]solLframe,rvecAzimuthAngleLframe,rMagnitude,Rsol,pdn,pMagnitude,\[Phi]OffsetPvecNIFTemp,
                \[Phi]OffsetPvecNIF,pvecAzimuthAngleLframe,Psol,t,finalvec,pdninit,periodpdn,findpdnsign,first0,
-               k,e\[Phi],\[Beta]e\[Phi],v\[Phi],\[Beta]e,v2},
+               k,e\[Phi],\[Beta]e\[Phi],v\[Phi],\[Beta]e,v2,solr,A0,A1,B0,B1,C0,C1,D1,solrr,rext,distances,closestIndices,solr1,solr2,solr3,
+               artilde,ertilde,rMagnitudetilde,pdntilde,pMagnitudetilde,\[Phi]OffsetPvecNIFTemptilde,\[Phi]OffsetPvecNIFtilde,
+               pvecAzimuthAngleLframetilde},
 
-(*Official corrceted 1.5PN Hflow with only 1.5 terms, nothing added*)
 c = 1/Sqrt[\[Epsilon]];   
 \[Lambda]0=0; (*set initial time to 0 such that \[Lambda]max is the flow amount*) 
 precisionGoal = Automatic (* 50*)  ;
 M = m1+m2 ;  \[Mu] = m1 m2/M ; \[Nu]=\[Mu]/M;
 s1vec = S1in/(\[Mu] G M);
+
 s2vec = S2in/(\[Mu] G M);
 (*These spin bers (times spinSuppressFac) entered by user are unscaled quantities. But s1 and s2 are scaled (reduced) spins*)
 s1 = Norm[s1vec];
@@ -203,28 +205,41 @@ Rsol[t_]:=Module[{rx,ry,rz},
 Return[ G M(Inverse[EulMat] . Inverse[JtoLframeEulMat[t]] . {rx,ry,rz}) ]; ];
 
 (* P solution*)
-pdn[t_] :=  ((-2\[CapitalEpsilon] + \[Epsilon](1- 3 \[Nu])\[CapitalEpsilon]^2) + (2(1 - \[Epsilon] (4-\[Nu])\[CapitalEpsilon]))/rMagnitude[t] + (-l^2 + \[Epsilon](6+\[Nu]))/rMagnitude[t]^2 + (-\[Epsilon] \[Nu] (l^2+ 2dotlseff/\[Nu]) )/rMagnitude[t]^3  )^(1/2) ;
 
 pdninit = rvec . pvec/r; periodpdn = \[Pi]/nunscaled;
-first0 = t0; (*Have to define first0 otherwise it does not work, i dont know why*)
 
-If [first0 <=0, first0 = first0 + \[Pi]/nunscaled, first0=first0];
-findpdnsign[t_]:=  QuotientRemainder[QuotientRemainder[t-first0,periodpdn][[1]],2][[2]];
+solr = Solve[Sqrt[(A0+\[Epsilon] A1)rr^3+(B0+\[Epsilon] B1)rr^2+(C0+\[Epsilon] C1)rr+(\[Epsilon] D1)]==0,rr];
+A0=-2 \[CapitalEpsilon];A1=\[CapitalEpsilon]^2-3 \[CapitalEpsilon]^2 \[Nu];B0=2;B1=-8 \[CapitalEpsilon]+2 \[CapitalEpsilon] \[Nu];C0=-l^2;C1=6+\[Nu];D1=-2 dotlseff-l^2 \[Nu];
+solrr=rr/.solr//Re; rext = {ar(1-er),ar(1+er)};
 
-pMagnitude[t_]:=( pdn[t]^2+l^2/rMagnitude[t]^2)^(1/2) ;
-\[Phi]OffsetPvecNIFTemp[t_] :=  ArcSin[l/(rMagnitude[t]pMagnitude[t])] ;
+distances=Table[EuclideanDistance[rext[[i]],solrr[[j]]],{i,Length[rext]},{j,Length[solrr]}];
+closestIndices=Table[First@First@Position[distances[[i]],Min[distances[[i]]]],{i,Length[rext]}];
+solr1= solrr[[closestIndices[[1]]]];solr2= solrr[[closestIndices[[2]]]];
 
-\[Phi]OffsetPvecNIF[t_]:=Module[{tempVar} ,
+artilde=(solr1+solr2)/2;
+ertilde=(-solr1+solr2)/(solr1+solr2);
+rMagnitudetilde[t_] := artilde (1-ertilde Cos[u])/.findu[t];
+
+pdntilde[t_] :=  ((-2\[CapitalEpsilon] + \[Epsilon](1- 3 \[Nu])\[CapitalEpsilon]^2) + (2(1 - \[Epsilon] (4-\[Nu])\[CapitalEpsilon]))/rMagnitudetilde[t] + (-l^2 + \[Epsilon](6+\[Nu]))/rMagnitudetilde[t]^2 + (-\[Epsilon] \[Nu] (l^2+ 2dotlseff/\[Nu]) )/rMagnitudetilde[t]^3  )^(1/2) ; 
+pdn[t_] :=  ((-2\[CapitalEpsilon] + \[Epsilon](1- 3 \[Nu])\[CapitalEpsilon]^2) + (2(1 - \[Epsilon] (4-\[Nu])\[CapitalEpsilon]))/rMagnitude[t] + (-l^2 + \[Epsilon](6+\[Nu]))/rMagnitude[t]^2 + (-\[Epsilon] \[Nu] (l^2+ 2dotlseff/\[Nu]) )/rMagnitude[t]^3  )^(1/2) ; 
+
+first0 = t0; (*Have to define first0, can not use only t0 otherwise it does not work, i dont know why*)
+If [first0 <=0, first0 = first0 + \[Pi]/nunscaled, first0=first0]; (*take positive zero between [-\[Pi]/n , +\[Pi]/n]*)
+findpdnsign[t_]:=  QuotientRemainder[QuotientRemainder[t-first0,periodpdn][[1]],2][[2]]; (*Calculate complete half periods*)
+
+pMagnitudetilde[t_]:=( pdntilde[t]^2+l^2/rMagnitudetilde[t]^2)^(1/2) ;
+\[Phi]OffsetPvecNIFTemptilde[t_] :=  ArcSin[l/(rMagnitudetilde[t]pMagnitudetilde[t])] ;
+
+\[Phi]OffsetPvecNIFtilde[t_]:=Module[{tempVar} ,
 If[(pdninit > 0 && findpdnsign[t] == 1) || (pdninit < 0 && findpdnsign[t] == 0),
-    tempVar = \[Phi]OffsetPvecNIFTemp[t],
-    tempVar = \[Phi]OffsetPvecNIFTemp[t] + 2 (\[Pi]/2 - \[Phi]OffsetPvecNIFTemp[t]);];
+    tempVar = \[Phi]OffsetPvecNIFTemptilde[t],
+    tempVar = \[Phi]OffsetPvecNIFTemptilde[t] + 2 (\[Pi]/2 - \[Phi]OffsetPvecNIFTemptilde[t]);];
 Return[tempVar];];
 
-pvecAzimuthAngleLframe[t_]:= rvecAzimuthAngleLframe[t]+\[Phi]OffsetPvecNIF[t];
+pvecAzimuthAngleLframetilde[t_]:= rvecAzimuthAngleLframe[t]+\[Phi]OffsetPvecNIFtilde[t];
 Psol[t_]:=Module[{px,py,pz},
-{px,py,pz} = vectorComponents[{pMagnitude[t], \[Pi]/2,pvecAzimuthAngleLframe[t]}];
-Return[ \[Mu](Inverse[EulMat] . Inverse[JtoLframeEulMat[t]] . {px,py,pz}) ]; ];
-            
+{px,py,pz} = vectorComponents[{pMagnitudetilde[t], \[Pi]/2,pvecAzimuthAngleLframetilde[t]}];
+Return[\[Mu](Inverse[EulMat] . Inverse[JtoLframeEulMat[t]] . {px,py,pz}) ]; ];
                 finalvec=Re[{Rsol[\[Lambda]max-\[Lambda]0],Psol[\[Lambda]max-\[Lambda]0],
                 S1sol[\[Lambda]max-\[Lambda]0],S2sol[\[Lambda]max-\[Lambda]0]}]//N;
                 (*Print["The final state is"];*)

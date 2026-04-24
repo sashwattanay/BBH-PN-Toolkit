@@ -1,0 +1,1163 @@
+Solutions to second post-Newtonian dynamics of spinning and eccentric binary black holes (accompanying arxiv:2603.20031)
+Authors : Tom Colin (tom.colin@obspm.fr) and Sashwat Tanay (sashwattanay@gmail.com)
+A. README: Post-Newtonian Dynamics Code User Manual
+1. Physics Definitions
+Before configuring the code, note the underlying Hamiltonian terms: 
+Subscript[h, full] = Subscript[h, N] + Subscript[h, 1PN] + Subscript[h, so] + (Subscript[h, 2] + Subscript[h, ss])
+Subscript[h, N] = Pure Newtonian gravity
+Subscript[h, 1], Subscript[h, 2] = 1PN and 2PN purely orbital corrections
+Subscript[h, so] = 1.5PN Spin-Orbit coupling
+Subscript[h, ss] = 2PN Spin-Spin coupling
+2. Physics Models & Plotting Indices
+We can plot the phase space variable solution under various evolution schemes. Use these 7 indices in the graphing command DefPlot below in Sec. B-4 to select the evolution scheme.
+Note: All models compute non-orbit averaged dynamics, except Index 3 which computes 'Orbit-Averaged' dynamics.
+Index	Physics Model Plotted	Hamiltonian Equation	Code Routine
+1	1.5PN Spin-Orbit (Analytic)	H = Subscript[h, N] + Subscript[h, 1] + Subscript[h, so]	Hflow1List
+2	2PN Spin-Spin (Analytic)	H = Subscript[h, N] + Subscript[h, 1] + Subscript[h, so] + Subscript[h, 2] + Subscript[h, ss]	Hflow2SList
+3	2PN Spin-Spin Orbit-averaged (Analytic)	H = Subscript[h, N] + Subscript[h, 1] + Subscript[h, so] + Subscript[h, 2] + Subscript[h, ss]	Hflow2SList
+4	1.5PN Spin-Orbit (Numerical)	H = Subscript[h, N] + Subscript[h, 1] + Subscript[h, so]	ComputeNum1
+5	2PN Spin-Spin (Numerical)	H = Subscript[h, N] + Subscript[h, 1] + Subscript[h, so] + Subscript[h, 2] + Subscript[h, ss]	ComputeNum2S
+6	2PN Pure Orbital (Analytic)	H = Subscript[h, N] + Subscript[h, 1] + Subscript[h, 2] (Spins=0)	Hflow2SListFixedSpins
+7	2PN Pure Orbital (Numerical)	H = Subscript[h, N] + Subscript[h, 1] + Subscript[h, 2] (Spins=0)	ComputeNumOrb
+
+
+3. Initialization
+Go to Sec. B-0 below and set things up.
+Orb (for analytical solutions) and NumOrb (for numerical solutions): Toggles the purely orbital corrections (Subscript[h, 1] and Subscript[h, 2]). Default is "Yes". If set to "No", the purely orbital parts of the Hamiltonian (without spins) Subscript[h, 1] and Subscript[h, 2] are ignored, and equations of motion change accordingly. 
+QKP: This is valid only for "Index 1" solution mentioned in the above table. It decides which baseline solution for |R| = |Subscript[R, 1]-Subscript[R, 2] | (orbital separation vector norm) is to be injected for computing spin solutions; see Eq. 3.5 of https://arxiv.org/abs/1908.02927. In this paper, the Newtonian solution was injected. We have two options. Choosing "N" injects the Newtonian solution for |R| (just like https://arxiv.org/abs/1908.02927), whereas choosing "SO" injects the 1.5PN solution for |R|. Our default value is "SO".
+Torb: The rough orbital time period of the system, the approximate time in which |R| returns back to its original value.
+end[data]: Total numerical integration runtime and plot display time.
+userData: Your initial data formatted as {Subscript[m, 1], Subscript[m, 2], R, P, Subscript[S, 1]/\[Epsilon]^(1/2), Subscript[S, 2]/\[Epsilon]^(1/2), \[Epsilon] = 1/c^2}. Here P = Subscript[P, 1] = -Subscript[P, 2], as we are working in the centre-of-mass frame
+Constraint: Subscript[m, 1] must be strictly greater than Subscript[m, 2].
+Constants: G = 1.
+4. Setting up Plotting Parameters
+Then go to Sec. B-4-B to set the plotting parameters, which we now explain. Here we plot using the function DefPlot
+Syntax: DefPlot[data, vector_number, component_number, time_min, time_max, {plot_indices}]
+vector_number: 1 (R), 2 (L), 3 (Subscript[S, 1]), or 4 (Subscript[S, 2]).
+component_number: 1 (x-component), 2 (y-component), or 3 (z-component).
+Example: DefPlot[data, 2, 3, tmin, tmax, {2, 3, 5}] graphs the z-component of Angular Momentum overlaying Analytical, Averaged, and Numerical 2PN.
+5. Succinct Overview: How to Run the Notebook
+Set parameters up in Secs. B-0 and B-4-B (to be found below), as explained above.
+Quit the kernel and clear all memory (Evaluation --> Quit Kernel).
+Run the entire notebook (Evaluation --> Evaluate Notebook). That's it! 
+We have a summary table for the system. Sec. B-2-B-2 generates a summary table for the system with its important parameters displayed:       (a) mass ratio q              (b) angles b/w angular momenta \[Kappa]1 (L and Subscript[S, 1]), \[Kappa]2 (L and Subscript[S, 1]), \[Gamma] (Subscript[S, 1] and Subscript[S, 2])           (c) PN parameter PNa = G M/(c^2 Subscript[R, initial]), which does not take eccentricity into account                (d) PN parameter PNp = G M/(c^2 Subscript[a, N] (1-Subscript[e, N])), which takes eccentricity into account. Here M = total mass, G =1, Subscript[e, N] = Newtonian eccentricity, Subscript[a, n] = Newtonian semi major axis for the unscaled R. In this table, are also displayed       (e) dimensionless spins Subscript[\[Chi], 1] and Subscript[\[Chi], 2]             (f) Subscript[S, 1 or 2]/(\[Epsilon]^(1/2) L),        plus other QKP parameters like    scaled Hamiltonian, radial eccentricity, mean motion, orbital time period and spin-precession time period.        
+IMPORTANT: Our solutions work well when (a) both PN parameters are below sub-percent level,  (b) eccentricity is less than and away from 1,   (c)  Subscript[\[Chi], 1 or 2]  is less than and away from 1,    (d) Subscript[S, 1 or 2]/(L \[Epsilon]^(1/2))  is less than and away from 1.  (e) Scaled Hamiltonian h < 0,   (f) Subscript[\[Kappa], 1], Subscript[\[Kappa], 2], \[Gamma] are not 0 or \[Pi] radians (away from spin aligned or anti-aligned cases). The values of all these parameters are found in the so-called "summary table" discussed above.
+B. Code begins
+0. Choose Parameters
+In[1]:= Orb="Yes";
+NumOrb="Yes";
+QKP="SO";
+end[data_]:=  600Torb[data] 
+
+(* ====================*)(*INITIAL DATA INPUT*)(*Format:{m1,m2,R,P,Subscript[S, 1]/\[Epsilon]^(1/2),Subscript[S, 2]/\[Epsilon]^(1/2),\[Epsilon] = 1/c^2. Keep m1 > m2}*)(* ====================*)
+
+userData={5.5,4.,0.9 {-3,6,-2.1},-0.9 {2,1,-1},-1/2 {-2,3,-2} 1.3*3,-1/2 {-2,-3,-1} 3,0.0020};
+
+
+accuracyGoal=14;
+precisionGoal=14;
+maxSteps= Infinity;
+workingprecision =40;
+In[10]:= (*Validation:Ensure m1 is strictly greater than m2*)
+If[userData[[1]]<=userData[[2]],Print["Error: Mass m1 must be strictly greater than mass m2. Please adjust your parameters."];
+Abort[];];
+1. Analytical Solution
+A.  HN + H1PN + HSO 			(QKP  =  "N" or "SO")	&	(ORB = "Yes" or "No")
+In[11]:= (* =====================*)(*GEOMETRY& EULER MATRICES*)(* ============================*)
+sphericalAngles[V_]:=Module[{polarAngJ,azimuthAngJ},polarAngJ=ToSphericalCoordinates[Re[V]][[2]];
+azimuthAngJ=ToSphericalCoordinates[Re[V]][[3]];
+Return[{polarAngJ,azimuthAngJ}];];
+
+vectorComponents[V_,\[Theta]_,\[CurlyPhi]_]:=V*{Sin[\[Theta]]*Cos[\[CurlyPhi]],Sin[\[Theta]]*Sin[\[CurlyPhi]],Cos[\[Theta]]};
+
+computeEulerMatrix[jvec_]:=Module[{\[Theta],\[Phi],cos\[Theta],sin\[Theta],cos\[Phi],sin\[Phi]},{\[Theta],\[Phi]}=sphericalAngles[jvec]+{0,\[Pi]/2};
+cos\[Theta]=Cos[\[Theta]];sin\[Theta]=Sin[\[Theta]];
+cos\[Phi]=Cos[\[Phi]];sin\[Phi]=Sin[\[Phi]];
+N[{{cos\[Phi],sin\[Phi],0},{-sin\[Phi]*cos\[Theta],cos\[Phi]*cos\[Theta],sin\[Theta]},{sin\[Phi]*sin\[Theta],-cos\[Phi]*sin\[Theta],cos\[Theta]}}]];
+
+(* ==============================*)(*BASE QUANTITIES COMPUTATION (t=0)*)(* ========================================*)computeBaseQuantities1[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,QKP_, ORB_]:=Module[{o, c,M,\[Mu],\[Nu],rvec,pvec,r,p,SS10,s1vec,s1,SS20,s2vec,s2,lvec,l,jvec,j,EulMat,InvEulMat,\[Delta]1,\[Delta]2,seffdl,h,h0,
+\[CapitalSigma]1,\[CapitalSigma]2,A3,A2,A1,A0,x2,x3,x1,\[Beta],SqA,JtoLframeEulMat0,
+n,nunscaled,nso,nunscaledso,ar,arso,er,erso,et,etso,e\[Phi],e\[Phi]so,fP,gP,f\[Phi],g\[Phi],\[CapitalPhi],d,
+\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]e\[Phi]so,\[Beta]erso,\[Beta]e\[Phi],\[Beta]er,
+drdt0,u0testso,Absu0so,u0so,ver0so,ve\[Phi]0so,t0so,sign,cos\[Kappa]10,Int30,\[Alpha],\[CapitalUpsilon]0,
+lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,s1\[Xi]10,solPieceS110,solPieceS120,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,
+Nprec,Uprec,Tprec,Torb,freq\[Xi]1L,freqcos\[Kappa]1},c=1/Sqrt[\[Epsilon]];
+
+If[ORB=="Yes", o = 1];If[ORB=="No", o = 0];
+
+M=N[m1+m2];\[Mu]=N[m1 m2/M];\[Nu]=\[Mu]/M;
+rvec=N[R0/M];r=Norm[rvec];
+pvec=N[P0/\[Mu]];p=Norm[pvec];
+SS10=N[S10 Sqrt[\[Epsilon]]];s1vec=SS10/(\[Mu] M);s1=Norm[s1vec];
+SS20=N[S20 Sqrt[\[Epsilon]]];s2vec=SS20/(\[Mu] M);s2=Norm[s2vec];
+lvec=Cross[rvec,pvec];l=Norm[lvec];
+jvec=lvec+s1vec+s2vec;j=Norm[jvec];
+\[Delta]1=2 \[Nu] (1+3 m2/(4 m1));\[Delta]2=2 \[Nu] (1+3 m1/(4 m2));seffdl=Dot[lvec,\[Delta]1 s1vec+\[Delta]2 s2vec];
+
+h=p^2/2-1/r+ o \[Epsilon] (1/(2 r^2)+1/8 p^4 (-1+3 \[Nu])-(Dot[rvec/r,pvec]^2 \[Nu]+p^2 (3+\[Nu]))/(2 r))+(seffdl \[Epsilon])/r^3;
+h0=p^2/2-1/r;
+EulMat=computeEulerMatrix[jvec];InvEulMat=Inverse[EulMat];
+
+\[CapitalSigma]1=N[s1vec.s2vec/(s1 s2)-l/s2 (\[Delta]1-\[Delta]2)/\[Delta]2 s1vec.lvec/(l s1)];
+\[CapitalSigma]2=N[s2vec.lvec/(l s2)+(\[Delta]1 s1)/(\[Delta]2 s2) s1vec.lvec/(l s1)];
+
+A3=2 l s1 \[Delta]1 (\[Delta]2-\[Delta]1);
+A2=-(l^2 (\[Delta]1-\[Delta]2)^2+2 \[Delta]2 l \[CapitalSigma]2 s2 (\[Delta]2-\[Delta]1)+s1^2 \[Delta]1^2+2 \[Delta]1 \[Delta]2 \[CapitalSigma]1 s1 s2+\[Delta]2^2 s2^2);
+A1=(2 \[Delta]2 s2 (l \[CapitalSigma]1 (\[Delta]2-\[Delta]1)+\[CapitalSigma]2 (\[Delta]1 s1+\[Delta]2 \[CapitalSigma]1 s2)));
+A0=-s2^2 \[Delta]2^2 (\[CapitalSigma]1^2+\[CapitalSigma]2^2-1);
+{x2,x3,x1}=Sort[x/. Solve[A3 x^3+A2 x^2+A1 x+A0==0,x]];
+\[Beta]=Sqrt[(x3-x2)/(x1-x2)];
+SqA=2/Sqrt[A3 (x1-x2)];
+JtoLframeEulMat0=computeEulerMatrix[EulMat.lvec];
+
+(*1. Unconditionally compute strictly SO (1.5PN) variables for main orbit geometry*)
+nso=2 Sqrt[2] (-h)^(3/2)-o ((-h)^(3/2) h \[Epsilon] (-15+\[Nu]))/Sqrt[2];
+nunscaledso=nso/M;
+arso=-(1/(2 h))+o 1/4 \[Epsilon] ((-7+\[Nu])+(4 seffdl)/l^2);
+erso=Sqrt[1+2 h l^2+o h \[Epsilon] (2 (-6+\[Nu])+5 h l^2 (-3+\[Nu]))+(8 h (1+h l^2) seffdl \[Epsilon])/l^2];
+etso=Sqrt[1+2 h l^2+ o \[Epsilon] (4 h  (1-\[Nu])+h^2 l^2  (17-7 \[Nu]))+(4 h seffdl \[Epsilon])/l^2];
+e\[Phi]so=Sqrt[1+2 h l^2+ o \[Epsilon] (-12 h+h^2 l^2 (-15+\[Nu]))+\[Epsilon] 4 (\[Delta]1+\[Delta]2)(1+2 h l^2)h +4\[Epsilon] (3+4 h l^2)seffdl h /l^2];
+
+(*2. Conditionally compute the variables strictly for use INSIDE Upsilon (Int30)*)
+n=If[QKP=="N",2 Sqrt[2] (-h0)^(3/2),nso];
+nunscaled=n/M;
+ar=If[QKP=="N",-(1/(2 h0)),arso];
+er=If[QKP=="N",Sqrt[1+2 h0 l^2],erso];
+et=If[QKP=="N",Sqrt[1+2 h0 l^2],etso];
+e\[Phi]=If[QKP=="N",Sqrt[1+2 h0 l^2],e\[Phi]so];
+fP=0;gP=0;f\[Phi]=0;g\[Phi]=0;
+\[CapitalPhi]=1+o \[Epsilon] 3 /l^2- \[Epsilon] /l^4(l^2 \[Delta]1+l^2 \[Delta]2+3 seffdl);
+
+d=((2+er^2-3 er et)/(2 ar^3 (1-er^2)^(5/2)))^(-1/3);
+\[Alpha]1l=-((\[Delta]2 (j+l+s2 \[CapitalSigma]2))/(s1 (\[Delta]1-\[Delta]2)));
+\[Alpha]2l=-((\[Delta]2 (-j+l+s2 \[CapitalSigma]2))/(s1 (\[Delta]1-\[Delta]2)));
+\[Beta]1l=-(\[Delta]2/(2 s1 (\[Delta]1-\[Delta]2))) (l^2 \[Delta]1+j^2 \[Delta]2+s1 (\[Delta]1-\[Delta]2) (s1+s2 \[CapitalSigma]1)+l s2 \[Delta]1 \[CapitalSigma]2+j (l (\[Delta]1+\[Delta]2)+s2 \[Delta]2 \[CapitalSigma]2));
+\[Beta]2l=-(\[Delta]2/(2 s1 (\[Delta]1-\[Delta]2))) (l^2 \[Delta]1+j^2 \[Delta]2+s1 (\[Delta]1-\[Delta]2) (s1+s2 \[CapitalSigma]1)+l s2 \[Delta]1 \[CapitalSigma]2-j (l (\[Delta]1+\[Delta]2)+s2 \[Delta]2 \[CapitalSigma]2));
+\[Alpha]1s1=\[Delta]2 (-j+s1+s2 \[CapitalSigma]1)/(l \[Delta]1);
+\[Alpha]2s1=\[Delta]2 (j+s1+s2 \[CapitalSigma]1)/(l \[Delta]1);
+\[Beta]1s1=-1/(2 l \[Delta]1) \[Delta]2 (l^2 \[Delta]1+(s1 (\[Delta]1-\[Delta]2)+j \[Delta]2) (-j+s1+s2 \[CapitalSigma]1)+l s2 \[Delta]1 \[CapitalSigma]2);
+\[Beta]2s1=1/(2 l \[Delta]1) \[Delta]2 (-l^2 \[Delta]1+(-s1 \[Delta]1+(j+s1) \[Delta]2) (j+s1+s2 \[CapitalSigma]1)-l s2 \[Delta]1 \[CapitalSigma]2);
+drdt0=Sign[1/(8 r^4) pvec.rvec (-o 4 r^2 \[Epsilon] (6+4 \[Nu])+r^3 (8+o 4 p^2 \[Epsilon] (-1+3 \[Nu])))];
+
+(* =================*)(*3. Initial parameters*)(* ==================*)
+\[Beta]e\[Phi]so=e\[Phi]so/(1+Sqrt[1-e\[Phi]so^2]);
+\[Beta]erso=erso/(1+Sqrt[1-erso^2]);
+u0testso=ArcCos[Clip[(r/arso-1)/(-erso),{-1,1}]];
+Absu0so=u/. FindRoot[r==arso (1-erso Cos[u]),{u,u0testso}];
+u0so=drdt0*Absu0so;
+ver0so=u0so+2 ArcTan[(\[Beta]erso Sin[u0so])/(1-\[Beta]erso Cos[u0so])];
+ve\[Phi]0so=u0so+2 ArcTan[(\[Beta]e\[Phi]so Sin[u0so])/(1-\[Beta]e\[Phi]so Cos[u0so])];
+t0so=-(u0so-etso Sin[u0so])/nunscaledso;
+
+\[Beta]e\[Phi]=e\[Phi]/(1+Sqrt[1-e\[Phi]^2]);
+\[Beta]er=er/(1+Sqrt[1-er^2]);
+sign=If[Dot[lvec,Cross[s1vec,s2vec]]>0,1,-1];
+cos\[Kappa]10=Dot[lvec,s1vec]/(l s1);
+
+Int30=(1/(2 ar^3 n))*(((2+er^2-3 er et) ver0so)/(1-er^2)^(5/2)+((-er+et) Sin[u0so])/((-1+er^2) (-1+er Cos[u0so])^2)+((-3 er+et+2 er^2 et) Sin[u0so])/((-1+er^2)^2 (-1+er Cos[u0so])));
+
+\[Alpha]=sign*SqA*EllipticF[ArcSin[Sqrt[(cos\[Kappa]10-x2)/(x3-x2)]],\[Beta]^2]-(\[Epsilon]*Int30);
+\[CapitalUpsilon]0=1/SqA*(\[Alpha]+\[Epsilon]*Int30);
+lvecJframe0=EulMat.lvec;
+l\[Xi]10=sphericalAngles[lvecJframe0][[2]]+\[Pi]/2;
+solPieceL10=SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]1l+x2)
+-\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]2l+x2));
+solPieceL20=l\[Xi]10-solPieceL10;
+
+s1vecJframe0=EulMat.s1vec;
+s1\[Xi]10=sphericalAngles[s1vecJframe0][[2]]+\[Pi]/2;
+solPieceS110=SqA (\[Beta]1s1 EllipticPi[(x2-x3)/(\[Alpha]1s1+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]1s1+x2)
+-\[Beta]2s1 EllipticPi[(x2-x3)/(\[Alpha]2s1+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]2s1+x2)
++j \[Delta]2 \[CapitalUpsilon]0);
+solPieceS120=s1\[Xi]10-solPieceS110;
+
+r0Lframe=JtoLframeEulMat0.EulMat.rvec;
+r\[Phi]0=sphericalAngles[r0Lframe][[2]];
+solPieceR10=SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]1l+x2)
++\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]2l+x2));
+solPieceR20=\[CapitalPhi] ve\[Phi]0so;
+
+Nprec=Hypergeometric2F1[1/2,1/2,1,\[Beta]^2] (2 ar^3 n (1-er^2)^(5/2))/(\[Epsilon] Sqrt[A3 (x1-x2)] (2+er^2-3 et er));
+Uprec=2 \[Pi] Nprec;
+Tprec=Uprec/n M;
+Torb=2 \[Pi]/nunscaled;
+freq\[Xi]1L=(\[Epsilon] ((\[Beta]1l EllipticPi[(x2-x3)/(x2+\[Alpha]1l),\[Beta]^2])/(x2+\[Alpha]1l)-(\[Beta]2l EllipticPi[(x2-x3)/(x2+\[Alpha]2l),\[Beta]^2])/(x2+\[Alpha]2l)))/(d^3 M EllipticK[\[Beta]^2]);
+freqcos\[Kappa]1=nunscaled/Nprec;
+
+Return[N[{c,M,\[Mu],\[Nu],rvec,pvec,r,p,SS10,s1vec,s1,SS20,s2vec,s2,lvec,l,jvec,j,EulMat,InvEulMat,\[Delta]1,\[Delta]2,seffdl,h,h0,\[CapitalSigma]1,\[CapitalSigma]2,A3,A2,A1,A0,x2,x3,x1,\[Beta],SqA,JtoLframeEulMat0,n,nunscaled,nso,nunscaledso,ar,arso,er,erso,et,etso,e\[Phi],e\[Phi]so,fP,gP,f\[Phi],g\[Phi],\[CapitalPhi],d,\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]e\[Phi]so,\[Beta]erso,\[Beta]e\[Phi],\[Beta]er,drdt0,t0so,sign,cos\[Kappa]10,Int30,\[Alpha],\[CapitalUpsilon]0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,s1\[Xi]10,solPieceS110,solPieceS120,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,Nprec,Uprec,Tprec,Torb,freq\[Xi]1L,freqcos\[Kappa]1}]];];
+
+
+(* =================================================================*)
+(*TIME PROPAGATION MODULE*)
+(* =================================================================*)
+Hflow1List[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,QKP_,ORB_,tList_]:=Module[{pi,c,M,\[Mu],\[Nu],rvec,pvec,r,p,SS10,s1vec,s1,SS20,s2vec,s2,lvec,l,jvec,j,EulMat,InvEulMat,\[Delta]1,\[Delta]2,seffdl,h,h0,
+\[CapitalSigma]1,\[CapitalSigma]2,A3,A2,A1,A0,x2,x3,x1,\[Beta],SqA,
+n,nunscaled,nso,nunscaledso,ar,arso,er,erso,et,etso,e\[Phi],e\[Phi]so,fP,gP,f\[Phi],g\[Phi],\[CapitalPhi],d,
+\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]e\[Phi]so,\[Beta]erso,\[Beta]e\[Phi],\[Beta]er,
+drdt0,t0so,sign,cos\[Kappa]10,Int30,\[Alpha],\[CapitalUpsilon]0,
+JtoLframeEulMat0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,s1\[Xi]10,solPieceS110,solPieceS120,
+r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,
+Nprec,Uprec,Tprec,Torb,freq\[Xi]1L,freqcos\[Kappa]1,computeForTime},
+pi=3.141592653589793`;
+{c,M,\[Mu],\[Nu],rvec,pvec,r,p,SS10,s1vec,s1,SS20,s2vec,s2,lvec,l,jvec,j,EulMat,InvEulMat,\[Delta]1,\[Delta]2,seffdl,h,h0,\[CapitalSigma]1,\[CapitalSigma]2,A3,A2,A1,A0,x2,x3,x1,\[Beta],SqA,JtoLframeEulMat0,n,nunscaled,nso,nunscaledso,ar,arso,er,erso,et,etso,e\[Phi],e\[Phi]so,fP,gP,f\[Phi],g\[Phi],\[CapitalPhi],d,\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]e\[Phi]so,\[Beta]erso,\[Beta]e\[Phi],\[Beta]er,drdt0,t0so,sign,cos\[Kappa]10,Int30,\[Alpha],\[CapitalUpsilon]0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,s1\[Xi]10,solPieceS110,solPieceS120,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,Nprec,Uprec,Tprec,Torb,freq\[Xi]1L,freqcos\[Kappa]1}=computeBaseQuantities1[m1,m2,R0,P0,S10,S20,\[Epsilon],QKP,ORB];
+
+computeForTime[tmax_]:=Module[{
+finduso,umaxso,cosuso,sinuso,ve\[Phi]so,findu,umax,cosu,sinu,ver,Int3,\[CapitalUpsilon],JacAmp,cos\[Kappa]1,
+solPieceL1,l\[Xi]1sol,cos\[Kappa]2,lvecAzimuthAngle,lvecPolarAngle,LsolJframe,Lsol,
+solPieceS11,s1\[Xi]1sol,cos\[Gamma],s1vecAzimuthAngle,s1vecPolarAngle,S1sol,S2sol,
+JtoLframeEulMat,solPieceR1,solPieceR2,solPieceR3,solPieceR4,rvecAzimuthAngleLframe,rMagnitude,Rsol},
+
+(* ==*)(*1. Main Orbit Trajectory:ALWAYS evaluates 1.5PN parameters*)(*==*)
+finduso[t_]:=Module[{target,initialGuess},target=nunscaledso (t-t0so);
+initialGuess=target;
+FindRoot[target==u-etso Sin[u],{u,initialGuess},Method->"Newton",WorkingPrecision->MachinePrecision]];
+umaxso=u/. finduso[tmax];
+cosuso=Cos[umaxso];sinuso=Sin[umaxso];
+ve\[Phi]so=umaxso+2. ArcTan[(\[Beta]e\[Phi]so sinuso)/(1-\[Beta]e\[Phi]so cosuso)];
+
+(*==*)(*2. Isolated Upsilon Trajectory:dynamically tracks QKP choice*)(*==*)
+findu[t_]:=Module[{target,initialGuess},target=nunscaled (t-t0so);
+initialGuess=target;
+FindRoot[target==u-et Sin[u],{u,initialGuess},Method->"Newton",WorkingPrecision->MachinePrecision]];
+umax=u/. findu[tmax];
+cosu=Cos[umax];sinu=Sin[umax];
+ver=umax+2. ArcTan[(\[Beta]er sinu)/(1-\[Beta]er cosu)];
+
+(*Int3 is evaluated STRICTLY with the Newtonian QKP if needed*)Int3=(1./(2. ar^3. n))*(((2.+er^2.-3. er et) ver)/(1.-er^2.)^(5./2.)+((-er+et) sinu)/((-1.+er^2.) (-1.+er cosu)^2.)+((-3. er+et+2. er^2. et) sinu)/((-1.+er^2.)^2. (-1.+er cosu)));
+\[CapitalUpsilon]=1/SqA (\[Alpha]+\[Epsilon] Int3);
+JacAmp=JacobiAmplitude[\[CapitalUpsilon],\[Beta]^2];
+cos\[Kappa]1=x2+(x3-x2) JacobiSN[\[CapitalUpsilon],\[Beta]^2]^2;
+
+(*==*3. SOLUTION FOR VECTOR L==*)
+solPieceL1=SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),JacAmp,\[Beta]^2]/(\[Alpha]1l+x2)
+-\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),JacAmp,\[Beta]^2]/(\[Alpha]2l+x2));
+l\[Xi]1sol=solPieceL1+solPieceL20;
+cos\[Kappa]2=\[CapitalSigma]2-\[Delta]1 s1/(\[Delta]2 s2) cos\[Kappa]1;
+lvecAzimuthAngle=-pi/2.+l\[Xi]1sol;
+lvecPolarAngle=ArcCos[(l^2+l s1 cos\[Kappa]1+l s2 cos\[Kappa]2)/(l j)];
+LsolJframe=\[Mu] M vectorComponents[l,lvecPolarAngle,lvecAzimuthAngle];
+Lsol=(InvEulMat.LsolJframe);
+
+(*==SOLUTION FOR VECTOR S1==*)
+solPieceS11=SqA (\[Beta]1s1 EllipticPi[(x2-x3)/(\[Alpha]1s1+x2),JacAmp,\[Beta]^2]/(\[Alpha]1s1+x2)
+-\[Beta]2s1 EllipticPi[(x2-x3)/(\[Alpha]2s1+x2),JacAmp,\[Beta]^2]/(\[Alpha]2s1+x2)
++j \[Delta]2 \[CapitalUpsilon]);
+s1\[Xi]1sol=solPieceS11+solPieceS120;
+cos\[Gamma]=\[CapitalSigma]1-l (\[Delta]2-\[Delta]1)/(\[Delta]2 s2) cos\[Kappa]1;
+s1vecAzimuthAngle=-pi/2.+s1\[Xi]1sol;
+s1vecPolarAngle=ArcCos[(s1^2.+l s1 cos\[Kappa]1+s1 s2 cos\[Gamma])/(s1 j)];
+S1sol=\[Mu] M (InvEulMat.vectorComponents[s1,s1vecPolarAngle,s1vecAzimuthAngle]);
+
+(* =====SOLUTION FOR VECTOR S2=====*)
+S2sol=(jvec*\[Mu]*M)-Lsol-S1sol;
+
+(* =====SOLUTION FOR VECTOR R=====*)
+JtoLframeEulMat=computeEulerMatrix[LsolJframe];
+solPieceR1=SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),JacAmp,\[Beta]^2]/(\[Alpha]1l+x2)
++\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),JacAmp,\[Beta]^2]/(\[Alpha]2l+x2));
+solPieceR2=\[CapitalPhi] ve\[Phi]so;
+solPieceR3=solPieceR1+solPieceR2;
+solPieceR4=r\[Phi]0-(solPieceR10+solPieceR20);
+rvecAzimuthAngleLframe=solPieceR3+solPieceR4;
+
+(*Physical Radius physically constrained to 1.5PN*)
+rMagnitude=arso (1-erso Cos[umaxso]);
+
+Rsol=M (InvEulMat.Inverse[JtoLframeEulMat].vectorComponents[rMagnitude,pi/2.,rvecAzimuthAngleLframe]);
+{(*1*)Rsol,(*2*)Lsol,(*3*)S1sol,(*4*)S2sol,(*5*)Tprec,(*6*)Torb,(*7*)rvecAzimuthAngleLframe,(*8*)Transpose[JtoLframeEulMat],(*9*)vectorComponents[rMagnitude,pi/2.,rvecAzimuthAngleLframe]}];
+Map[computeForTime,tList]];
+
+(*EXECUTION WRAPPERS*)
+DataAn1[QKP_,ORB_,t_,data_]:=Block[{rvecAzimuthAngleLframe},Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+Hflow1List[m1,m2,R0,P0,S10,S20,\[Epsilon],QKP, ORB,t]]]
+
+An1[QKP_, ORB_,t_]:=Association[#:>DataAn1[QKP,ORB,t,#]&/@Keys[Inputs]]
+B.  HN + H1PN + HSO + H2PN + HSS  	(AVG = "Yes" or "No")	&	(ORB = "Yes" or "No")
+In[18]:= (*==*)(*GEOMETRY & EULER MATRICES*)(*==*)
+sphericalAngles[V_]:=Module[{polarAngJ,azimuthAngJ},polarAngJ=ToSphericalCoordinates[Re[V]][[2]];
+azimuthAngJ=ToSphericalCoordinates[Re[V]][[3]];
+Return[{polarAngJ,azimuthAngJ}];];
+
+vectorComponents[V_,\[Theta]_,\[CurlyPhi]_]:=V*{Sin[\[Theta]]*Cos[\[CurlyPhi]],Sin[\[Theta]]*Sin[\[CurlyPhi]],Cos[\[Theta]]};
+
+computeEulerMatrix[jvec_]:=Module[{\[Theta],\[Phi],cos\[Theta],sin\[Theta],cos\[Phi],sin\[Phi]},{\[Theta],\[Phi]}=sphericalAngles[jvec]+{0,\[Pi]/2};
+cos\[Theta]=Cos[\[Theta]];sin\[Theta]=Sin[\[Theta]];
+cos\[Phi]=Cos[\[Phi]];sin\[Phi]=Sin[\[Phi]];
+N[{{cos\[Phi],sin\[Phi],0},{-sin\[Phi]*cos\[Theta],cos\[Phi]*cos\[Theta],sin\[Theta]},{sin\[Phi]*sin\[Theta],-cos\[Phi]*sin\[Theta],cos\[Theta]}}]];
+
+(* =================================================================*)
+(*BASE QUANTITIES COMPUTATION (t=0)*)
+(* =================================================================*)
+
+computeBaseQuantities2S[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,AVG_, ORB_]:=Module[{
+o,c,M,\[Mu],\[Nu],\[Delta],\[CapitalDelta],\[Sigma]1,\[Sigma]2,\[Delta]1,\[Delta]2,
+rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,lvec,l,jvec,j,EulMat,InvEulMat,
+\[Lambda],lseff,mathcalSvec,mathcalS2,h,\[CapitalSigma]1,\[CapitalSigma]2,s1vecLframe0,s2vecLframe0,\[Phi]s1,\[Phi]s2,s1p,s2p,a,b,\[Phi]s,sp2,\[Delta]l20,ltilde2,\[Delta]l2avg,
+lavg,a0,e0,ar,er,et,e\[Phi],n,nunscaled,ft,gt,f\[Phi],g\[Phi],\[CapitalPhi],hr,h\[Phi]1,h\[Phi]2,d,
+A3,A2,A1,A0,A,x2,x3,x1,\[Beta],SqA,\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Beta]3l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]3s1,
+drdt0,u0test,Absu0,u0,\[Beta]e\[Phi],\[Beta]er,ve\[Phi]0,ver0,t0,cos\[Kappa]10,Int30,sign,\[Alpha],\[CapitalUpsilon]0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,
+s1\[Xi]10,solPieceS110,solPieceS120,JtoLframeEulMat0,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,
+Nprec,Uprec,Tprec,Torb,freqcos\[Kappa]1,freq\[Xi]1L},
+
+If[ORB=="Yes", o = 1];
+If[ORB=="No", o = 0];
+
+c=1/Sqrt[\[Epsilon]];
+M=N[m1+m2];\[Mu]=N[m1 m2/M];\[Nu]=\[Mu]/M;\[Delta]=(m1-m2)/M;
+rvec=N[R0/M];r=Norm[rvec];
+pvec=N[P0/\[Mu]];p=Norm[pvec];
+SS10=N[S10 Sqrt[\[Epsilon]]];s1vec=SS10/(\[Mu] M);s1=Norm[s1vec];
+SS20=N[S20 Sqrt[\[Epsilon]]];s2vec=SS20/(\[Mu] M);s2=Norm[s2vec];
+lvec=Cross[rvec,pvec];l=Norm[lvec];
+jvec=lvec+s1vec+s2vec;j=Norm[jvec];
+EulMat=computeEulerMatrix[jvec];InvEulMat=Inverse[EulMat];
+
+(*Spin-Coupling*)
+\[Delta]1=2 \[Nu] (1+3 m2/(4 m1));\[Delta]2=2 \[Nu] (1+3 m1/(4 m2));\[CapitalDelta]=\[Delta]1+\[Delta]2-\[Nu]/2;lseff=Dot[lvec,\[Delta]1 s1vec+\[Delta]2 s2vec];
+\[Sigma]1=\[Nu] (1+m2/m1);\[Sigma]2=\[Nu] (1+m1/m2);\[Lambda]=Dot[lvec,\[Sigma]1 s1vec+\[Sigma]2 s2vec]/l^2;
+mathcalSvec=(m2/M) s1vec+(m1/M) s2vec;mathcalS2=Norm[mathcalSvec]^2;
+
+(*h=hN+h1PN+hSO+h2PN+HSS*)h=p^2/2-1/r+ o \[Epsilon] (1/(2 r^2)+1/8 p^4 (-1+3 \[Nu])-(Dot[rvec/r,pvec]^2 \[Nu]+p^2 (3+\[Nu]))/(2 r))+(lseff \[Epsilon])/r^3+ o \[Epsilon]^2 (-((1+3 \[Nu])/(4 r^3))+1/16 p^6 (1-5 \[Nu]+5 \[Nu]^2)+(3 Dot[rvec/r,pvec]^2 \[Nu]+p^2 (5+8 \[Nu]))/(2 r^2)+(-3 Dot[rvec/r,pvec]^4 \[Nu]^2-2 Dot[rvec/r,pvec]^2 p^2 \[Nu]^2+p^4 (5-20 \[Nu]-3 \[Nu]^2))/(8 r))-
+((Dot[s1vec,s2vec]-3 Dot[rvec/r,s1vec] Dot[rvec/r,s2vec]) \[Epsilon] \[Nu])/r^3+(m2 (3 Dot[rvec/r,s1vec]^2-s1^2) \[Epsilon] \[Nu])/(2 m1 r^3)+(m1 (3 Dot[rvec/r,s2vec]^2-s2^2) \[Epsilon] \[Nu])/(2 m2 r^3);
+\[CapitalSigma]1=N[Dot[s1vec,s2vec]/(s1 s2)+l/s2 (m1-m2)/m1 Dot[s1vec,lvec]/(l s1)];
+\[CapitalSigma]2=N[Dot[s2vec,lvec]/(l s2)+(m2 s1)/(m1 s2) Dot[s1vec,lvec]/(l s1)];
+
+(*Cubic equation coefficients*)
+A3=(2 l (m1-m2) m2 s1)/m1^2;
+A2=-(1/m1^2) (l^2 (m1-m2)^2+m2^2 s1^2+m1^2 s2^2+2 m1 m2 s1 s2 \[CapitalSigma]1+2 l m1 (m1-m2) s2 \[CapitalSigma]2);
+A1=(2 s2 (l (m1-m2) \[CapitalSigma]1+(m2 s1+m1 s2 \[CapitalSigma]1) \[CapitalSigma]2))/m1;
+A0=s2^2 (1-\[CapitalSigma]1^2-\[CapitalSigma]2^2);
+A=9/2 (m2 (m1-m2))/M^2 (1-\[Lambda])^2 l s1;
+{x2,x3,x1}=Sort[x/. Solve[A3 x^3+A2 x^2+A1 x+A0==0,x]];
+\[Beta]=Sqrt[(x3-x2)/(x1-x2)];
+SqA=2/Sqrt[A (x1-x2)];
+JtoLframeEulMat0=computeEulerMatrix[EulMat.lvec];
+r0Lframe=JtoLframeEulMat0.EulMat.rvec;
+s1vecLframe0=JtoLframeEulMat0.EulMat.s1vec;
+s2vecLframe0=JtoLframeEulMat0.EulMat.s2vec;
+
+a0=-(1/(2 h));e0=Sqrt[1+2 h l^2];
+\[Phi]s1=ArcTan[s1vecLframe0[[1]],s1vecLframe0[[2]]];\[Phi]s2=ArcTan[s2vecLframe0[[1]],s2vecLframe0[[2]]];
+s1p=Sqrt[s1vecLframe0[[1]]^2+s1vecLframe0[[2]]^2];s2p=Sqrt[s2vecLframe0[[1]]^2+s2vecLframe0[[2]]^2];
+a=m2/M s1p;b=m1/M s2p;
+\[Phi]s=ArcTan[a Cos[\[Phi]s1]+b Cos[\[Phi]s2],a Sin[\[Phi]s1]+b Sin[\[Phi]s2]];
+sp2=a^2+b^2+2a b Cos[\[Phi]s1-\[Phi]s2];
+
+\[Delta]l20=\[Epsilon] (2 \[Nu] h Dot[s1vec,s2vec]+2/r (Dot[rvec/r,mathcalSvec])^2-Dot[pvec,mathcalSvec]^2);
+ltilde2=l^2+\[Delta]l20;
+\[Delta]l2avg=\[Epsilon] (2 \[Nu] h Dot[s1vec,s2vec]+sp2/(2 ltilde2) (1-e0^2+e0^2 Cos[2 \[Phi]s]));
+lavg=Sqrt[ltilde2-\[Delta]l2avg];
+
+(*2PN QKP Orbital Elements*)
+n=2 Sqrt[2] (-h)^(3/2)*(1+ o 1/4 \[Epsilon] h (15-\[Nu])+ o \[Epsilon]^2*(3/2 (-5+2 \[Nu]) (2 Sqrt[2] (-h)^(3/2))/lavg+1/32 (555+30 \[Nu]+11 \[Nu]^2) h^2));
+nunscaled=n/M;
+ar=-1/(2 h)*(1+o 1/2 \[Epsilon] h (7-\[Nu])- 1/2 \[Epsilon] h /lavg^2 (4 lseff-2 mathcalS2+3 sp2)+ o 1/4 \[Epsilon]^2 (2 (17-11 \[Nu]) h/lavg^2+(1+10 \[Nu]+\[Nu]^2) h^2));
+er=Sqrt[1+2 h lavg^2-o \[Epsilon] (2 (6-\[Nu]) h+ 5 (3-\[Nu]) h^2 lavg^2)+\[Epsilon] 2 h/lavg^2 (1+h lavg^2) (4 lseff-2 mathcalS2+3 sp2)+ o \[Epsilon]^2 (-2 (17-11 \[Nu]) h/lavg^2+(26+\[Nu]+\[Nu]^2) h^2+(80-55 \[Nu]+4 \[Nu]^2) h^3 lavg^2)];
+et=Sqrt[1+2 h lavg^2+o \[Epsilon] ( 4 (1-\[Nu]) h+(17-7 \[Nu]) h^2 lavg^2)+\[Epsilon] h/lavg^2 (4 lseff-2 mathcalS2+3 sp2)+ o \[Epsilon]^2 ((11 \[Nu]-17) h/lavg^2+2 (2+\[Nu]+5 \[Nu]^2) h^2+(112-47 \[Nu]+16 \[Nu]^2) h^3 lavg^2+3 (2 \[Nu]-5) (1+2 h lavg^2) (2 Sqrt[2] (-h)^(3/2))/lavg)];
+e\[Phi]=o Sqrt[1+2 h lavg^2+\[Epsilon] h (-( 12-4 \[CapitalDelta])-( 15- \[Nu]-8 \[CapitalDelta]) h lavg^2+1/lavg^2 (3+4 h lavg^2) (4 lseff-2 mathcalS2+3 sp2)-2 (1+2 h lavg^2) \[Lambda] ((2 \[CapitalDelta]-\[Nu])+3 s2/lavg \[Mu]/m2 \[CapitalSigma]2))+ \[Epsilon]^2 (1/8 (-408+232 \[Nu]+15 \[Nu]^2+64 \[CapitalDelta] (4-5/2 \[Nu]+\[CapitalDelta])) h/lavg^2-1/2 (16-88 \[Nu]-9 \[Nu]^2-12 \[CapitalDelta] (1-9 \[Nu]+14/3 \[CapitalDelta])) h^2+1/2 (160-30 \[Nu]+3 \[Nu]^2-16 \[CapitalDelta] (10+3 \[Nu]-3 \[CapitalDelta])) h^3 lavg^2)]+(1-o) Sqrt[1+2 h lavg^2+4 \[Epsilon] h (1+2 h lavg^2) \[CapitalDelta] +(h (64+224 h lavg^2+192 h^2 lavg^4) \[CapitalDelta]^2 \[Epsilon]^2)/(8 lavg^2)+\[Epsilon] (-4 h (-3-4 h lavg^2) (lseff/lavg^2+(3 sp2-2 mathcalS2)/lavg^2/4 )-2 h (1+2 h lavg^2) \[Lambda] (-\[Nu]+2 \[CapitalDelta]+3 m1 s2 \[CapitalSigma]2/lavg/M))];
+ft=- o 1/8 \[Nu] (4+\[Nu]) Sqrt[1+2 h lavg^2] (2 Sqrt[2] (-h)^(3/2))/lavg;
+gt= o 3/2 (5-2 \[Nu]) (2 Sqrt[2] (-h)^(3/2))/lavg;
+f\[Phi]=o 1/8 (\[Nu]-3 \[Nu]^2-\[CapitalDelta] (8-5 \[Nu]+2 \[CapitalDelta])) (1+2 h lavg^2)/lavg^4-(1-o)\[CapitalDelta]^2/4(1+2 h lavg^2)/lavg^4;
+g\[Phi]=-o 3 \[Nu]^2/32 (1+2 h lavg^2)^(3/2)/lavg^4;
+\[CapitalPhi]=o (1+\[Epsilon]/lavg^2*( 3-\[CapitalDelta]-3/(4 lavg^2) (4 lseff-2 mathcalS2+3 sp2)+1/2 \[Lambda] ((2 \[CapitalDelta]-\[Nu])+3 s2/lavg \[Mu]/m2 \[CapitalSigma]2)+ \[Epsilon]/(4 lavg^2) (105-30 \[Nu]-60 \[CapitalDelta]+15 \[CapitalDelta] \[Nu]-2 h lavg^2 (-15+6 \[Nu]+\[CapitalDelta] (18-13 \[Nu])))))+
+(1-o)(1+\[Epsilon]/lavg^2*( -\[CapitalDelta]-3/(4 lavg^2) (4 lseff-2 mathcalS2+3 sp2)+1/2 \[Lambda] ((2 \[CapitalDelta]-\[Nu])+3 s2/lavg \[Mu]/m2 \[CapitalSigma]2)));
+hr=-sp2/(4 lavg^2);
+h\[Phi]1=-1/2 Sqrt[1+2 h lavg^2] sp2/lavg^4;
+h\[Phi]2=-sp2/(8 lavg^4);
+d=((2+er^2-3 er et)/(2 ar^3 (1-er^2)^(5/2)))^(-1/3);
+
+(*Alphas and Betas*)
+\[Alpha]1l=m1/(m1-m2) (j+l+s2 \[CapitalSigma]2)/s1;
+\[Alpha]2l=m1/(m1-m2) (-j+l+s2 \[CapitalSigma]2)/s1;
+\[Beta]1l=(3 m1)/(4 (m1^2-m2^2)) 1/s1 (1-\[Lambda]) (m1 j^2+m2 l^2+(m1+m2) j l-(m1-m2) s1 (s1+s2 \[CapitalSigma]1)+(m2 l+m1 j) s2 \[CapitalSigma]2);
+\[Beta]2l=(3 m1)/(4 (m1^2-m2^2)) 1/s1 (1-\[Lambda]) (m1 j^2+m2 l^2-(m1+m2) j l-(m1-m2) s1 (s1+s2 \[CapitalSigma]1)+(m2 l-m1 j) s2 \[CapitalSigma]2);
+\[Beta]3l=(j \[Nu])/2;
+
+\[Alpha]1s1=m1/m2 1/l (-j+s1+s2 \[CapitalSigma]1);
+\[Alpha]2s1=m1/m2 1/l (j+s1+s2 \[CapitalSigma]1);
+\[Beta]1s1=m1/(4 m2 l) ((2 \[Delta]2-3 \[Mu]/m2 \[Lambda]) j^2-(2 \[Delta]1-3 \[Mu]/m1 \[Lambda]) l^2-\[Nu] (s1^2+s2^2+2 s1 s2 \[CapitalSigma]1+2 l s2 \[CapitalSigma]2)-3 ((2 m1-m2)/(m1+m2)) (1-\[Lambda]) j s1+3 (m1^2-m2^2)/(m1+m2)^2 (1-\[Lambda]) (s1^2+s1 s2 \[CapitalSigma]1)-3 (1-\[Lambda])/(m1+m2) (m1 j \[CapitalSigma]1+m2 l \[CapitalSigma]2) s2);
+\[Beta]2s1=m1/(4 m2 l) ((2 \[Delta]2-3 \[Mu]/m2 \[Lambda]) j^2-(2 \[Delta]1-3 \[Mu]/m1 \[Lambda]) l^2-\[Nu] (s1^2+s2^2+2 s1 s2 \[CapitalSigma]1+2 l s2 \[CapitalSigma]2)+3 ((2 m1-m2)/(m1+m2)) (1-\[Lambda]) j s1+3 (m1^2-m2^2)/(m1+m2)^2 (1-\[Lambda]) (s1^2+s1 s2 \[CapitalSigma]1)-3 (1-\[Lambda])/(m1+m2) (-m1 j \[CapitalSigma]1+m2 l \[CapitalSigma]2) s2);
+\[Beta]3s1=(\[Delta]2-3 \[Mu]/(2 m2) \[Lambda]) j;
+
+(*Compute u0, t0 and \[CapitalUpsilon]0*)
+\[Beta]e\[Phi]=e\[Phi]/(1+Sqrt[1-e\[Phi]^2]);
+\[Beta]er=er/(1+(1-er^2)^(1/2));
+drdt0=Sign[pvec.rvec/r+o \[Epsilon] (-6-4 \[Nu]+p^2 r (-1+3 \[Nu])) pvec.rvec/2 r^2+o \[Epsilon]^2 (r (40+88 \[Nu]-4 p^2 r (-5+20 \[Nu]+4 \[Nu]^2)+3 p^4 r^2 (1-5 \[Nu]+5 \[Nu]^2)) pvec.rvec-16 o \[Nu]^2 (pvec.rvec)^3)/8 r^4];
+u0test=ArcCos[Clip[(r/ar-1)/(-er),{-1,1}]];
+Absu0=u/. FindRoot[r==ar (1-er Cos[u])+\[Epsilon] hr Cos[2(u+2 ArcTan[(\[Beta]e\[Phi] Sin[u])/(1-\[Beta]e\[Phi] Cos[u])])-2*\[Phi]s],{u,u0test}];
+u0=drdt0*Absu0;
+ve\[Phi]0=u0+2 ArcTan[(\[Beta]e\[Phi] Sin[u0])/(1-\[Beta]e\[Phi] Cos[u0])];
+ver0=u0+2 ArcTan[(\[Beta]er Sin[u0])/(1-\[Beta]er Cos[u0])];
+t0=-(u0-et Sin[u0]+\[Epsilon]^2 (ft Sin[ve\[Phi]0]+gt (ve\[Phi]0-u0)))/nunscaled;
+sign=If[(M-\[Lambda] \[Mu]) Dot[lvec,Cross[s1vec,s2vec]]>0,1,-1];
+cos\[Kappa]10=Dot[lvec,s1vec]/(l s1);
+
+If[AVG=="Yes",Int30=(2+er^2-3 er et)/(2 ar^3 (1-er^2)^(5/2) n) (u0-et Sin[u0]),Int30=(1/(2 ar^3 n))*(((2+er^2-3 er et) ver0)/(1-er^2)^(5/2)+((-er+et) Sin[u0])/((-1+er^2) (-1+er Cos[u0])^2)+((-3 er+et+2 er^2 et) Sin[u0])/((-1+er^2)^2 (-1+er Cos[u0])))];
+\[Alpha]=sign*2/Sqrt[A (x1-x2)]*EllipticF[ArcSin[Sqrt[(cos\[Kappa]10-x2)/(x3-x2)]],\[Beta]^2]-(\[Epsilon]*Int30);
+\[CapitalUpsilon]0=0.5 Sqrt[A (x1-x2)] (\[Alpha]+\[Epsilon] Int30);
+
+(*SolPieces mappings for L,S1,R*)
+lvecJframe0=EulMat.lvec;
+l\[Xi]10=sphericalAngles[lvecJframe0][[2]]+\[Pi]/2;
+solPieceL10=SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]1l+x2)-\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]2l+x2)+\[Beta]3l \[CapitalUpsilon]0);
+solPieceL20=l\[Xi]10-solPieceL10;
+
+s1vecJframe0=EulMat.s1vec;
+s1\[Xi]10=sphericalAngles[s1vecJframe0][[2]]+\[Pi]/2;
+solPieceS110=SqA (\[Beta]1s1 EllipticPi[(x2-x3)/(\[Alpha]1s1+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]1s1+x2)-\[Beta]2s1 EllipticPi[(x2-x3)/(\[Alpha]2s1+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]2s1+x2)+\[Beta]3s1 \[CapitalUpsilon]0);
+solPieceS120=s1\[Xi]10-solPieceS110;
+
+r0Lframe=JtoLframeEulMat0.EulMat.rvec;
+r\[Phi]0=sphericalAngles[r0Lframe][[2]];
+solPieceR10=SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]1l+x2)+\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]2l+x2));
+solPieceR20=\[CapitalPhi] ve\[Phi]0+\[Epsilon]^2 (f\[Phi] Sin[2 ve\[Phi]0]+g\[Phi] Sin[3 ve\[Phi]0])+\[Epsilon] (h\[Phi]1 Sin[ve\[Phi]0-2 \[Phi]s]+h\[Phi]2 Sin[2 ve\[Phi]0-2 \[Phi]s]);
+
+(*Frequencies*)
+Nprec=Hypergeometric2F1[1/2,1/2,1,\[Beta]^2] (2 ar^3 n (1-er^2)^(5/2))/(\[Epsilon] Sqrt[A (x1-x2)] (2+er^2-3 et er));
+Uprec=2 \[Pi] Nprec;
+Tprec=Uprec/n M;
+Torb=2 \[Pi]/nunscaled;
+freq\[Xi]1L=(\[Epsilon] ((\[Beta]1l EllipticPi[(x2-x3)/(x2+\[Alpha]1l),\[Beta]^2])/(x2+\[Alpha]1l)-(\[Beta]2l EllipticPi[(x2-x3)/(x2+\[Alpha]2l),\[Beta]^2])/(x2+\[Alpha]2l)+\[Beta]3l EllipticK[\[Beta]^2]))/(d^3 M EllipticK[\[Beta]^2]);
+freqcos\[Kappa]1=nunscaled/Nprec;
+Return[N[{c,M,\[Mu],\[Nu],rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,lvec,l,jvec,j,\[Sigma]1,\[Sigma]2,\[Lambda],\[Delta]1,\[Delta]2,\[Delta],\[CapitalDelta],lseff,mathcalS2,h,\[CapitalSigma]1,\[CapitalSigma]2,s1vecLframe0,s2vecLframe0,\[Delta]l20,ltilde2,\[Delta]l2avg,lavg,a0,e0,\[Phi]s,sp2,ar,er,et,e\[Phi],n,nunscaled,ft,gt,f\[Phi],g\[Phi],\[CapitalPhi],hr,h\[Phi]1,h\[Phi]2,d,A3,A2,A1,A0,A,x2,x3,x1,\[Beta],SqA,\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Beta]3l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]3s1,EulMat,InvEulMat,drdt0,u0test,Absu0,u0,\[Beta]e\[Phi],\[Beta]er,ve\[Phi]0,ver0,t0,cos\[Kappa]10,Int30,sign,\[Alpha],\[CapitalUpsilon]0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,s1\[Xi]10,solPieceS110,solPieceS120,JtoLframeEulMat0,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,Nprec,Uprec,Tprec,Torb,freqcos\[Kappa]1,freq\[Xi]1L}]];];
+
+
+
+
+
+(*==*)(*TIME PROPAGATION MODULE (2S)*)(*==*)
+
+Hflow2SList[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,AVG_,ORB_,tList_]:=Module[{pi,c,M,\[Mu],\[Nu],rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,lvec,l,jvec,j,\[Sigma]1,\[Sigma]2,\[Lambda],\[Delta]1,\[Delta]2,\[Delta],\[CapitalDelta],lseff,mathcalS2,h,\[CapitalSigma]1,\[CapitalSigma]2,s1vecLframe0,s2vecLframe0,\[Delta]l20,ltilde2,\[Delta]l2avg,lavg,a0,e0,spVecX,spVecY,\[Phi]s,sp2,ar,er,et,e\[Phi],n,nunscaled,ft,gt,f\[Phi],g\[Phi],\[CapitalPhi],hr,h\[Phi]1,h\[Phi]2,d,A3,A2,A1,A0,A,x2,x3,x1,\[Beta],SqA,\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Beta]3l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]3s1,EulMat,InvEulMat,drdt0,u0test,Absu0,u0,\[Beta]e\[Phi],\[Beta]er,ve\[Phi]0,ver0,t0,cos\[Kappa]10,Int30,sign,\[Alpha],\[CapitalUpsilon]0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,s1\[Xi]10,solPieceS110,solPieceS120,JtoLframeEulMat0,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,Nprec,Uprec,Tprec,Torb,freqcos\[Kappa]1,freq\[Xi]1L,computeForTime},
+
+pi=3.141592653589793`;
+{c,M,\[Mu],\[Nu],rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,lvec,l,jvec,j,\[Sigma]1,\[Sigma]2,\[Lambda],\[Delta]1,\[Delta]2,\[Delta],\[CapitalDelta],lseff,mathcalS2,h,\[CapitalSigma]1,\[CapitalSigma]2,s1vecLframe0,s2vecLframe0,\[Delta]l20,ltilde2,\[Delta]l2avg,lavg,a0,e0,\[Phi]s,sp2,ar,er,et,e\[Phi],n,nunscaled,ft,gt,f\[Phi],g\[Phi],\[CapitalPhi],hr,h\[Phi]1,h\[Phi]2,d,A3,A2,A1,A0,A,x2,x3,x1,\[Beta],SqA,\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Beta]3l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]3s1,EulMat,InvEulMat,drdt0,u0test,Absu0,u0,\[Beta]e\[Phi],\[Beta]er,ve\[Phi]0,ver0,t0,cos\[Kappa]10,Int30,sign,\[Alpha],\[CapitalUpsilon]0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,s1\[Xi]10,solPieceS110,solPieceS120,JtoLframeEulMat0,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,Nprec,Uprec,Tprec,Torb,freqcos\[Kappa]1,freq\[Xi]1L}=computeBaseQuantities2S[m1,m2,R0,P0,S10,S20,\[Epsilon],AVG,ORB];
+
+(*Evolution for time t*)
+computeForTime[tmax_]:=Module[{o,fve\[Phi],findu,umax,cosu,sinu,ve\[Phi],ver,Int3,\[CapitalUpsilon],JacAmp,cos\[Kappa]1,
+solPieceL1,l\[Xi]1sol,cos\[Kappa]2,lvecAzimuthAngle,lvecPolarAngle,LsolJframe,Lsol,
+solPieceS11,s1\[Xi]1sol,cos\[Gamma],s1vecAzimuthAngle, s1vecPolarAngle, S1sol,S2sol,
+JtoLframeEulMat,s1vecLframe,s2vecLframe,U\[Phi]s1,U\[Phi]s2,Us1p,Us2p,Ua,Ub,U\[Phi]s,Usp2,Us1vec,Us2vec,Ulvec,Ulseff,U\[Lambda],UmathcalSvec,UmathcalS2,U\[Delta]l2avg,Ulavg,
+Un,Ununscaled,Uar,Uer,Uet,Ue\[Phi],Uft,Ugt,Uf\[Phi],Ug\[Phi],U\[CapitalPhi],Uhr,Uh\[Phi]1,Uh\[Phi]2,Uumax,Usinu,Ucosu,Uve\[Phi],
+U\[Beta]e\[Phi],Ufve\[Phi],Ufindu,U\[Beta]er,Uver,UInt3,U\[CapitalUpsilon],UJacAmp,solPieceR1,solPieceR2,solPieceR3,solPieceR4,rvecAzimuthAngleLframe,rMagnitude,Rsol},
+
+If[ORB=="Yes", o = 1];
+If[ORB=="No", o = 0];
+
+\[Beta]e\[Phi]=e\[Phi]/(1+Sqrt[1-e\[Phi]^2]);
+fve\[Phi]=u+2. ArcTan[(\[Beta]e\[Phi] Sin[u])/(1-\[Beta]e\[Phi] Cos[u])];
+
+findu[t_]:=Module[{target,initialGuess},target=nunscaled (t-t0);
+initialGuess=target;
+FindRoot[target==u-et Sin[u]+\[Epsilon]^2 (ft Sin[fve\[Phi]]+gt (fve\[Phi]-u)),{u,initialGuess},Method->"Newton",WorkingPrecision->MachinePrecision]];
+
+umax=u/. findu[tmax];
+cosu=Cos[umax];sinu=Sin[umax];
+ve\[Phi]=umax+2. ArcTan[(\[Beta]e\[Phi] sinu)/(1-\[Beta]e\[Phi] cosu)];
+ver=umax+2. ArcTan[(\[Beta]er sinu)/(1-\[Beta]er cosu)];
+
+If[AVG=="Yes",Int3=(2+er^2-3 er et)/(2 ar^3 (1-er^2)^(5/2) n) (umax-et sinu),Int3=(1./(2. ar^3. n)) (((2.+er^2.-3. er et) ver)/(1.-er^2.)^(5./2.)+((-er+et) sinu)/((-1.+er^2.) (-1.+er cosu)^2.)+((-3. er+et+2. er^2. et) sinu)/((-1.+er^2.)^2. (-1.+er cosu)))];
+\[CapitalUpsilon]=0.5 Sqrt[A (x1-x2)] (\[Alpha]+\[Epsilon] Int3);
+JacAmp=JacobiAmplitude[\[CapitalUpsilon],\[Beta]^2];
+cos\[Kappa]1=x2+(x3-x2) JacobiSN[\[CapitalUpsilon],\[Beta]^2]^2;
+
+(*L Vector Evolution*)
+solPieceL1=SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),JacAmp,\[Beta]^2]/(\[Alpha]1l+x2)
+-\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),JacAmp,\[Beta]^2]/(\[Alpha]2l+x2)
++\[Beta]3l \[CapitalUpsilon]);
+l\[Xi]1sol=solPieceL1+solPieceL20;
+cos\[Kappa]2=\[CapitalSigma]2-m2 s1/(m1 s2) cos\[Kappa]1;
+lvecAzimuthAngle=-pi/2.+l\[Xi]1sol;
+lvecPolarAngle=ArcCos[(l^2+l s1 cos\[Kappa]1+l s2 cos\[Kappa]2)/(l j)];
+LsolJframe=\[Mu] M vectorComponents[l,lvecPolarAngle,lvecAzimuthAngle];
+Lsol=(InvEulMat.LsolJframe);
+
+(*S1 Vector Evolution*)
+solPieceS11=SqA (\[Beta]1s1 EllipticPi[(x2-x3)/(\[Alpha]1s1+x2),JacAmp,\[Beta]^2]/(\[Alpha]1s1+x2)
+-\[Beta]2s1 EllipticPi[(x2-x3)/(\[Alpha]2s1+x2),JacAmp,\[Beta]^2]/(\[Alpha]2s1+x2)
++\[Beta]3s1 \[CapitalUpsilon]);
+s1\[Xi]1sol=solPieceS11+solPieceS120;
+cos\[Gamma]=\[CapitalSigma]1-l (m1-m2)/(m1 s2) cos\[Kappa]1;
+s1vecAzimuthAngle=-pi/2.+s1\[Xi]1sol;
+s1vecPolarAngle=ArcCos[(s1^2.+l s1 cos\[Kappa]1+s1 s2 cos\[Gamma])/(s1 j)];
+S1sol=\[Mu] M (InvEulMat.vectorComponents[s1,s1vecPolarAngle,s1vecAzimuthAngle]);
+
+(*S2 Vector Evolution*)
+S2sol=(jvec*\[Mu]*M)-Lsol-S1sol;
+
+(*Dynamic "U"pdating for R Vector*)
+JtoLframeEulMat=computeEulerMatrix[LsolJframe];
+s1vecLframe=JtoLframeEulMat.EulMat.S1sol/(\[Mu] M);
+s2vecLframe=JtoLframeEulMat.EulMat.S2sol/(\[Mu] M);
+
+a0=-(1/(2 h));e0=Sqrt[1+2 h l^2];
+U\[Phi]s1=ArcTan[s1vecLframe[[1]],s1vecLframe[[2]]];
+U\[Phi]s2=ArcTan[s2vecLframe[[1]],s2vecLframe[[2]]];
+Us1p=Sqrt[s1vecLframe[[1]]^2+s1vecLframe[[2]]^2];
+Us2p=Sqrt[s2vecLframe[[1]]^2+s2vecLframe[[2]]^2];
+Ua=m2/M Us1p;Ub=m1/M Us2p;
+U\[Phi]s=ArcTan[Ua Cos[U\[Phi]s1]+Ub Cos[U\[Phi]s2],Ua Sin[U\[Phi]s1]+Ub Sin[U\[Phi]s2]];
+Usp2=Ua^2+Ub^2+2Ua Ub Cos[U\[Phi]s1-U\[Phi]s2];
+
+Us1vec=S1sol/(\[Mu] M);Us2vec=S2sol/(\[Mu] M);Ulvec=Lsol/(\[Mu] M);
+Ulseff=Dot[Ulvec,\[Delta]1 Us1vec+\[Delta]2 Us2vec];
+U\[Lambda]=Dot[Ulvec,\[Sigma]1 Us1vec+\[Sigma]2 Us2vec]/Dot[Ulvec,Ulvec];
+UmathcalSvec=(m2/M) Us1vec+(m1/M) Us2vec;
+UmathcalS2=Norm[UmathcalSvec]^2;
+U\[Delta]l2avg=\[Epsilon] (2 \[Nu] h Dot[Us1vec,Us2vec]+Usp2/(2 ltilde2) (1-e0^2+e0^2 Cos[2 U\[Phi]s]));
+Ulavg=Sqrt[ltilde2-U\[Delta]l2avg];
+(*Ulavg=lavg;*)
+
+Un=2 Sqrt[2] (-h)^(3/2)*(1+ o 1/4 \[Epsilon] h (15-\[Nu])+ o \[Epsilon]^2*(3/2 (-5+2 \[Nu]) (2 Sqrt[2] (-h)^(3/2))/Ulavg+1/32 (555+30 \[Nu]+11 \[Nu]^2) h^2));
+Ununscaled=Un/M;
+Uar=-1/(2 h)*(1+o 1/2 \[Epsilon] h (7-\[Nu])- 1/2 \[Epsilon] h /Ulavg^2 (4 Ulseff-2 UmathcalS2+3 Usp2)+ o 1/4 \[Epsilon]^2 (2 (17-11 \[Nu]) h/Ulavg^2+(1+10 \[Nu]+\[Nu]^2) h^2));
+Uer=Sqrt[1+2 h Ulavg^2-o \[Epsilon] (2 (6-\[Nu]) h+ 5 (3-\[Nu]) h^2 Ulavg^2)+\[Epsilon] 2 h/Ulavg^2 (1+h Ulavg^2) (4 Ulseff-2 UmathcalS2+3 Usp2)+ o \[Epsilon]^2 (-2 (17-11 \[Nu]) h/Ulavg^2+(26+\[Nu]+\[Nu]^2) h^2+(80-55 \[Nu]+4 \[Nu]^2) h^3 Ulavg^2)];
+Uet=Sqrt[1+2 h Ulavg^2+o \[Epsilon] ( 4 (1-\[Nu]) h+(17-7 \[Nu]) h^2 Ulavg^2)+\[Epsilon] h/Ulavg^2 (4 Ulseff-2 UmathcalS2+3 Usp2)+ o \[Epsilon]^2 ((11 \[Nu]-17) h/Ulavg^2+2 (2+\[Nu]+5 \[Nu]^2) h^2+(112-47 \[Nu]+16 \[Nu]^2) h^3 Ulavg^2+3 (2 \[Nu]-5) (1+2 h Ulavg^2) (2 Sqrt[2] (-h)^(3/2))/Ulavg)];
+Ue\[Phi]=o Sqrt[1+2 h Ulavg^2+\[Epsilon] h (-( 12-4 \[CapitalDelta])-( 15- \[Nu]-8 \[CapitalDelta]) h Ulavg^2+1/Ulavg^2 (3+4 h Ulavg^2) (4 Ulseff-2 UmathcalS2+3 Usp2)-2 (1+2 h Ulavg^2) U\[Lambda] ((2 \[CapitalDelta]-\[Nu])+3 s2/Ulavg \[Mu]/m2 \[CapitalSigma]2))+ \[Epsilon]^2 (1/8 (-408+232 \[Nu]+15 \[Nu]^2+64 \[CapitalDelta] (4-5/2 \[Nu]+\[CapitalDelta])) h/Ulavg^2-1/2 (16-88 \[Nu]-9 \[Nu]^2-12 \[CapitalDelta] (1-9 \[Nu]+14/3 \[CapitalDelta])) h^2+1/2 (160-30 \[Nu]+3 \[Nu]^2-16 \[CapitalDelta] (10+3 \[Nu]-3 \[CapitalDelta])) h^3 Ulavg^2)]+(1-o) Sqrt[1+2 h Ulavg^2+4 \[Epsilon] h (1+2 h Ulavg^2) \[CapitalDelta] +(h (64+224 h Ulavg^2+192 h^2 Ulavg^4) \[CapitalDelta]^2 \[Epsilon]^2)/(8 Ulavg^2)+\[Epsilon] (-4 h (-3-4 h Ulavg^2) (Ulseff/Ulavg^2+(3 Usp2-2 UmathcalS2)/Ulavg^2/4 )-2 h (1+2 h Ulavg^2) U\[Lambda] (-\[Nu]+2 \[CapitalDelta]+3 m1 s2 \[CapitalSigma]2/Ulavg/M))];
+Uft=- o 1/8 \[Nu] (4+\[Nu]) Sqrt[1+2 h Ulavg^2] (2 Sqrt[2] (-h)^(3/2))/Ulavg;
+Ugt= o 3/2 (5-2 \[Nu]) (2 Sqrt[2] (-h)^(3/2))/Ulavg;
+Uf\[Phi]=o 1/8 (\[Nu]-3 \[Nu]^2-\[CapitalDelta] (8-5 \[Nu]+2 \[CapitalDelta])) (1+2 h Ulavg^2)/Ulavg^4-(1-o)\[CapitalDelta]^2/4(1+2 h Ulavg^2)/Ulavg^4;
+Ug\[Phi]=-o 3 \[Nu]^2/32 (1+2 h Ulavg^2)^(3/2)/Ulavg^4;
+U\[CapitalPhi]=o (1+\[Epsilon]/Ulavg^2*( 3-\[CapitalDelta]-3/(4 Ulavg^2) (4 Ulseff-2 UmathcalS2+3 Usp2)+1/2 U\[Lambda] ((2 \[CapitalDelta]-\[Nu])+3 s2/Ulavg \[Mu]/m2 \[CapitalSigma]2)+ \[Epsilon]/(4 Ulavg^2) (105-30 \[Nu]-60 \[CapitalDelta]+15 \[CapitalDelta] \[Nu]-2 h Ulavg^2 (-15+6 \[Nu]+\[CapitalDelta] (18-13 \[Nu])))))+
+(1-o)(1+\[Epsilon]/Ulavg^2*( -\[CapitalDelta]-3/(4 Ulavg^2) (4 Ulseff-2 UmathcalS2+3 Usp2)+1/2 U\[Lambda] ((2 \[CapitalDelta]-\[Nu])+ 3 s2/Ulavg \[Mu]/m2 \[CapitalSigma]2)));
+
+
+Uhr=-Usp2/(4 Ulavg^2);
+Uh\[Phi]1=-1/2 Sqrt[1+2 h Ulavg^2] Usp2/Ulavg^4;
+Uh\[Phi]2=-Usp2/(8 Ulavg^4);
+
+U\[Beta]e\[Phi]=Ue\[Phi]/(1+Sqrt[1-Ue\[Phi]^2]);
+Ufve\[Phi]=u+2. ArcTan[(U\[Beta]e\[Phi] Sin[u])/(1-U\[Beta]e\[Phi] Cos[u])];
+
+Ufindu[t_]:=Module[{target,initialGuess},target=Ununscaled (t-t0);
+initialGuess=target;
+FindRoot[target==u-Uet Sin[u]+\[Epsilon]^2 (Uft Sin[Ufve\[Phi]]+Ugt (Ufve\[Phi]-u)),{u,initialGuess},Method->"Newton",WorkingPrecision->MachinePrecision]];
+Uumax=u/. Ufindu[tmax];
+Usinu=Sin[Uumax];Ucosu=Cos[Uumax];
+Uve\[Phi]=Uumax+2. ArcTan[(U\[Beta]e\[Phi] Usinu)/(1-U\[Beta]e\[Phi] Ucosu)];
+U\[Beta]er=Uer/(1+Sqrt[1-Uer^2]);
+Uver=Uumax+2. ArcTan[(U\[Beta]er Usinu)/(1-U\[Beta]er Ucosu)];
+
+If[AVG=="Yes",UInt3=(2+Uer^2-3 Uer Uet)/(2 Uar^3 (1-Uer^2)^(5/2) Un) (Uumax-Uet Usinu),UInt3=(1./(2. Uar^3. Un)) (((2.+Uer^2.-3. Uer Uet) Uver)/(1.-Uer^2.)^(5./2.)+((-Uer+Uet) Usinu)/((-1.+Uer^2.) (-1.+Uer Ucosu)^2.)+((-3. Uer+Uet+2. Uer^2. Uet) Usinu)/((-1.+Uer^2.)^2. (-1.+Uer Ucosu)))];
+U\[CapitalUpsilon]=0.5 Sqrt[A (x1-x2)] (\[Alpha]+\[Epsilon] UInt3);
+UJacAmp=JacobiAmplitude[U\[CapitalUpsilon],\[Beta]^2];
+
+solPieceR1=  SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),UJacAmp,\[Beta]^2]/(\[Alpha]1l+x2)
++\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),UJacAmp,\[Beta]^2]/(\[Alpha]2l+x2));
+solPieceR2=U\[CapitalPhi] Uve\[Phi]+(\[Epsilon]^2 (Uf\[Phi] Sin[2 Uve\[Phi]]+Ug\[Phi] Sin[3 Uve\[Phi]])+\[Epsilon] (Uh\[Phi]1 Sin[Uve\[Phi]-2 U\[Phi]s]+Uh\[Phi]2 Sin[2 Uve\[Phi]-2 U\[Phi]s]));
+solPieceR3=solPieceR1+solPieceR2;
+solPieceR4=r\[Phi]0-(solPieceR10+solPieceR20);
+rvecAzimuthAngleLframe=solPieceR3+solPieceR4;
+(*rvecAzimuthAngleLframe=AzimuthalRvectorLframe[tmax,Num2S,data][[1]];*)
+
+rMagnitude=Uar (1-Uer Ucosu)+\[Epsilon] Uhr Cos[2 Uve\[Phi]-2 U\[Phi]s];
+
+Rsol=M (InvEulMat.Transpose[JtoLframeEulMat].vectorComponents[rMagnitude,Pi/2,rvecAzimuthAngleLframe]);
+{(*1*)Rsol,(*2*)Lsol,(*3*)S1sol,(*4*)S2sol,(*5*)Tprec,(*6*)Torb,(*7*)rvecAzimuthAngleLframe,(*8*)Transpose[JtoLframeEulMat],(*9*)vectorComponents[rMagnitude,Pi/2,rvecAzimuthAngleLframe]}];
+
+Map[computeForTime,tList]];
+
+
+C. HN + H1PN + H2PN :  Fixed Spins
+In[23]:= computeBaseQuantitiesFixedSpin[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,AVG_, ORB_]:=Module[{
+o,c,M,\[Mu],\[Nu],\[Delta],\[CapitalDelta],\[Sigma]1,\[Sigma]2,\[Delta]1,\[Delta]2,
+rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,lvec,l,jvec,j,EulMat,InvEulMat,
+\[Lambda],lseff,mathcalSvec,mathcalS2,h,\[CapitalSigma]1,\[CapitalSigma]2,s1vecLframe0,s2vecLframe0,\[Phi]s1,\[Phi]s2,s1p,s2p,a,b,\[Phi]s,sp2,\[Delta]l20,ltilde2,\[Delta]l2avg,
+lavg,a0,e0,ar,er,et,e\[Phi],n,nunscaled,ft,gt,f\[Phi],g\[Phi],\[CapitalPhi],hr,h\[Phi]1,h\[Phi]2,d,
+A3,A2,A1,A0,A,x2,x3,x1,\[Beta],SqA,\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Beta]3l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]3s1,
+drdt0,u0test,Absu0,u0,\[Beta]e\[Phi],\[Beta]er,ve\[Phi]0,ver0,t0,cos\[Kappa]10,Int30,sign,\[Alpha],\[CapitalUpsilon]0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,
+s1\[Xi]10,solPieceS110,solPieceS120,JtoLframeEulMat0,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,
+Nprec,Uprec,Tprec,Torb,freqcos\[Kappa]1,freq\[Xi]1L},
+
+If[ORB=="Yes", o = 1];
+If[ORB=="No", o = 0];
+
+c=1/Sqrt[\[Epsilon]];
+M=N[m1+m2];\[Mu]=N[m1 m2/M];\[Nu]=\[Mu]/M;\[Delta]=(m1-m2)/M;
+rvec=N[R0/M];r=Norm[rvec];
+pvec=N[P0/\[Mu]];p=Norm[pvec];
+s1vec={0.,0.,0.};
+s2vec={0.,0.,0.};
+s1=0.;
+s2=0.;
+
+lvec=Cross[rvec,pvec];l=Norm[lvec];
+
+EulMat=computeEulerMatrix[lvec];InvEulMat=Inverse[EulMat];
+
+(*h=hN+h1PN+hSO+h2PN+HSS*)
+h=p^2/2-1/r+ o \[Epsilon] (1/(2 r^2)+1/8 p^4 (-1+3 \[Nu])-(Dot[rvec/r,pvec]^2 \[Nu]+p^2 (3+\[Nu]))/(2 r))+ o \[Epsilon]^2 (-((1+3 \[Nu])/(4 r^3))+1/16 p^6 (1-5 \[Nu]+5 \[Nu]^2)+(3 Dot[rvec/r,pvec]^2 \[Nu]+p^2 (5+8 \[Nu]))/(2 r^2)+(-3 Dot[rvec/r,pvec]^4 \[Nu]^2-2 Dot[rvec/r,pvec]^2 p^2 \[Nu]^2+p^4 (5-20 \[Nu]-3 \[Nu]^2))/(8 r));
+
+r0Lframe=EulMat.rvec;
+
+
+(*2PN QKP Orbital Elements*)
+n=2 Sqrt[2] (-h)^(3/2)*(1+o 1/4 \[Epsilon] h (15-\[Nu])+o \[Epsilon]^2*(3/2 (-5+2 \[Nu]) (2 Sqrt[2] (-h)^(3/2))/l+1/32 (555+30 \[Nu]+11 \[Nu]^2) h^2)) ;
+nunscaled=n/M;
+ar=   -1/(2 h)*(1+o 1/2 \[Epsilon] h (7-\[Nu])+o 1/4 \[Epsilon]^2 (2 (17-11 \[Nu]) h/l^2+(1+10 \[Nu]+\[Nu]^2) h^2));
+er=Sqrt[1+2 h l^2-o \[Epsilon] (2 (6-\[Nu]) h+5 (3-\[Nu]) h^2 l^2)+o \[Epsilon]^2 (-2 (17-11 \[Nu]) h/l^2+(26+\[Nu]+\[Nu]^2) h^2+(80-55 \[Nu]+4 \[Nu]^2) h^3 l^2)];
+et=Sqrt[1+2 h l^2+o \[Epsilon] (4 (1-\[Nu]) h+(17-7 \[Nu]) h^2 l^2)+o \[Epsilon]^2 ((11 \[Nu]-17) h/l^2+2 (2+\[Nu]+5 \[Nu]^2) h^2+(112-47 \[Nu]+16 \[Nu]^2) h^3 l^2+3 (2 \[Nu]-5) (1+2 h l^2) (2 Sqrt[2] (-h)^(3/2))/l)];
+e\[Phi]=1 +  2 h l^2   +  o(+ 12(-h)\[Epsilon]      -(15-\[Nu])h^2 l^2 \[Epsilon] -1/2 (16-88 \[Nu] -9 \[Nu]^2)h^2 \[Epsilon]^2    -1/2 (160-30 \[Nu]+3 \[Nu]^2)(-h)^3 l^2 \[Epsilon]^2 + 1/8 (408-232\[Nu]-15 \[Nu]^2) (-h)/l^2 \[Epsilon]^2  )    //Sqrt ;
+ft=-o 1/8 \[Nu] (4+\[Nu]) Sqrt[1+2 h l^2] (2 Sqrt[2] (-h)^(3/2))/l;
+gt=o 3/2 (5-2 \[Nu]) (2 Sqrt[2] (-h)^(3/2))/l;
+f\[Phi]=o 1/8 (\[Nu]-3 \[Nu]^2) (1+2 h l^2)/l^4 ;
+g\[Phi]=-o 3 \[Nu]^2/32 (1+2 h l^2)^(3/2)/l^4;
+\[CapitalPhi]=o (1+\[Epsilon]/l^2*(3+\[Epsilon]/(4 l^2) (105-30 \[Nu]-2 h l^2 (-15+6 \[Nu]))))+(1-o);
+
+(*============================*)
+
+(*Compute u0, t0 and \[CapitalUpsilon]0*)
+\[Beta]e\[Phi]=e\[Phi]/(1+Sqrt[1-e\[Phi]^2]);
+\[Beta]er=er/(1+(1-er^2)^(1/2));
+drdt0=Sign[pvec.rvec/r+o \[Epsilon] (-6-4 \[Nu]+p^2 r (-1+3 \[Nu])) pvec.rvec/2 r^2+o \[Epsilon]^2 (r (40+88 \[Nu]-4 p^2 r (-5+20 \[Nu]+4 \[Nu]^2)+3 p^4 r^2 (1-5 \[Nu]+5 \[Nu]^2)) pvec.rvec-16 o \[Nu]^2 (pvec.rvec)^3)/8 r^4];
+u0test=ArcCos[Clip[(r/ar-1)/(-er),{-1,1}]];
+Absu0=u/. FindRoot[r==ar (1-er Cos[u])(*+\[Epsilon] hr Cos[2(u+2 ArcTan[(\[Beta]e\[Phi] Sin[u])/(1-\[Beta]e\[Phi] Cos[u])])-2*\[Phi]s ]*),{u,u0test}];
+u0=drdt0*Absu0;
+ve\[Phi]0=u0+2 ArcTan[(\[Beta]e\[Phi] Sin[u0])/(1-\[Beta]e\[Phi] Cos[u0])];
+ver0=u0+2 ArcTan[(\[Beta]er Sin[u0])/(1-\[Beta]er Cos[u0])];
+t0=-(u0-et Sin[u0]+\[Epsilon]^2 (ft Sin[ve\[Phi]0]+gt (ve\[Phi]0-u0)))/nunscaled;
+
+
+r\[Phi]0=sphericalAngles[r0Lframe][[2]];
+(*solPieceR10=SqA (\[Beta]1l EllipticPi[(x2-x3)/(\[Alpha]1l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]1l+x2)+\[Beta]2l EllipticPi[(x2-x3)/(\[Alpha]2l+x2),JacobiAmplitude[\[CapitalUpsilon]0,\[Beta]^2],\[Beta]^2]/(\[Alpha]2l+x2));*)
+solPieceR20=\[CapitalPhi] ve\[Phi]0+\[Epsilon]^2 (f\[Phi] Sin[2 ve\[Phi]0]+g\[Phi] Sin[3 ve\[Phi]0])(*+\[Epsilon] (h\[Phi]1 Sin[ve\[Phi]0-2 \[Phi]s]+h\[Phi]2 Sin[2 ve\[Phi]0-2 \[Phi]s])*);
+
+Torb=2 \[Pi]/nunscaled;
+
+
+Return[N[{c,M,\[Mu],\[Nu],rvec,r,pvec,p,lvec,l,\[Delta],h,ar,er,et,e\[Phi],n,nunscaled,ft,gt,f\[Phi],g\[Phi],\[CapitalPhi],EulMat,InvEulMat,drdt0,u0test,Absu0,u0,\[Beta]e\[Phi],\[Beta]er,ve\[Phi]0,ver0,t0,r0Lframe,r\[Phi]0,solPieceR20,Torb}]];];
+
+
+(*===================*)
+
+Hflow2SListFixedSpins[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,AVG_,ORB_,tList_]:=Module[{pi,c,M,\[Mu],\[Nu],rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,lvec,l,jvec,j,\[Sigma]1,\[Sigma]2,\[Lambda],\[Delta]1,\[Delta]2,\[Delta],\[CapitalDelta],lseff,mathcalS2,h,\[CapitalSigma]1,\[CapitalSigma]2,s1vecLframe0,s2vecLframe0,\[Delta]l20,ltilde2,\[Delta]l2avg,lavg,a0,e0,spVecX,spVecY,\[Phi]s,sp2,ar,er,et,e\[Phi],n,nunscaled,ft,gt,f\[Phi],g\[Phi],\[CapitalPhi],hr,h\[Phi]1,h\[Phi]2,d,A3,A2,A1,A0,A,x2,x3,x1,\[Beta],SqA,\[Alpha]1l,\[Alpha]2l,\[Beta]1l,\[Beta]2l,\[Beta]3l,\[Alpha]1s1,\[Alpha]2s1,\[Beta]1s1,\[Beta]2s1,\[Beta]3s1,EulMat,InvEulMat,drdt0,u0test,Absu0,u0,\[Beta]e\[Phi],\[Beta]er,ve\[Phi]0,ver0,t0,cos\[Kappa]10,Int30,sign,\[Alpha],\[CapitalUpsilon]0,lvecJframe0,l\[Xi]10,solPieceL10,solPieceL20,s1vecJframe0,s1\[Xi]10,solPieceS110,solPieceS120,JtoLframeEulMat0,r0Lframe,r\[Phi]0,solPieceR10,solPieceR20,Nprec,Uprec,Tprec,Torb,freqcos\[Kappa]1,freq\[Xi]1L,computeForTime},
+
+pi=3.141592653589793`;
+
+{c,M,\[Mu],\[Nu],rvec,r,pvec,p,lvec,l,\[Delta],h,ar,er,et,e\[Phi],n,nunscaled,ft,gt,f\[Phi],g\[Phi],\[CapitalPhi],EulMat,InvEulMat,drdt0,u0test,Absu0,u0,\[Beta]e\[Phi],\[Beta]er,ve\[Phi]0,ver0,t0,r0Lframe,r\[Phi]0,solPieceR20,Torb}=computeBaseQuantitiesFixedSpin[m1,m2,R0,P0,S10,S20,\[Epsilon],AVG,ORB];
+
+
+
+(*Evolution for time t*)
+computeForTime[tmax_]:=Module[{o,fve\[Phi],findu,umax,cosu,sinu,ve\[Phi],ver,Int3,\[CapitalUpsilon],JacAmp,cos\[Kappa]1,
+solPieceL1,l\[Xi]1sol,cos\[Kappa]2,lvecAzimuthAngle,lvecPolarAngle,LsolJframe,Lsol,
+solPieceS11,s1\[Xi]1sol,cos\[Gamma],s1vecAzimuthAngle, s1vecPolarAngle, S1sol,S2sol,
+JtoLframeEulMat,s1vecLframe,s2vecLframe,solPieceR1,solPieceR2,solPieceR3,solPieceR4,rvecAzimuthAngleLframe,rMagnitude,Rsol},
+
+If[ORB=="Yes", o = 1];
+If[ORB=="No", o = 0];
+
+\[Beta]e\[Phi]=e\[Phi]/(1+Sqrt[1-e\[Phi]^2]);
+fve\[Phi]=u+2. ArcTan[(\[Beta]e\[Phi] Sin[u])/(1-\[Beta]e\[Phi] Cos[u])];
+
+findu[t_]:=Module[{target,initialGuess},target=nunscaled (t-t0);
+initialGuess=target;
+FindRoot[target==u-et Sin[u]+\[Epsilon]^2 (ft Sin[fve\[Phi]]+gt (fve\[Phi]-u)),{u,initialGuess},Method->"Newton",WorkingPrecision->MachinePrecision]];
+
+umax=u/. findu[tmax];
+cosu=Cos[umax];sinu=Sin[umax];
+ve\[Phi]=umax+2. ArcTan[(\[Beta]e\[Phi] sinu)/(1-\[Beta]e\[Phi] cosu)];
+ver=umax+2. ArcTan[(\[Beta]er sinu)/(1-\[Beta]er cosu)];
+
+(* =================================================================*)
+(*OVERRIDE:FREEZE ANGULAR MOMENTA TO INITIAL VALUES*)
+(* =================================================================*)
+Lsol=lvec*\[Mu]*M;
+S1sol={0.,0.,0.}  ;          (* s1vec*\[Mu]*M;*)
+S2sol={0.,0.,0.}  ;          (* s2vec*\[Mu]*M;*)
+LsolJframe=lvecJframe0*\[Mu]*M;
+
+
+JtoLframeEulMat=IdentityMatrix[3];
+
+(*Kepler Equation Evaluation*)
+\[Beta]e\[Phi]=e\[Phi]/(1+Sqrt[1-e\[Phi]^2]);
+fve\[Phi]=u+2. ArcTan[(\[Beta]e\[Phi] Sin[u])/(1-\[Beta]e\[Phi] Cos[u])];
+findu[t_]:=Module[{target,initialGuess},
+target=nunscaled (t-t0);
+initialGuess=target;
+FindRoot[target==u-et Sin[u]+\[Epsilon]^2 (ft Sin[fve\[Phi]]+gt (fve\[Phi]-u)),{u,initialGuess},Method->"Newton",WorkingPrecision->MachinePrecision]];
+
+umax=u/. findu[tmax];
+sinu=Sin[umax];cosu=Cos[umax];
+ve\[Phi]=umax+2. ArcTan[(\[Beta]e\[Phi] sinu)/(1-\[Beta]e\[Phi] cosu)];
+
+(*Recalculate purely orbital Azimuthal offset at t=0 to anchor the initial position cleanly*)
+solPieceR20Fixed=\[CapitalPhi] ve\[Phi]0+\[Epsilon]^2 (f\[Phi] Sin[2 ve\[Phi]0]+g\[Phi] Sin[3 ve\[Phi]0]);
+solPieceR2=\[CapitalPhi] ve\[Phi]+\[Epsilon]^2 (f\[Phi] Sin[2 ve\[Phi]]+g\[Phi] Sin[3 ve\[Phi]]);
+
+(*Azimuthal angle skips the spin-precession pieces (solPieceR1) and strictly uses in-plane dynamics*)
+rvecAzimuthAngleLframe=solPieceR2+(r\[Phi]0-solPieceR20Fixed);
+
+(*Radial magnitude strictly without Spin-Spin oscillations*)
+rMagnitude=ar (1-er cosu);
+
+Rsol=M (InvEulMat.Transpose[JtoLframeEulMat].vectorComponents[rMagnitude,Pi/2,rvecAzimuthAngleLframe]);
+
+
+
+{(*1*)Rsol,(*2*)Lsol,(*3*)S1sol,(*4*)S2sol,(*5*)(*Tprec*)0,(*6*)Torb,(*7*)rvecAzimuthAngleLframe,(*8*)Transpose[JtoLframeEulMat],(*9*)vectorComponents[rMagnitude,Pi/2,rvecAzimuthAngleLframe]}];
+
+Map[computeForTime,tList]];
+
+
+(*========================*)
+
+(*==*)(*EXECUTION WRAPPERS*)(*==*)
+DataAn2S[AVG_,ORB_,t_,data_]:=Block[{rvecAzimuthAngleLframe},Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+Hflow2SList[m1,m2,R0,P0,S10,S20,\[Epsilon],AVG,ORB,t]]]
+
+An2S[AVG_,ORB_,t_]:=Association[#:>DataAn2S[AVG,ORB,t,#]&/@Keys[Inputs]]
+
+
+(*==*)(*EXECUTION WRAPPERS (2S FIXED SPINS)*)(*==*)
+DataAn2SFixed[AVG_,ORB_,t_,data_]:=Block[{rvecAzimuthAngleLframe},Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+Hflow2SListFixedSpins[m1,m2,R0,P0,S10,S20,\[Epsilon],AVG,ORB,t]]]
+
+An2SFixed[AVG_,ORB_,t_]:=Association[#:>DataAn2SFixed[AVG,ORB,t,#]&/@Keys[Inputs]]
+
+
+
+2. Inputs
+A. Check Inputs
+In[29]:= CheckInputs[G_,m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,data_]:=Module[{M,\[Mu],\[Nu],rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,s1ds2,lvec,l,jvec,j,\[CapitalSigma]2,\[Sigma]1,\[Sigma]2,\[Lambda],\[Delta]1,\[Delta]2,dotlseff,seffdl,hN,h1,hso,h2,hss,H1,H2,HSS,varN,varSO,varSS,nN,aN,eN,\[CapitalPhi]N,nSO,arSO,erSO,\[CapitalPhi]SO,nSS,arSS,erSS,\[CapitalPhi]SS,\[Delta]hSO,\[Delta]arSO,\[Delta]erSO,\[Delta]nSO,\[Delta]\[CapitalPhi]SO,\[Delta]hSS,\[Delta]arSS,\[Delta]erSS,\[Delta]nSS,\[Delta]\[CapitalPhi]SS,PNa,PNp,resultN,resultSO,resultSS,TprecN,TorbN,TprecSO,TorbSO,TprecSS,TorbSS,cos\[Kappa]1,cos\[Kappa]2,cos\[Gamma]},
+
+M=m1+m2;\[Mu]=m1 m2/M;\[Nu]=\[Mu]/M;
+
+SS10=Sqrt[\[Epsilon]] S10;SS20=Sqrt[\[Epsilon]] S20;
+
+rvec=R0/M;r=Norm[rvec];pvec=P0/\[Mu];p=Norm[pvec];
+
+s1vec=SS10/(\[Mu] M);s2vec=SS20/(\[Mu] M);s1=Norm[s1vec];s2=Norm[s2vec];s1ds2=s1vec.s2vec;
+
+lvec=Cross[rvec,pvec];l=Norm[lvec];jvec=lvec+s1vec+s2vec;j=Norm[jvec];
+\[Delta]1=2 \[Nu] (1+3/4 m2/m1);\[Delta]2=2 \[Nu] (1+3/4 m1/m2);dotlseff=lvec.(\[Delta]1 s1vec+\[Delta]2 s2vec);
+
+(*Hamiltonian components*)
+hN=p^2/2-1/r;
+h1=\[Epsilon] (1/(2 r^2)+1/8 p^4 (-1+3 \[Nu])-(Dot[rvec/r,pvec]^2 \[Nu]+p^2 (3+\[Nu]))/(2 r));
+hso=+(dotlseff \[Epsilon])/r^3;
+h2=\[Epsilon]^2 (-((1+3 \[Nu])/(4 r^3))+1/16 p^6 (1-5 \[Nu]+5 \[Nu]^2)+(3 Dot[rvec/r,pvec]^2 \[Nu]+p^2 (5+8 \[Nu]))/(2 r^2)+(-3 Dot[rvec/r,pvec]^4 \[Nu]^2-2 Dot[rvec/r,pvec]^2 p^2 \[Nu]^2+p^4 (5-20 \[Nu]-3 \[Nu]^2))/(8 r));
+hss=-((Dot[s1vec,s2vec]-3 Dot[rvec/r,s1vec] Dot[rvec/r,s2vec]) \[Epsilon] \[Nu])/r^3+(m2 (3 Dot[rvec/r,s1vec]^2-s1^2) \[Epsilon] \[Nu])/(2 m1 r^3)+(m1 (3 Dot[rvec/r,s2vec]^2-s2^2) \[Epsilon] \[Nu])/(2 m2 r^3);
+seffdl=dotlseff+r^3 hss/\[Epsilon];
+
+H1=hN+h1+hso;
+H2=hN+h1+hso+h2;
+HSS=hN+h1+hso+h2+hss;
+
+(*Compute QKP at different orders*)
+varN=computeBaseQuantities1[m1,m2,R0,P0,S10,S20,\[Epsilon],"N","Yes"];
+varSO=computeBaseQuantities1[m1,m2,R0,P0,S10,S20,\[Epsilon],"SO","Yes"];
+varSS=computeBaseQuantities2S[m1,m2,R0,P0,S10,S20,\[Epsilon],"No","Yes"];
+
+(*Extract values-Newtonian*)
+nN=varN[[38]];aN=varN[[42]];eN=varN[[44]];\[CapitalPhi]N=1;
+
+(*Extract values-Spin-Orbit*)
+nSO=varSO[[38]];arSO=varSO[[42]];erSO=varSO[[44]];\[CapitalPhi]SO=varSO[[54]];
+
+(*Extract values-Spin-Spin*)
+nSS=varSS[[45]];arSS=varSS[[41]];erSS=varSS[[42]];\[CapitalPhi]SS=varSS[[51]];
+
+(*Compute differences N vs SO*)
+\[Delta]hSO=Abs[(H1-hN)/H1];\[Delta]arSO=Abs[(arSO-aN)/arSO];\[Delta]erSO=Abs[(erSO-eN)/erSO];\[Delta]nSO=Abs[(nSO-nN)/nSO];\[Delta]\[CapitalPhi]SO=Abs[(\[CapitalPhi]SO-\[CapitalPhi]N)/\[CapitalPhi]SO];
+
+(*Compute differences SO vs SS*)
+\[Delta]hSS=Abs[(HSS-H1)/HSS];\[Delta]arSS=Abs[(arSS-arSO)/arSS];\[Delta]erSS=Abs[(erSS-erSO)/erSS];\[Delta]nSS=Abs[(nSS-nSO)/nSS];\[Delta]\[CapitalPhi]SS=Abs[(\[CapitalPhi]SS-\[CapitalPhi]SO)/\[CapitalPhi]SS];
+
+(*PN parameters*)
+PNa=\[Epsilon] /r;
+PNp=\[Epsilon] /(aN(1-eN));
+(*Angular variables*)
+cos\[Kappa]1=s1vec.lvec/(s1 l);cos\[Kappa]2=lvec.s2vec/(l s2);cos\[Gamma]=s1vec.s2vec/(s1 s2);
+
+(*Get Tprec and Torb from Hflow functions*)
+resultN=Hflow1List[m1,m2,R0,P0,S10,S20,\[Epsilon],"N","Yes",{0}][[1]];
+TprecN= "Norb = "Tprec[data]/Torb[data];
+TorbN=resultN[[6]];
+
+resultSO=Hflow1List[m1,m2,R0,P0,S10,S20,\[Epsilon],"SO","Yes",{0}][[1]];
+TprecSO=resultSO[[5]];
+TorbSO=resultSO[[6]];
+
+resultSS=Hflow2SList[m1,m2,R0,P0,S10,S20,\[Epsilon],"No","Yes",{0}][[1]];
+TprecSS=resultSS[[5]];
+TorbSS=resultSS[[6]];
+(*Print organized table*)
+Print@Grid[{{Style["Summary Table for Dataset: "data,Bold,14],SpanFromLeft,SpanFromLeft,SpanFromLeft,SpanFromLeft,SpanFromLeft},
+(* =====================================================*)
+{Style["Initial configuration",Bold,12],SpanFromLeft,SpanFromLeft,SpanFromLeft,SpanFromLeft,SpanFromLeft},
+{"q = m2/m1","\[Kappa]1 [º]","\[Kappa]2 [º]","\[Gamma] [º]","PNa [%]","PNp [%]"},
+{Round[m2/m1,0.01],Round[ArcCos[cos\[Kappa]1] 180/\[Pi],0.1],Round[ArcCos[cos\[Kappa]2] 180/\[Pi],0.1],Round[ArcCos[cos\[Gamma]] 180/\[Pi],0.1],Round[100 PNa,0.01],Round[100 PNp,0.01]},
+(* =====================================================*)
+{Style["Spin strength",Bold,12],SpanFromLeft,SpanFromLeft,SpanFromLeft,SpanFromLeft,SpanFromLeft},
+{"\[Chi]1","\[Chi]2","Subscript[S, 1]/(L \[Epsilon]^(1/2))","Subscript[S, 2]/(L \[Epsilon]^(1/2))","l\[CenterDot]seff",SpanFromLeft},
+{Round[Norm[S10]/(G m1^2),0.01],Round[Norm[S20]/(G m2^2),0.01],Round[s1/l/Sqrt[\[Epsilon]],0.01],Round[s2/l/Sqrt[\[Epsilon]],0.01],Round[seffdl/Sqrt[\[Epsilon]],0.001],SpanFromLeft},
+{Style["QKP Parameters",Bold,12],SpanFromLeft,SpanFromLeft,SpanFromLeft,SpanFromLeft,SpanFromLeft},
+{"h","n","er","Torb", "Tprec(Torb)"},
+{H2,nSS,erSS,TorbSS, TprecSS/TorbSS}},
+(* =====================================================*)
+Frame->All,Dividers->{{2->Thick},{1->Thick,5->Thick,9->Thick}},
+Background->{None,{1->LightBlue,2->LightYellow,5->LightYellow,8->LightYellow}},
+Alignment->{Center,Center},Spacings->{2,1},ItemSize->{{12,12,12,12,14,14},Automatic}]]
+B. Numerical Inputs Random
+1) Define Periods 
+In[30]:=  G=1;(*Keep 1 because it is not put well everywhere*)
+
+TprecData[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];Hflow2SList[m1,m2,R0,P0,S10,S20,\[Epsilon],"No","Yes",{0}][[1,5]]];
+
+Tprec:=AssociationMap[TprecData,Keys[Inputs]]//Quiet;(*One Precession Period*)
+
+TorbData[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];Hflow2SList[m1,m2,R0,P0,S10,S20,\[Epsilon],"No","No",{0}][[1,6]]];
+
+Torb:=AssociationMap[TorbData,Keys[Inputs]];(*One Orbital Period*)
+
+PNparamData[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon],varN,aN,eN},
+{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+varN=computeBaseQuantities1[m1,m2,R0,P0,S10,S20,\[Epsilon],"N","Yes"];
+aN=varN[[42]];eN=varN[[44]];
+\[Epsilon] /(aN(1-eN))];
+
+
+PNparam:=AssociationMap[PNparamData,Keys[Inputs]];(*One Orbital Period*)
+
+2) Choose Data
+In[37]:= Inputs=<|data1->userData|>;
+G=1;
+Results=AssociationMap[Function[{data},Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+CheckInputs[1,m1,m2,R0,P0,S10,S20,\[Epsilon],data]]],Keys[Inputs]]//Quiet;
+During evaluation of In[37]:= Summary Table for Dataset:  data1	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]
+Initial configuration	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]
+q = m2/m1	\[Kappa]1 [º]	\[Kappa]2 [º]	\[Gamma] [º]	PNa [%]	PNp [%]
+0.73	76.7	46.	101.2	0.3	0.71
+Spin strength	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]
+\[Chi]1	\[Chi]2	Subscript[S, 1]/(L \[Epsilon]^(1/2))	Subscript[S, 2]/(L \[Epsilon]^(1/2))	l\[CenterDot]seff	\[SpanFromLeft]
+0.27	0.35	0.58	0.41	0.15	\[SpanFromLeft]
+QKP Parameters	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]
+h	n	er	Torb	Tprec(Torb)	
+-1.0507	3.02247	0.424661	19.7488	768.876	
+
+
+In[40]:= (*1000  //Pause;*)
+3. Numerical Solution
+1. Code
+In[41]:= (************************H = HN + H1PN + HSO************************)
+ComputeNum1[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,ORB_,end_]:=Module[{o,G,\[Mu],initialConditions,eqn1,eqn2,eqn3,eqn4,eqn5,sol1,equations,SS10,SS20,opts,t,EulMat},
+If[ORB=="Yes", o = 1];
+If[ORB=="No", o = 0];
+
+G=1;
+\[Mu]=m1 m2/(m1+m2);
+SS10=S10 Sqrt[\[Epsilon]];SS20=S20 Sqrt[\[Epsilon]];
+EulMat=computeEulerMatrix[Cross[R0,P0]+SS10+SS20];
+(*initialConditions={R[0]==EulMat.R0,P[0]==EulMat.P0,S1[0]==EulMat.SS10,S2[0]==EulMat.SS20,L[0]==EulMat.Cross[R0,P0]};*)
+initialConditions={R[0]==R0,P[0]==P0,S1[0]==SS10,S2[0]==SS20,L[0]==Cross[R0,P0]};
+
+eqn1 = R'[t]==+(P[t]/m1+P[t]/m2)- o \[Epsilon]( P[t](P[t] . P[t])/(2 m1^3)+P[t](P[t] . P[t])/(2 m2^3)+ G R[t] (P[t] . R[t])/(R[t] . R[t])^(3/2)+7 G P[t] /(R[t] . R[t])^(1/2)+3 G m1 P[t]/(m2 (R[t] . R[t])^(1/2))+3 G m2 P[t]/(m1 (R[t] . R[t])^(1/2)))-(G \[Epsilon] (m2 (4 m1+3 m2) R[t]\[Cross]S1[t]+m1 (3 m1+4 m2) R[t]\[Cross]S2[t]))/(2 m1 m2 (R[t].R[t])^(3/2));eqn2 = P'[t]==  -((G m1 m2 R[t])/(R[t].R[t])^(3/2))+ o/(2 m1 m2 (R[t].R[t])^(5/2)) G \[Epsilon] (2 m1 m2 P[t].R[t] R[t].R[t] P[t]-3 m1 m2 (P[t].R[t])^2 R[t]+2 G m1^2 m2^2 (m1+m2) Sqrt[R[t].R[t]] R[t]-(3 m1^2+7 m1 m2+3 m2^2) P[t].P[t] R[t].R[t] R[t])-1/(8 m1^3 m2^3 (R[t].R[t])^(7/2)) G \[Epsilon] (4 m1^2 m2^2 (m2 (4 m1+3 m2) P[t]\[Cross]S1[t]+m1 (3 m1+4 m2) P[t]\[Cross]S2[t]) (R[t].R[t])^2+12 m1^2 m2^3 (4 m1+3 m2) P[t].R[t]\[Cross]S1[t] R[t].R[t] R[t]+12 m1^3 m2^2 (3 m1+4 m2) P[t].R[t]\[Cross]S2[t] R[t].R[t] R[t]);
+
+eqn3 =S1'[t]== +((G (4 m1+3 m2) \[Epsilon] (R[t].S1[t] P[t]-P[t].S1[t] R[t]))/(2 m1 (R[t].R[t])^(3/2)));
+
+eqn4 =S2'[t]==+((G (4 m2+3 m1) \[Epsilon] (R[t].S2[t] P[t]-P[t].S2[t] R[t]))/(2 m2 (R[t].R[t])^(3/2)));
+eqn5=L[t]==Cross[R[t],P[t]];
+equations={eqn1,eqn2,eqn3,eqn4,eqn5}~Join~initialConditions;
+sol1=NDSolve[equations,{R,P,S1,S2,L},{t,0,end},(*WorkingPrecision->workingprecision,*)AccuracyGoal->accuracyGoal,PrecisionGoal->precisionGoal,MaxSteps->maxSteps];
+sol1]
+(*H = HN + H1PN + HSO + H2PN *)
+ComputeNum2[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,ORB_,end_]:=Module[{o, G,\[Mu],initialConditions,eqn1,eqn2,eqn3,eqn4,eqn5,sol1,equations,SS10,SS20,opts,t,EulMat},
+
+If[ORB=="Yes", o = 1];
+If[ORB=="No", o = 0];
+
+G=1;
+\[Mu]=m1 m2/(m1+m2);
+SS10=S10 Sqrt[\[Epsilon]];SS20=S20 Sqrt[\[Epsilon]];
+EulMat=computeEulerMatrix[Cross[R0,P0]+SS10+SS20];
+(*initialConditions={R[0]==EulMat.R0,P[0]==EulMat.P0,S1[0]==EulMat.SS10,S2[0]==EulMat.SS20,L[0]==EulMat.Cross[R0,P0]};*)
+initialConditions={R[0]==SetPrecision[R0,20],P[0]==SetPrecision[P0,20],S1[0]==SetPrecision[SS10,20],S2[0]==SetPrecision[SS20,20],L[0]==SetPrecision[Cross[R0,P0],20]};
+
+eqn1 = R'[t]==+(P[t]/m1+P[t]/m2)- o \[Epsilon]( P[t](P[t] . P[t])/(2 m1^3)+P[t](P[t] . P[t])/(2 m2^3)+ G R[t] (P[t] . R[t])/(R[t] . R[t])^(3/2)+7 G P[t] /(R[t] . R[t])^(1/2)+3 G m1 P[t]/(m2 (R[t] . R[t])^(1/2))+3 G m2 P[t]/(m1 (R[t] . R[t])^(1/2)))-(G \[Epsilon] (m2 (4 m1+3 m2) R[t]\[Cross]S1[t]+m1 (3 m1+4 m2) R[t]\[Cross]S2[t]))/(2 m1 m2 (R[t].R[t])^(3/2))+ o \[Epsilon]^2 (3 P[t] (P[t] . P[t])^2/(8 m1^5)+(3 P[t] (P[t] . P[t])^2)/(8 m2^5)-3 G R[t] (P[t] . R[t])^3/(2 m1 m2 (R[t] . R[t])^(5/2))+3 (G^2) m1 R[t] (P[t] . R[t]) /(R[t] . R[t])^2+3 (G^2) m2 R[t] (P[t] . R[t]) /(R[t] . R[t])^2-G R[t] (P[t] . P[t])(P[t] . R[t])/(2 m1 m2 (R[t] . R[t])^(3/2))-G P[t] (P[t] . R[t])^2/(2 m1 m2 (R[t] . R[t])^(3/2))+23 G^2 m1 P[t]/(R[t] . R[t])+5 G^2 m1^2 P[t]/(m2 (R[t] . R[t]))+23 G^2 m2 P[t]/(R[t] . R[t])+5 G^2 m2^2 P[t]/(m1 (R[t] . R[t]))+5 G m1 P[t](P[t] . P[t])/(2 m2^3 (R[t] . R[t])^(1/2))+5 G m2 P[t](P[t] . P[t])/(2 m1^3 (R[t] . R[t])^(1/2))-13 G P[t](P[t] . P[t])/(2 m2 m1 (R[t] . R[t])^(1/2)));
+
+eqn2 = P'[t]==  -((G m1 m2 R[t])/(R[t].R[t])^(3/2))+ o (G \[Epsilon] (2 m1 m2 P[t].R[t] R[t].R[t] P[t]-3 m1 m2 (P[t].R[t])^2 R[t]+2 G m1^2 m2^2 (m1+m2) Sqrt[R[t].R[t]] R[t]-(3 m1^2+7 m1 m2+3 m2^2) P[t].P[t] R[t].R[t] R[t]))/(2 m1 m2 (R[t].R[t])^(5/2))-1/(8 m1^3 m2^3 (R[t].R[t])^(7/2)) G \[Epsilon] (4 m1^2 m2^2 (m2 (4 m1+3 m2) P[t]\[Cross]S1[t]+m1 (3 m1+4 m2) P[t]\[Cross]S2[t]) (R[t].R[t])^2+12 m1^2 m2^3 (4 m1+3 m2) P[t].R[t]\[Cross]S1[t] R[t].R[t] R[t]+12 m1^3 m2^2 (3 m1+4 m2) P[t].R[t]\[Cross]S2[t] R[t].R[t] R[t])- o/(8 m1^3 m2^3 (R[t].R[t])^(7/2)) G \[Epsilon]^2 (-12 m1^2 m2^2 (P[t].R[t])^3 R[t].R[t] P[t]+24 G m1^3 m2^3 (m1+m2) P[t].R[t] (R[t].R[t])^(3/2) P[t]-4 m1^2 m2^2 P[t].P[t] P[t].R[t] (R[t].R[t])^2 P[t]+15 m1^2 m2^2 (P[t].R[t])^4 R[t]-48 G m1^3 m2^3 (m1+m2) (P[t].R[t])^2 Sqrt[R[t].R[t]] R[t]+6 G^2 m1^6 m2^4 R[t].R[t] R[t]+30 G^2 m1^5 m2^5 R[t].R[t] R[t]+6 G^2 m1^4 m2^6 R[t].R[t] R[t]+6 m1^2 m2^2 P[t].P[t] (P[t].R[t])^2 R[t].R[t] R[t]-8 G m1^2 m2^2 (m1+m2) (8 m1 m2+5 (m1+m2)^2) P[t].P[t] (R[t].R[t])^(3/2) R[t]+(-5 m1^4+13 m1^2 m2^2-5 m2^4) (P[t].P[t])^2 (R[t].R[t])^2 R[t]);
+
+eqn3 =S1'[t]== +((G (4 m1+3 m2) \[Epsilon] (R[t].S1[t] P[t]-P[t].S1[t] R[t]))/(2 m1 (R[t].R[t])^(3/2)));
+
+
+eqn4 =S2'[t]== +((G (4 m2+3 m1) \[Epsilon] (R[t].S2[t] P[t]-P[t].S2[t] R[t]))/(2 m2 (R[t].R[t])^(3/2)));
+
+eqn5=L[t]==Cross[R[t],P[t]];
+equations={eqn1,eqn2,eqn3,eqn4,eqn5}~Join~initialConditions;
+sol1=NDSolve[equations,{R,P,S1,S2,L},{t,0,end},(*WorkingPrecision->workingprecision,*) AccuracyGoal->accuracyGoal,PrecisionGoal->precisionGoal,MaxSteps->maxSteps];
+sol1
+]
+
+(*H = HN + H1PN + H2PN *)
+ComputeNumOrb[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,ORB_,end_]:=Module[{o, G,\[Mu],initialConditions,eqn1,eqn2,eqn3,eqn4,eqn5,sol1,equations,SS10,SS20,opts,t,EulMat},
+
+If[ORB=="Yes", o = 1];
+If[ORB=="No", o = 0];
+
+G=1;
+\[Mu]=m1 m2/(m1+m2);
+SS10=S10 Sqrt[\[Epsilon]];SS20=S20 Sqrt[\[Epsilon]];
+EulMat=computeEulerMatrix[Cross[R0,P0]+SS10+SS20];
+initialConditions={R[0]==SetPrecision[R0,20],P[0]==SetPrecision[P0,20],S1[0]==SetPrecision[SS10,20],S2[0]==SetPrecision[SS20,20],L[0]==SetPrecision[Cross[R0,P0],20]};
+
+eqn1 = R'[t]==+(P[t]/m1+P[t]/m2)- o \[Epsilon]( P[t](P[t] . P[t])/(2 m1^3)+P[t](P[t] . P[t])/(2 m2^3)+ G R[t] (P[t] . R[t])/(R[t] . R[t])^(3/2)+7 G P[t] /(R[t] . R[t])^(1/2)+3 G m1 P[t]/(m2 (R[t] . R[t])^(1/2))+3 G m2 P[t]/(m1 (R[t] . R[t])^(1/2)))+ o \[Epsilon]^2 (3 P[t] (P[t] . P[t])^2/(8 m1^5)+(3 P[t] (P[t] . P[t])^2)/(8 m2^5)-3 G R[t] (P[t] . R[t])^3/(2 m1 m2 (R[t] . R[t])^(5/2))+3 (G^2) m1 R[t] (P[t] . R[t]) /(R[t] . R[t])^2+3 (G^2) m2 R[t] (P[t] . R[t]) /(R[t] . R[t])^2-G R[t] (P[t] . P[t])(P[t] . R[t])/(2 m1 m2 (R[t] . R[t])^(3/2))-G P[t] (P[t] . R[t])^2/(2 m1 m2 (R[t] . R[t])^(3/2))+23 G^2 m1 P[t]/(R[t] . R[t])+5 G^2 m1^2 P[t]/(m2 (R[t] . R[t]))+23 G^2 m2 P[t]/(R[t] . R[t])+5 G^2 m2^2 P[t]/(m1 (R[t] . R[t]))+5 G m1 P[t](P[t] . P[t])/(2 m2^3 (R[t] . R[t])^(1/2))+5 G m2 P[t](P[t] . P[t])/(2 m1^3 (R[t] . R[t])^(1/2))-13 G P[t](P[t] . P[t])/(2 m2 m1 (R[t] . R[t])^(1/2)));
+
+eqn2 = P'[t]==  -((G m1 m2 R[t])/(R[t].R[t])^(3/2))+ o (G \[Epsilon] (2 m1 m2 P[t].R[t] R[t].R[t] P[t]-3 m1 m2 (P[t].R[t])^2 R[t]+2 G m1^2 m2^2 (m1+m2) Sqrt[R[t].R[t]] R[t]-(3 m1^2+7 m1 m2+3 m2^2) P[t].P[t] R[t].R[t] R[t]))/(2 m1 m2 (R[t].R[t])^(5/2))- o/(8 m1^3 m2^3 (R[t].R[t])^(7/2)) G \[Epsilon]^2 (-12 m1^2 m2^2 (P[t].R[t])^3 R[t].R[t] P[t]+24 G m1^3 m2^3 (m1+m2) P[t].R[t] (R[t].R[t])^(3/2) P[t]-4 m1^2 m2^2 P[t].P[t] P[t].R[t] (R[t].R[t])^2 P[t]+15 m1^2 m2^2 (P[t].R[t])^4 R[t]-48 G m1^3 m2^3 (m1+m2) (P[t].R[t])^2 Sqrt[R[t].R[t]] R[t]+6 G^2 m1^6 m2^4 R[t].R[t] R[t]+30 G^2 m1^5 m2^5 R[t].R[t] R[t]+6 G^2 m1^4 m2^6 R[t].R[t] R[t]+6 m1^2 m2^2 P[t].P[t] (P[t].R[t])^2 R[t].R[t] R[t]-8 G m1^2 m2^2 (m1+m2) (8 m1 m2+5 (m1+m2)^2) P[t].P[t] (R[t].R[t])^(3/2) R[t]+(-5 m1^4+13 m1^2 m2^2-5 m2^4) (P[t].P[t])^2 (R[t].R[t])^2 R[t]);
+
+eqn3 =S1'[t]==0;
+
+
+eqn4 =S2'[t]==0;
+
+eqn5=L[t]==Cross[R[t],P[t]];
+equations={eqn1,eqn2,eqn3,eqn4,eqn5}~Join~initialConditions;
+sol1=NDSolve[equations,{R,P,S1,S2,L},{t,0,end},(*WorkingPrecision->workingprecision,*) AccuracyGoal->accuracyGoal,PrecisionGoal->precisionGoal,MaxSteps->maxSteps];
+sol1
+]
+
+(*H = HN + H1PN + HSO + H2PN + H2PNSS*)
+ComputeNum2S[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,ORB_,end_]:=Module[{o, G,\[Mu],initialConditions,eqn1,eqn2,eqn3,eqn4,eqn5,sol1,equations,SS10,SS20,opts,t,EulMat},
+
+If[ORB=="Yes", o = 1];
+If[ORB=="No", o = 0];
+
+G=1;
+\[Mu]=m1 m2/(m1+m2);
+SS10=S10 Sqrt[\[Epsilon]];SS20=S20 Sqrt[\[Epsilon]];
+EulMat=computeEulerMatrix[Cross[R0,P0]+SS10+SS20];
+(*initialConditions={R[0]==EulMat.R0,P[0]==EulMat.P0,S1[0]==EulMat.SS10,S2[0]==EulMat.SS20,L[0]==EulMat.Cross[R0,P0]};*)
+initialConditions={R[0]==SetPrecision[R0,20],P[0]==SetPrecision[P0,20],S1[0]==SetPrecision[SS10,20],S2[0]==SetPrecision[SS20,20],L[0]==SetPrecision[Cross[R0,P0],20]};
+
+eqn1 = R'[t]==+(P[t]/m1+P[t]/m2)- o \[Epsilon]( P[t](P[t] . P[t])/(2 m1^3)+P[t](P[t] . P[t])/(2 m2^3)+ G R[t] (P[t] . R[t])/(R[t] . R[t])^(3/2)+7 G P[t] /(R[t] . R[t])^(1/2)+3 G m1 P[t]/(m2 (R[t] . R[t])^(1/2))+3 G m2 P[t]/(m1 (R[t] . R[t])^(1/2)))-(G \[Epsilon] (m2 (4 m1+3 m2) R[t]\[Cross]S1[t]+m1 (3 m1+4 m2) R[t]\[Cross]S2[t]))/(2 m1 m2 (R[t].R[t])^(3/2))+ o \[Epsilon]^2 (3 P[t] (P[t] . P[t])^2/(8 m1^5)+(3 P[t] (P[t] . P[t])^2)/(8 m2^5)-3 G R[t] (P[t] . R[t])^3/(2 m1 m2 (R[t] . R[t])^(5/2))+3 (G^2) m1 R[t] (P[t] . R[t]) /(R[t] . R[t])^2+3 (G^2) m2 R[t] (P[t] . R[t]) /(R[t] . R[t])^2-G R[t] (P[t] . P[t])(P[t] . R[t])/(2 m1 m2 (R[t] . R[t])^(3/2))-G P[t] (P[t] . R[t])^2/(2 m1 m2 (R[t] . R[t])^(3/2))+23 G^2 m1 P[t]/(R[t] . R[t])+5 G^2 m1^2 P[t]/(m2 (R[t] . R[t]))+23 G^2 m2 P[t]/(R[t] . R[t])+5 G^2 m2^2 P[t]/(m1 (R[t] . R[t]))+5 G m1 P[t](P[t] . P[t])/(2 m2^3 (R[t] . R[t])^(1/2))+5 G m2 P[t](P[t] . P[t])/(2 m1^3 (R[t] . R[t])^(1/2))-13 G P[t](P[t] . P[t])/(2 m2 m1 (R[t] . R[t])^(1/2)));
+
+eqn2 = P'[t]==  -((G m1 m2 R[t])/(R[t].R[t])^(3/2))+ o (G \[Epsilon] (2 m1 m2 P[t].R[t] R[t].R[t] P[t]-3 m1 m2 (P[t].R[t])^2 R[t]+2 G m1^2 m2^2 (m1+m2) Sqrt[R[t].R[t]] R[t]-(3 m1^2+7 m1 m2+3 m2^2) P[t].P[t] R[t].R[t] R[t]))/(2 m1 m2 (R[t].R[t])^(5/2))-1/(8 m1^3 m2^3 (R[t].R[t])^(7/2)) G \[Epsilon] (4 m1^2 m2^2 (m2 (4 m1+3 m2) P[t]\[Cross]S1[t]+m1 (3 m1+4 m2) P[t]\[Cross]S2[t]) (R[t].R[t])^2+12 m1^2 m2^3 (4 m1+3 m2) P[t].R[t]\[Cross]S1[t] R[t].R[t] R[t]+12 m1^3 m2^2 (3 m1+4 m2) P[t].R[t]\[Cross]S2[t] R[t].R[t] R[t])- o/(8 m1^3 m2^3 (R[t].R[t])^(7/2)) G \[Epsilon]^2 (-12 m1^2 m2^2 (P[t].R[t])^3 R[t].R[t] P[t]+24 G m1^3 m2^3 (m1+m2) P[t].R[t] (R[t].R[t])^(3/2) P[t]-4 m1^2 m2^2 P[t].P[t] P[t].R[t] (R[t].R[t])^2 P[t]+15 m1^2 m2^2 (P[t].R[t])^4 R[t]-48 G m1^3 m2^3 (m1+m2) (P[t].R[t])^2 Sqrt[R[t].R[t]] R[t]+6 G^2 m1^6 m2^4 R[t].R[t] R[t]+30 G^2 m1^5 m2^5 R[t].R[t] R[t]+6 G^2 m1^4 m2^6 R[t].R[t] R[t]+6 m1^2 m2^2 P[t].P[t] (P[t].R[t])^2 R[t].R[t] R[t]-8 G m1^2 m2^2 (m1+m2) (8 m1 m2+5 (m1+m2)^2) P[t].P[t] (R[t].R[t])^(3/2) R[t]+(-5 m1^4+13 m1^2 m2^2-5 m2^4) (P[t].P[t])^2 (R[t].R[t])^2 R[t])-1/(2 m1 m2 (R[t].R[t])^(7/2)) 3 G \[Epsilon] (-5 m2^2 (R[t].S1[t])^2 R[t]-5 m1^2 (R[t].S2[t])^2 R[t]+R[t].R[t] (m2^2 S1[t].S1[t]+2 m1 m2 S1[t].S2[t]+m1^2 S2[t].S2[t]) R[t]+2 m1 R[t].R[t] R[t].S2[t] (m2 S1[t]+m1 S2[t])+2 m2 R[t].S1[t] (-5 m1 R[t].S2[t] R[t]+R[t].R[t] (m2 S1[t]+m1 S2[t])));
+
+eqn3 =S1'[t]== +((G (4 m1+3 m2) \[Epsilon] (R[t].S1[t] P[t]-P[t].S1[t] R[t]))/(2 m1 (R[t].R[t])^(3/2)))+1/(m1 (R[t].R[t])^(5/2)) G \[Epsilon] (m1 S1[t]\[Cross]S2[t] R[t].R[t]+3 R[t]\[Cross]S1[t] (m2 R[t].S1[t]+m1 R[t].S2[t]));
+
+
+eqn4 =S2'[t]== +((G (4 m2+3 m1) \[Epsilon] (R[t].S2[t] P[t]-P[t].S2[t] R[t]))/(2 m2 (R[t].R[t])^(3/2)))+1/(m2 (R[t].R[t])^(5/2)) G \[Epsilon] (-m2 S1[t]\[Cross]S2[t] R[t].R[t]+3 R[t]\[Cross]S2[t] (m1 R[t].S2[t]+m2 R[t].S1[t]));
+
+eqn5=L[t]==Cross[R[t],P[t]];
+equations={eqn1,eqn2,eqn3,eqn4,eqn5}~Join~initialConditions;
+sol1=NDSolve[equations,{R,P,S1,S2,L},{t,0,end},(*WorkingPrecision->workingprecision,*)AccuracyGoal->accuracyGoal,PrecisionGoal->precisionGoal,MaxSteps->maxSteps];
+sol1
+]
+2. Compute
+In[45]:= (************************H = HN + H1PN + HSO************************)
+DataNum1[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
+{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+ComputeNum1[m1,m2,R0,P0,S10,S20,\[Epsilon], NumOrb,end[data]]]
+Num1=AssociationMap[DataNum1,Keys[Inputs]];
+In[47]:= (*(************************H = HN + H1PN + HSO + H2PN************************)
+DataNum2[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
+{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+ComputeNum2[m1,m2,R0,P0,S10,S20,\[Epsilon], NumOrb,end[data]]]
+Num2=AssociationMap[DataNum2,Keys[Inputs]];*)
+In[48]:= (************************H = HN + H1PN + HSO + H2PN + HSS************************)
+DataNum2S[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
+{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+ComputeNum2S[m1,m2,R0,P0,S10,S20,\[Epsilon],NumOrb,end[data]]]
+
+Num2S=AssociationMap[DataNum2S,Keys[Inputs]];
+
+In[50]:= DataNumOrb[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
+{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
+ComputeNumOrb[m1,m2,R0,P0,S10,S20,\[Epsilon], NumOrb,end[data]]]
+NumOrb=AssociationMap[DataNumOrb,Keys[Inputs]];
+3. AzimuthalRvectorLframe
+In[52]:= (*Function to compute the azimuthal angle of R vector in L frame*)
+AzimuthalRvectorLframe[t_,NumModel_,data_]:=Module[{vectorComponents,rvecLabFrame,pvecLabFrame,s1vecLabFrame,s2vecLabFrame,lvecLabFrame,jvecLabFrame,LabtoJEulMat,\[Theta]J,\[Phi]J,lsolJframe,lx,ly,lz,\[Xi]1L,\[Xi]2L,JtoLEulMat,rvecLframe,angles,rNorm,rvecAzimuthAngleLframe,RvecLabFrame,m1,m2,R0,P0,S10,S20,\[Epsilon],M,\[Mu]},
+
+{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data]; M=m1+m2; \[Mu]=m1 m2 /M;
+
+(*Numerical Values at time t in Lab frame*)
+rvecLabFrame=(R[t]/. NumModel[data][[1]])/(M);
+pvecLabFrame=(P[t]/. NumModel[data][[1]])/(\[Mu]);
+s1vecLabFrame=(S1[t]/. NumModel[data][[1]])/(\[Mu] M);
+s2vecLabFrame=(S2[t]/. NumModel[data][[1]])/(\[Mu] M);
+lvecLabFrame=(L[t]/. NumModel[data][[1]])/(\[Mu] M);
+jvecLabFrame=lvecLabFrame+s1vecLabFrame+s2vecLabFrame;
+rNorm=Norm@rvecLabFrame;
+
+(*Euler Matrix from Lab to J frame at all times*)
+{\[Theta]J, \[Phi]J}=sphericalAngles[jvecLabFrame]+{0,\[Pi]/2};LabtoJEulMat ={{Cos[\[Phi]J], Sin[\[Phi]J],0},{-Sin[\[Phi]J]Cos[\[Theta]J], Cos[\[Phi]J]Cos[\[Theta]J], Sin[\[Theta]J]},{Sin[\[Phi]J]Sin[\[Theta]J], -Cos[\[Phi]J]Sin[\[Theta]J], Cos[\[Theta]J]}};
+(*L vector in J frame*)
+lsolJframe=LabtoJEulMat.lvecLabFrame;
+
+(*Euler Matrix from J to L frame at time t*)
+{lx,ly,lz} = lsolJframe;
+{\[Xi]2L, \[Xi]1L}=sphericalAngles[{lx,ly,lz}]+{0,\[Pi]/2};
+JtoLEulMat ={ {Cos[\[Xi]1L], Sin[\[Xi]1L],0},{-Sin[\[Xi]1L]Cos[\[Xi]2L], Cos[\[Xi]1L]Cos[\[Xi]2L], Sin[\[Xi]2L]},{Sin[\[Xi]1L]Sin[\[Xi]2L], -Cos[\[Xi]1L]Sin[\[Xi]2L], Cos[\[Xi]2L]}};      
+(*r vector in L frame*)
+rvecLframe=JtoLEulMat.LabtoJEulMat.rvecLabFrame;
+
+(*AzimuthAngle of rvec in Lframe : what we want*)
+rvecAzimuthAngleLframe=sphericalAngles[rvecLframe][[2]];
+
+(*Conistency check, have to recover R0*)
+RvecLabFrame= M Transpose[LabtoJEulMat] . Inverse[JtoLEulMat].vectorComponents[{rNorm, \[Pi]/2,rvecAzimuthAngleLframe}];
+
+Return [{rvecAzimuthAngleLframe,Transpose@JtoLEulMat,rvecLframe}];]
+
+4.Plots
+A) Code
+In[53]:= (*==*)(*COLORS& VECTOR NAMES*)(*==*)
+CBlue=RGBColor[0.24,0.6,0.8];
+COrange=RGBColor[0.95,0.627,0.1425];
+CGreen=RGBColor[0.455,0.7,0.21];
+CRed=RGBColor[0.982526,0.385626,0.209179];
+CPurple=RGBColor[0.578,0.51,0.85];
+CBrown=RGBColor[0.772079,0.431554,0.102387];
+
+Vector={R,L,S1,S2};
+Legend={{"Rx","Ry","Rz"},{"Lx","Ly","Lz"},{"S1x","S1y","S1z"},{"S2x","S2y","S2z"}};
+LegendNorm={"R","L","S1","S2"};
+LegendLtoJ={{"(1,1)","(1,2)","(1,3)"},{"(2,1)","(2,2)","(2,3)"},{"(3,1)","(3,2)","(3,3)"}};
+
+Lhat[v_]:=v/Norm[v];
+
+(*==*)(*MODELS + Choose Orbital Terms*)(*==*)
+PlotAn1[t_,data_]:=An1[QKP,Orb,{t}][data][[1]][[NumVec,NumComp]];
+PlotAn2S[t_,data_]:=An2S["No",Orb,{t}][data][[1]][[NumVec,NumComp]];
+PlotAn2Savg[t_,data_]:=An2S["Yes",Orb,{t}][data][[1]][[NumVec,NumComp]];
+PlotNum1[t_,data_]:=(Vector[[NumVec]][t]/. Num1[data][[1]])[[NumComp]];
+PlotNum2S[t_,data_]:=(Vector[[NumVec]][t]/. Num2S[data][[1]])[[NumComp]];
+PlotNumOrb[t_,data_]:=(Vector[[NumVec]][t]/. NumOrb[data][[1]])[[NumComp]];
+
+(*ADD THIS LINE*)
+PlotAn2SFixed[t_,data_]:=An2SFixed["No",Orb,{t}][data][[1]][[NumVec,NumComp]];
+
+PlotAn1Norm[t_,data_]:=Norm[An1[QKP,Orb,{t}][data][[1]][[NumVec]]];
+PlotAn2SNorm[t_,data_]:=Norm[An2S["No",Orb,{t}][data][[1]][[NumVec]]];
+PlotNum1Norm[t_,data_]:=Norm[(Vector[[NumVec]][t]/. Num1[data][[1]])];
+PlotNum2SNorm[t_,data_]:=Norm[(Vector[[NumVec]][t]/. Num2S[data][[1]])];
+PlotNumOrbNorm[t_,data_]:=Norm[(Vector[[NumVec]][t]/. NumOrb[data][[1]])];
+
+azNum1[t_,data_]:=Mod[AzimuthalRvectorLframe[t,Num1,data][[1]],2\[Pi]];
+azNum2S[t_,data_]:=Mod[AzimuthalRvectorLframe[t,Num2S,data][[1]],2\[Pi]];
+azAn1[t_,data_]:=Mod[An1[QKP, Orb,{t}][data][[1,7]],2\[Pi]];
+azAn2S[t_,data_]:=Mod[An2S["No",Orb,{t}][data][[1,7]],2\[Pi]];
+
+LtoJNum1[t_,data_]:=AzimuthalRvectorLframe[t,Num1,data][[2]][[Compi,Compj]];
+LtoJNum2S[t_,data_]:=AzimuthalRvectorLframe[t,Num2S,data][[2]][[Compi,Compj]];
+LtoJAn1[t_,data_]:=An1[QKP, Orb,{t}][data][[1,8]][[Compi,Compj]];
+LtoJAn2S[t_,data_]:=An2S["No",Orb,{t}][data][[1,8]][[Compi,Compj]];
+
+RLframeNum1[t_,data_]:=AzimuthalRvectorLframe[t,Num1,data][[3]][[NumComp]];
+RLframeNum2S[t_,data_]:=AzimuthalRvectorLframe[t,Num2S,data][[3]][[NumComp]];
+RLframeAn1[t_,data_]:=An1[QKP, Orb,{t}][data][[1,9]][[NumComp]];
+RLframeAn2S[t_,data_]:=An2S["No",Orb,{t}][data][[1,9]][[NumComp]];
+
+NumModel=Num2S;
+
+(*PLOTTING FUNCTIONS*)
+DefPlot[data_,vecNum_,compNum_,tmin_,tmax_,plotIndices_List,numPoints_:10]:=Module[{allFunctions,functionLabels,selectedFunctions,TorbVal,tValues,tScaledData},
+allFunctions={PlotAn1,PlotAn2S,PlotAn2Savg,PlotNum1,PlotNum2S,PlotAn2SFixed,PlotNumOrb};
+functionLabels={"1.5PN AN","2PN AN","2PN avg AN","1.5PN NUM","2PN NUM","2PN FIXED","2PN FIXED NUM"};
+selectedFunctions=allFunctions[[plotIndices]];
+TorbVal=Torb[data];
+tValues=Table[tmin+i*(tmax-tmin)/(numPoints-1),{i,0,numPoints-1}];
+tScaledData=Table[Table[{t/TorbVal,selectedFunctions[[i]][t,data]},{t,tValues}],{i,Length[selectedFunctions]}];
+ListLinePlot[tScaledData,Frame->True,FrameLabel->{"t / \!\(\*SubscriptBox[\(T\), \(orb\)]\)",Legend[[vecNum,compNum]]},
+PlotRange->All,FrameStyle->Directive[Black,Thin],TicksStyle->Directive[FontSize->12],
+PlotStyle->{{Continue,CBlue},{Continue,COrange},{Continue,CGreen},{Dashed,CPurple},{Dashed,CRed},{Continue,CBrown},{Dashed,Green}}[[plotIndices]],
+PlotLegends->Placed[LineLegend[Style[#,FontSize->16]&/@functionLabels[[plotIndices]],LegendLayout->{"Row",1}],Top]]];
+
+
+DefPlotNorm[data_,vecNum_,compNum_,tmin_,tmax_,plotIndices_List,numPoints_:10]:=Module[{allFunctions,functionLabels,selectedFunctions,TorbVal,tValues,tScaledData},
+allFunctions={PlotAn1,PlotAn2S,PlotAn2Savg,PlotNum1,PlotNum2S,PlotAn2SFixed};
+functionLabels={"1.5PN AN","2PN AN","2PN avg AN","1.5PN NUM","2PN NUM","2PN FIXED"};
+selectedFunctions=allFunctions[[plotIndices]];
+TorbVal=Torb[data];
+tValues=Table[tmin+i*(tmax-tmin)/(numPoints-1),{i,0,numPoints-1}];
+tScaledData=Table[Table[{t/TorbVal,selectedFunctions[[i]][t,data]},{t,tValues}],{i,Length[selectedFunctions]}];
+ListLinePlot[tScaledData,Frame->True,FrameLabel->{"t / \!\(\*SubscriptBox[\(T\), \(orb\)]\)",LegendNorm[[vecNum]]},
+PlotRange->All,FrameStyle->Directive[Black,Thin],TicksStyle->Directive[FontSize->12],
+PlotStyle->{{Continue,CBlue},{Continue,COrange},{Continue,CGreen},{Dashed,CPurple},{Dashed,CRed},{Dashed,CBrown}}[[plotIndices]],
+PlotLegends->Placed[LineLegend[Style[#,FontSize->16]&/@functionLabels[[plotIndices]],LegendLayout->{"Row",1}],Top]]];
+
+DefPlotAz[data_,tmin_,tmax_,plotIndices_List,numPoints_:10]:=Module[{allFunctions,functionLabels,selectedFunctions,TorbVal,tValues,tScaledData},
+allFunctions={PlotAn1,PlotAn2S,PlotAn2Savg,PlotNum1,PlotNum2S,PlotAn2SFixed};
+functionLabels={"1.5PN AN","2PN AN","2PN avg AN","1.5PN NUM","2PN NUM","2PN FIXED"};
+selectedFunctions=allFunctions[[plotIndices]];
+TorbVal=Torb[data];
+tValues=Table[tmin+i*(tmax-tmin)/(numPoints-1),{i,0,numPoints-1}];
+tScaledData=Table[Table[{t/TorbVal,selectedFunctions[[i]][t,data]},{t,tValues}],{i,Length[selectedFunctions]}];
+ListLinePlot[tScaledData,Frame->True,FrameLabel->{"t / \!\(\*SubscriptBox[\(T\), \(orb\)]\)","\[Phi]"},
+PlotRange->All,FrameStyle->Directive[Black,Thin],TicksStyle->Directive[FontSize->12],
+PlotStyle->{{Continue,CBlue},{Continue,COrange},{Continue,CGreen},{Dashed,CPurple},{Dashed,CRed},{Dashed,CBrown}}[[plotIndices]],
+PlotLegends->Placed[LineLegend[Style[#,FontSize->16]&/@functionLabels[[plotIndices]],LegendLayout->{"Row",1}],Top]]];
+
+DefPlotLtoJ[data_,Compi_,Compj_,tmin_,tmax_,plotIndices_List,numPoints_:10]:=Module[{allFunctions,functionLabels,selectedFunctions,TorbVal,tValues,tScaledData},
+allFunctions={PlotAn1,PlotAn2S,PlotAn2Savg,PlotNum1,PlotNum2S,PlotAn2SFixed};
+functionLabels={"1.5PN AN","2PN AN","2PN avg AN","1.5PN NUM","2PN NUM","2PN FIXED"};
+selectedFunctions=allFunctions[[plotIndices]];
+TorbVal=Torb[data];
+tValues=Table[tmin+i*(tmax-tmin)/(numPoints-1),{i,0,numPoints-1}];
+tScaledData=Table[Table[{t/TorbVal,selectedFunctions[[i]][t,data]},{t,tValues}],{i,Length[selectedFunctions]}];
+ListLinePlot[tScaledData,Frame->True,FrameLabel->{"t / \!\(\*SubscriptBox[\(T\), \(orb\)]\)",LegendLtoJ[[Compi,Compj]]},
+PlotRange->All,FrameStyle->Directive[Black,Thin],TicksStyle->Directive[FontSize->12],
+PlotStyle->{{Continue,CBlue},{Continue,COrange},{Continue,CGreen},{Dashed,CPurple},{Dashed,CRed},{Continue,CBrown},{Dashed,Brown}}[[plotIndices]],
+PlotLegends->Placed[LineLegend[Style[#,FontSize->16]&/@functionLabels[[plotIndices]],LegendLayout->{"Row",1}],Top]]];
+
+DefPlotRLframe[data_,NumComp_,tmin_,tmax_,plotIndices_List,numPoints_:10]:=Module[{allFunctions,functionLabels,selectedFunctions,TorbVal,tValues,tScaledData},
+allFunctions={PlotAn1,PlotAn2S,PlotAn2Savg,PlotNum1,PlotNum2S,PlotAn2SFixed};
+functionLabels={"1.5PN AN","2PN AN","2PN avg AN","1.5PN NUM","2PN NUM","2PN FIXED"};
+selectedFunctions=allFunctions[[plotIndices]];
+TorbVal=Torb[data];
+tValues=Table[tmin+i*(tmax-tmin)/(numPoints-1),{i,0,numPoints-1}];
+tScaledData=Table[Table[{t/TorbVal,selectedFunctions[[i]][t,data]},{t,tValues}],{i,Length[selectedFunctions]}];
+ListLinePlot[tScaledData,Frame->True,FrameLabel->{"t / \!\(\*SubscriptBox[\(T\), \(orb\)]\)",{"Rx in Lframe","Ry in Lframe","Rz in Lframe"}[[NumComp]]},
+PlotRange->All,FrameStyle->Directive[Black,Thin],TicksStyle->Directive[FontSize->12],
+PlotStyle->{{Continue,CBlue},{Continue,COrange},{Continue,CGreen},{Dashed,CPurple},{Dashed,CRed},{Dashed,CBrown}}[[plotIndices]],
+PlotLegends->Placed[LineLegend[Style[#,FontSize->16]&/@functionLabels[[plotIndices]],LegendLayout->{"Row",1}],Top]]];
+
+In[94]:= 
+In[95]:= 
+B) Plots
+In[96]:= (*TEST S2 SOLUTION : OK*)
+data=data1;NumVec=4;NumComp=1;
+tmin=298 Torb[data];tmax=tmin+  2 Torb[data];plotIndices={1,2,4,5(*,6*)};Npoints=100;
+
+DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
+Out[98]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM
+
+
+
+In[99]:= (*TEST S1 SOLUTION : OK*)
+data=data1;NumVec=3;NumComp=1;
+tmin=500 Torb[data];tmax=tmin+5Torb[data];plotIndices={1,2,4,5(*,6*)};Npoints=100;
+
+DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
+Out[101]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM
+
+
+
+In[102]:= (*TEST L SOLUTION : OK*)
+data=data1;NumVec=2;NumComp=1;
+tmin=500 Torb[data];tmax=tmin+4Torb[data];plotIndices={1,2,3,4,5(*,6*)};Npoints=100;
+
+DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
+Out[104]= 1.5PN AN	2PN AN	2PN avg AN	1.5PN NUM	2PN NUM
+
+
+
+In[105]:= (*TEST Rmag SOLUTION : OK*)
+data=data1;NumVec=1;NumComp=3;
+tmin=  590  Torb[data];tmax=tmin+2Torb[data];plotIndices={1,2,4,5,6};Npoints=100;
+
+DefPlotNorm[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
+Out[107]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM	2PN FIXED
+
+
+
+In[111]:= data=data1;NumVec=1;NumComp=1;
+tmin=220Torb[data];tmax=tmin+2Torb[data];plotIndices={1,2,4,5,6,7};Npoints=100;
+
+DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
+Out[113]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM	2PN FIXED	2PN FIXED NUM
+
+
+
+In[120]:= Speak["Job done"]

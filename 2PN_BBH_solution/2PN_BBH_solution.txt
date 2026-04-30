@@ -1,6 +1,12 @@
-Solutions to second post-Newtonian dynamics of spinning and eccentric binary black holes (accompanying arxiv:2603.20031)
+In[5]:= SetOptions[$FrontEndSession,DynamicEvaluationTimeout->3000];
+SetOptions[$FrontEndSession,DynamicUpdating->False];
+SetOptions[$FrontEnd,DynamicUpdating->False];
+SetOptions[EvaluationNotebook[],DynamicUpdating->False];
+In[9]:= CurrentValue[DynamicUpdating]               (*Should give "False"*)
+Out[9]= False
+Solutions to second post-Newtonian dynamics of spinning and eccentric binary black holes (accompanying arXiv:2603.20031)
 Authors : Tom Colin (tom.colin@obspm.fr) and Sashwat Tanay (sashwattanay@gmail.com)
-A. README: Post-Newtonian Dynamics Code User Manual
+A. README: Post-Newtonian Dynamics Notebook User Manual
 1. Physics Definitions
 Before configuring the code, note the underlying Hamiltonian terms: 
 Subscript[h, full] = Subscript[h, N] + Subscript[h, 1PN] + Subscript[h, so] + (Subscript[h, 2] + Subscript[h, ss])
@@ -9,7 +15,7 @@ Subscript[h, 1], Subscript[h, 2] = 1PN and 2PN purely orbital corrections
 Subscript[h, so] = 1.5PN Spin-Orbit coupling
 Subscript[h, ss] = 2PN Spin-Spin coupling
 2. Physics Models & Plotting Indices
-We can plot the phase space variable solution under various evolution schemes. Use these 7 indices in the graphing command DefPlot below in Sec. B-4 to select the evolution scheme.
+We can plot the phase space variable solution under various evolution schemes. Use these 7 indices in the graphing command DefPlot below in Sec. B-6-B to select the evolution scheme.
 Note: All models compute non-orbit averaged dynamics, except Index 3 which computes 'Orbit-Averaged' dynamics.
 Index	Physics Model Plotted	Hamiltonian Equation	Code Routine
 1	1.5PN Spin-Orbit (Analytic)	H = Subscript[h, N] + Subscript[h, 1] + Subscript[h, so]	Hflow1List
@@ -22,7 +28,7 @@ Index	Physics Model Plotted	Hamiltonian Equation	Code Routine
 
 
 3. Initialization
-Go to Sec. B-0 below and set things up.
+Go to Sec. B-1 below and set things up.
 Orb (for analytical solutions) and NumOrb (for numerical solutions): Toggles the purely orbital corrections (Subscript[h, 1] and Subscript[h, 2]). Default is "Yes". If set to "No", the purely orbital parts of the Hamiltonian (without spins) Subscript[h, 1] and Subscript[h, 2] are ignored, and equations of motion change accordingly. 
 QKP: This is valid only for "Index 1" solution mentioned in the above table. It decides which baseline solution for |R| = |Subscript[R, 1]-Subscript[R, 2] | (orbital separation vector norm) is to be injected for computing spin solutions; see Eq. 3.5 of https://arxiv.org/abs/1908.02927. In this paper, the Newtonian solution was injected. We have two options. Choosing "N" injects the Newtonian solution for |R| (just like https://arxiv.org/abs/1908.02927), whereas choosing "SO" injects the 1.5PN solution for |R|. Our default value is "SO".
 Torb: The rough orbital time period of the system, the approximate time in which |R| returns back to its original value.
@@ -31,39 +37,35 @@ userData: Your initial data formatted as {Subscript[m, 1], Subscript[m, 2], R, P
 Constraint: Subscript[m, 1] must be strictly greater than Subscript[m, 2].
 Constants: G = 1.
 4. Setting up Plotting Parameters
-Then go to Sec. B-4-B to set the plotting parameters, which we now explain. Here we plot using the function DefPlot
+Then go to Sec. B-6-B to set the plotting parameters, which we now explain. Here we plot using the function DefPlot
 Syntax: DefPlot[data, vector_number, component_number, time_min, time_max, {plot_indices}]
 vector_number: 1 (R), 2 (L), 3 (Subscript[S, 1]), or 4 (Subscript[S, 2]).
 component_number: 1 (x-component), 2 (y-component), or 3 (z-component).
 Example: DefPlot[data, 2, 3, tmin, tmax, {2, 3, 5}] graphs the z-component of Angular Momentum overlaying Analytical, Averaged, and Numerical 2PN.
 5. Succinct Overview: How to Run the Notebook
-Set parameters up in Secs. B-0 and B-4-B (to be found below), as explained above.
+Set parameters up in Secs. B-1 and B-6-B (to be found below), as explained above.
 Quit the kernel and clear all memory (Evaluation --> Quit Kernel).
+Run the first cell (at the very top of the notebook) *manually* (i.e. via Shift + Enter), which has the following content: "SetOptions[$FrontEndSession ..."
 Run the entire notebook (Evaluation --> Evaluate Notebook). That's it! 
-We have a summary table for the system. Sec. B-2-B-2 generates a summary table for the system with its important parameters displayed:       (a) mass ratio q              (b) angles b/w angular momenta \[Kappa]1 (L and Subscript[S, 1]), \[Kappa]2 (L and Subscript[S, 1]), \[Gamma] (Subscript[S, 1] and Subscript[S, 2])           (c) PN parameter PNa = G M/(c^2 Subscript[R, initial]), which does not take eccentricity into account                (d) PN parameter PNp = G M/(c^2 Subscript[a, N] (1-Subscript[e, N])), which takes eccentricity into account. Here M = total mass, G =1, Subscript[e, N] = Newtonian eccentricity, Subscript[a, n] = Newtonian semi major axis for the unscaled R. In this table, are also displayed       (e) dimensionless spins Subscript[\[Chi], 1] and Subscript[\[Chi], 2]             (f) Subscript[S, 1 or 2]/(\[Epsilon]^(1/2) L),        plus other QKP parameters like    scaled Hamiltonian, radial eccentricity, mean motion, orbital time period and spin-precession time period.        
+Sec. B-4 generates a summary table for the system with its important parameters displayed:       (a) mass ratio q              (b) angles b/w angular momenta \[Kappa]1 (L and Subscript[S, 1]), \[Kappa]2 (L and Subscript[S, 1]), \[Gamma] (Subscript[S, 1] and Subscript[S, 2])           (c) PN parameter PNa = G M/(c^2 Subscript[R, initial]), which does not take eccentricity into account                (d) PN parameter PNp = G M/(c^2 Subscript[a, N] (1-Subscript[e, N])), which takes eccentricity into account. Here M = total mass, G =1, Subscript[e, N] = Newtonian eccentricity, Subscript[a, n] = Newtonian semi major axis for the unscaled R. In this table, are also displayed       (e) dimensionless spins Subscript[\[Chi], 1] and Subscript[\[Chi], 2]             (f) Subscript[S, 1 or 2]/(\[Epsilon]^(1/2) L),        plus other QKP parameters like    scaled Hamiltonian, radial eccentricity, mean motion, orbital time period and spin-precession time period.        
 IMPORTANT: Our solutions work well when (a) both PN parameters are below sub-percent level,  (b) eccentricity is less than and away from 1,   (c)  Subscript[\[Chi], 1 or 2]  is less than and away from 1,    (d) Subscript[S, 1 or 2]/(L \[Epsilon]^(1/2))  is less than and away from 1.  (e) Scaled Hamiltonian h < 0,   (f) Subscript[\[Kappa], 1], Subscript[\[Kappa], 2], \[Gamma] are not 0 or \[Pi] radians (away from spin aligned or anti-aligned cases). The values of all these parameters are found in the so-called "summary table" discussed above.
 B. Code begins
-0. Choose Parameters
-In[1]:= Orb="Yes";
+1. Set Parameters
+In[10]:= Orb="Yes";
 NumOrb="Yes";
 QKP="SO";
 end[data_]:=  600Torb[data] 
 
-(* ====================*)(*INITIAL DATA INPUT*)(*Format:{m1,m2,R,P,Subscript[S, 1]/\[Epsilon]^(1/2),Subscript[S, 2]/\[Epsilon]^(1/2),\[Epsilon] = 1/c^2. Keep m1 > m2}*)(* ====================*)
-
+(*Input initial data in the format: {m1,m2,R,P,Subscript[S, 1]/\[Epsilon]^(1/2),Subscript[S, 2]/\[Epsilon]^(1/2),\[Epsilon] = 1/c^2}.  Keep m1 > m2 *)
 userData={3.5,2.3,{-3,-5,3},-1/2 {2,1,2},-1 {-2,-3,-2} ,-1/2 {-4,-3,-1} ,0.008};
-
 
 accuracyGoal=14;
 precisionGoal=14;
 maxSteps= Infinity;
 workingprecision =40;
-In[10]:= (*Validation:Ensure m1 is strictly greater than m2*)
-If[userData[[1]]<=userData[[2]],Print["Error: Mass m1 must be strictly greater than mass m2. Please adjust your parameters."];
-Abort[];];
-1. Analytical Solution
+2. Analytical Solution
 A.  HN + H1PN + HSO 			(QKP  =  "N" or "SO")	&	(ORB = "Yes" or "No")
-In[11]:= (* =====================*)(*GEOMETRY& EULER MATRICES*)(* ============================*)
+In[19]:= (* =====================*)(*GEOMETRY& EULER MATRICES*)(* ============================*)
 sphericalAngles[V_]:=Module[{polarAngJ,azimuthAngJ},polarAngJ=ToSphericalCoordinates[Re[V]][[2]];
 azimuthAngJ=ToSphericalCoordinates[Re[V]][[3]];
 Return[{polarAngJ,azimuthAngJ}];];
@@ -273,7 +275,7 @@ Hflow1List[m1,m2,R0,P0,S10,S20,\[Epsilon],QKP, ORB,t]]]
 
 An1[QKP_, ORB_,t_]:=Association[#:>DataAn1[QKP,ORB,t,#]&/@Keys[Inputs]]
 B.  HN + H1PN + HSO + H2PN + HSS  	(AVG = "Yes" or "No")	&	(ORB = "Yes" or "No")
-In[18]:= (*==*)(*GEOMETRY & EULER MATRICES*)(*==*)
+In[26]:= (*==*)(*GEOMETRY & EULER MATRICES*)(*==*)
 sphericalAngles[V_]:=Module[{polarAngJ,azimuthAngJ},polarAngJ=ToSphericalCoordinates[Re[V]][[2]];
 azimuthAngJ=ToSphericalCoordinates[Re[V]][[3]];
 Return[{polarAngJ,azimuthAngJ}];];
@@ -558,7 +560,7 @@ Map[computeForTime,tList]];
 
 
 C. HN + H1PN + H2PN :  Fixed Spins
-In[23]:= computeBaseQuantitiesFixedSpin[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,AVG_, ORB_]:=Module[{
+In[31]:= computeBaseQuantitiesFixedSpin[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,AVG_, ORB_]:=Module[{
 o,c,M,\[Mu],\[Nu],\[Delta],\[CapitalDelta],\[Sigma]1,\[Sigma]2,\[Delta]1,\[Delta]2,
 rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,lvec,l,jvec,j,EulMat,InvEulMat,
 \[Lambda],lseff,mathcalSvec,mathcalS2,h,\[CapitalSigma]1,\[CapitalSigma]2,s1vecLframe0,s2vecLframe0,\[Phi]s1,\[Phi]s2,s1p,s2p,a,b,\[Phi]s,sp2,\[Delta]l20,ltilde2,\[Delta]l2avg,
@@ -717,9 +719,9 @@ An2SFixed[AVG_,ORB_,t_]:=Association[#:>DataAn2SFixed[AVG,ORB,t,#]&/@Keys[Inputs
 
 
 
-2. Inputs
+3. Inputs
 A. Check Inputs
-In[29]:= CheckInputs[G_,m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,data_]:=Module[{M,\[Mu],\[Nu],rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,s1ds2,lvec,l,jvec,j,\[CapitalSigma]2,\[Sigma]1,\[Sigma]2,\[Lambda],\[Delta]1,\[Delta]2,dotlseff,seffdl,hN,h1,hso,h2,hss,H1,H2,HSS,varN,varSO,varSS,nN,aN,eN,\[CapitalPhi]N,nSO,arSO,erSO,\[CapitalPhi]SO,nSS,arSS,erSS,\[CapitalPhi]SS,\[Delta]hSO,\[Delta]arSO,\[Delta]erSO,\[Delta]nSO,\[Delta]\[CapitalPhi]SO,\[Delta]hSS,\[Delta]arSS,\[Delta]erSS,\[Delta]nSS,\[Delta]\[CapitalPhi]SS,PNa,PNp,resultN,resultSO,resultSS,TprecN,TorbN,TprecSO,TorbSO,TprecSS,TorbSS,cos\[Kappa]1,cos\[Kappa]2,cos\[Gamma]},
+In[37]:= CheckInputs[G_,m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,data_]:=Module[{M,\[Mu],\[Nu],rvec,r,pvec,p,SS10,SS20,s1vec,s2vec,s1,s2,s1ds2,lvec,l,jvec,j,\[CapitalSigma]2,\[Sigma]1,\[Sigma]2,\[Lambda],\[Delta]1,\[Delta]2,dotlseff,seffdl,hN,h1,hso,h2,hss,H1,H2,HSS,varN,varSO,varSS,nN,aN,eN,\[CapitalPhi]N,nSO,arSO,erSO,\[CapitalPhi]SO,nSS,arSS,erSS,\[CapitalPhi]SS,\[Delta]hSO,\[Delta]arSO,\[Delta]erSO,\[Delta]nSO,\[Delta]\[CapitalPhi]SO,\[Delta]hSS,\[Delta]arSS,\[Delta]erSS,\[Delta]nSS,\[Delta]\[CapitalPhi]SS,PNa,PNp,resultN,resultSO,resultSS,TprecN,TorbN,TprecSO,TorbSO,TprecSS,TorbSS,cos\[Kappa]1,cos\[Kappa]2,cos\[Gamma]},
 
 M=m1+m2;\[Mu]=m1 m2/M;\[Nu]=\[Mu]/M;
 
@@ -801,7 +803,7 @@ Background->{None,{1->LightBlue,2->LightYellow,5->LightYellow,8->LightYellow}},
 Alignment->{Center,Center},Spacings->{2,1},ItemSize->{{12,12,12,12,14,14},Automatic}]]
 B. Numerical Inputs Random
 1) Define Periods 
-In[30]:=  G=1;(*Keep 1 because it is not put well everywhere*)
+In[38]:=  G=1;(*Keep 1 because it is not put well everywhere*)
 
 TprecData[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];Hflow2SList[m1,m2,R0,P0,S10,S20,\[Epsilon],"No","Yes",{0}][[1,5]]];
 
@@ -821,11 +823,19 @@ aN=varN[[42]];eN=varN[[44]];
 PNparam:=AssociationMap[PNparamData,Keys[Inputs]];(*One Orbital Period*)
 
 2) Choose Data
-In[37]:= Inputs=<|data1->userData|>;
+In[45]:= CheckPhysicsConstraints[]:=If[userData[[1]]<=userData[[2]],Print[Style["CRITICAL PHYSICS ERROR: Mass m1 must be strictly greater than m2. Evaluation halted.","Message",Bold,Red]];
+Beep[];
+(*This tells the Front End to immediately drop all pending cells in the queue*)FrontEndExecute[FrontEndToken["EvaluatorAbort"]];];
+
+(*Updated Outer Routine for the Summary Table*)
+DisplaySummaryTable[]:=(CheckPhysicsConstraints[];
+Inputs=<|data1->userData|>;
 G=1;
-Results=AssociationMap[Function[{data},Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
-CheckInputs[1,m1,m2,R0,P0,S10,S20,\[Epsilon],data]]],Keys[Inputs]]//Quiet;
-During evaluation of In[37]:= Summary Table for Dataset:  data1	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]
+Quiet[AssociationMap[Function[{data},Module[{m1,m2,R0,P0,S10,S20,e},{m1,m2,R0,P0,S10,S20,e}=Inputs[data];
+CheckInputs[1,m1,m2,R0,P0,S10,S20,e,data]]],Keys[Inputs]]]; (* <--Semicolon added here*))
+4. Summary Table
+In[47]:= DisplaySummaryTable[]
+During evaluation of In[47]:= Summary Table for Dataset:  data1	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]
 Initial configuration	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]	\[SpanFromLeft]
 q = m2/m1	\[Kappa]1 [º]	\[Kappa]2 [º]	\[Gamma] [º]	PNa [%]	PNp [%]
 0.66	107.8	84.7	25.3	0.71	0.8
@@ -837,10 +847,9 @@ h	n	er	Torb	Tprec(Torb)
 -0.311054	0.486138	0.381322	74.9632	513.195	
 
 
-In[40]:= (*1000  //Pause;*)
-3. Numerical Solution
+5. Numerical Solution
 1. Code
-In[41]:= (************************H = HN + H1PN + HSO************************)
+In[48]:= (************************H = HN + H1PN + HSO************************)
 ComputeNum1[m1_,m2_,R0_,P0_,S10_,S20_,\[Epsilon]_,ORB_,end_]:=Module[{o,G,\[Mu],initialConditions,eqn1,eqn2,eqn3,eqn4,eqn5,sol1,equations,SS10,SS20,opts,t,EulMat},
 If[ORB=="Yes", o = 1];
 If[ORB=="No", o = 0];
@@ -944,29 +953,29 @@ sol1=NDSolve[equations,{R,P,S1,S2,L},{t,0,end},(*WorkingPrecision->workingprecis
 sol1
 ]
 2. Compute
-In[45]:= (************************H = HN + H1PN + HSO************************)
+In[52]:= (************************H = HN + H1PN + HSO************************)
 DataNum1[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
 {m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
 ComputeNum1[m1,m2,R0,P0,S10,S20,\[Epsilon], NumOrb,end[data]]]
 Num1=AssociationMap[DataNum1,Keys[Inputs]];
-In[47]:= (*(************************H = HN + H1PN + HSO + H2PN************************)
+In[54]:= (*(************************H = HN + H1PN + HSO + H2PN************************)
 DataNum2[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
 {m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
 ComputeNum2[m1,m2,R0,P0,S10,S20,\[Epsilon], NumOrb,end[data]]]
 Num2=AssociationMap[DataNum2,Keys[Inputs]];*)
-In[48]:= (************************H = HN + H1PN + HSO + H2PN + HSS************************)
+In[55]:= (************************H = HN + H1PN + HSO + H2PN + HSS************************)
 DataNum2S[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
 {m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
 ComputeNum2S[m1,m2,R0,P0,S10,S20,\[Epsilon],NumOrb,end[data]]]
 
 Num2S=AssociationMap[DataNum2S,Keys[Inputs]];
 
-In[50]:= DataNumOrb[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
+In[57]:= DataNumOrb[data_]:=Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},
 {m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];
 ComputeNumOrb[m1,m2,R0,P0,S10,S20,\[Epsilon], NumOrb,end[data]]]
 NumOrb=AssociationMap[DataNumOrb,Keys[Inputs]];
 3. AzimuthalRvectorLframe
-In[52]:= (*Function to compute the azimuthal angle of R vector in L frame*)
+In[59]:= (*Function to compute the azimuthal angle of R vector in L frame*)
 AzimuthalRvectorLframe[t_,NumModel_,data_]:=Module[{vectorComponents,rvecLabFrame,pvecLabFrame,s1vecLabFrame,s2vecLabFrame,lvecLabFrame,jvecLabFrame,LabtoJEulMat,\[Theta]J,\[Phi]J,lsolJframe,lx,ly,lz,\[Xi]1L,\[Xi]2L,JtoLEulMat,rvecLframe,angles,rNorm,rvecAzimuthAngleLframe,RvecLabFrame,m1,m2,R0,P0,S10,S20,\[Epsilon],M,\[Mu]},
 
 {m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data]; M=m1+m2; \[Mu]=m1 m2 /M;
@@ -1000,9 +1009,9 @@ RvecLabFrame= M Transpose[LabtoJEulMat] . Inverse[JtoLEulMat].vectorComponents[{
 
 Return [{rvecAzimuthAngleLframe,Transpose@JtoLEulMat,rvecLframe}];]
 
-4.Plots
+6. Final Plots
 A) Code
-In[53]:= (*==*)(*COLORS& VECTOR NAMES*)(*==*)
+In[60]:= (*==*)(*COLORS& VECTOR NAMES*)(*==*)
 CBlue=RGBColor[0.24,0.6,0.8];
 COrange=RGBColor[0.95,0.627,0.1425];
 CGreen=RGBColor[0.455,0.7,0.21];
@@ -1113,61 +1122,61 @@ PlotRange->All,FrameStyle->Directive[Black,Thin],TicksStyle->Directive[FontSize-
 PlotStyle->{{Continue,CBlue},{Continue,COrange},{Continue,CGreen},{Dashed,CPurple},{Dashed,CRed},{Dashed,CBrown}}[[plotIndices]],
 PlotLegends->Placed[LineLegend[Style[#,FontSize->16]&/@functionLabels[[plotIndices]],LegendLayout->{"Row",1}],Top]]];
 
-In[94]:= 
-In[95]:= 
+In[101]:= 
+In[102]:= 
 B) Plots
-In[96]:= (*TEST S2 SOLUTION : OK*)
+In[103]:= (*TEST S2 SOLUTION : OK*)
 data=data1;NumVec=4;NumComp=1;
 tmin=298 Torb[data];tmax=tmin+  2 Torb[data];plotIndices={1,2,4,5(*,6*)};Npoints=100;
 
 DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
-Out[98]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM
+Out[105]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM
 
 
 
-In[99]:= (*TEST S1 SOLUTION : OK*)
+In[106]:= (*TEST S1 SOLUTION : OK*)
 data=data1;NumVec=3;NumComp=1;
 tmin=500 Torb[data];tmax=tmin+5Torb[data];plotIndices={1,2,4,5(*,6*)};Npoints=100;
 
 DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
-Out[101]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM
+Out[108]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM
 
 
 
-In[102]:= (*TEST L SOLUTION : OK*)
+In[109]:= (*TEST L SOLUTION : OK*)
 data=data1;NumVec=2;NumComp=1;
 tmin=500 Torb[data];tmax=tmin+4Torb[data];plotIndices={1,2,3,4,5(*,6*)};Npoints=100;
 
 DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
-Out[104]= 1.5PN AN	2PN AN	2PN avg AN	1.5PN NUM	2PN NUM
+Out[111]= 1.5PN AN	2PN AN	2PN avg AN	1.5PN NUM	2PN NUM
 
 
 
-In[105]:= (*TEST Rmag SOLUTION : OK*)
+In[112]:= (*TEST Rmag SOLUTION : OK*)
 data=data1;NumVec=1;NumComp=3;
 tmin=  590  Torb[data];tmax=tmin+2Torb[data];plotIndices={1,2,4,5,6};Npoints=100;
 
 DefPlotNorm[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
-Out[107]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM	2PN FIXED
+Out[114]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM	2PN FIXED
 
 
 
-In[108]:= data=data1;NumVec=2;NumComp=1;
+In[115]:= data=data1;NumVec=2;NumComp=1;
 tmin=100Torb[data];tmax=tmin+500Torb[data];plotIndices={2,6,7};Npoints=100;
 
 DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
-Out[110]= 2PN AN	2PN FIXED	2PN FIXED NUM
+Out[117]= 2PN AN	2PN FIXED	2PN FIXED NUM
 
 
 
-In[111]:= data=data1;NumVec=1;NumComp=1;
+In[118]:= data=data1;NumVec=1;NumComp=1;
 tmin=220Torb[data];tmax=tmin+2Torb[data];plotIndices={1,2,4,5,6,7};Npoints=100;
 
 DefPlot[data,NumVec,NumComp,tmin,tmax,plotIndices,Npoints]
-Out[113]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM	2PN FIXED	2PN FIXED NUM
+Out[120]= 1.5PN AN	2PN AN	1.5PN NUM	2PN NUM	2PN FIXED	2PN FIXED NUM
 
 
 
-In[114]:= 
-In[115]:= 
-In[116]:= Speak["Job done"]
+In[121]:= 
+In[122]:= 
+In[124]:= Speak["Job done"]

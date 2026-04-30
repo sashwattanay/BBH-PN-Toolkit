@@ -1,12 +1,23 @@
 (* ::Package:: *)
 
+(* ::Input:: *)
+(*SetOptions[$FrontEndSession,DynamicEvaluationTimeout->3000];*)
+(*SetOptions[$FrontEndSession,DynamicUpdating->False];*)
+(*SetOptions[$FrontEnd,DynamicUpdating->False];*)
+(*SetOptions[EvaluationNotebook[],DynamicUpdating->False];*)
+
+
+(* ::Input:: *)
+(*CurrentValue[DynamicUpdating]               (*Should give "False"*)*)
+
+
 (* ::Title:: *)
-(*Solutions to second post-Newtonian dynamics of spinning and eccentric binary black holes (accompanying arxiv:2603.20031)*)
+(*Solutions to second post-Newtonian dynamics of spinning and eccentric binary black holes (accompanying arXiv:2603.20031)*)
 (*Authors : Tom Colin (tom.colin@obspm.fr) and Sashwat Tanay (sashwattanay@gmail.com)*)
 
 
 (* ::Chapter:: *)
-(*A. README: Post-Newtonian Dynamics Code User Manual*)
+(*A. README: Post-Newtonian Dynamics Notebook User Manual*)
 
 
 (* ::Text:: *)
@@ -35,7 +46,7 @@
 
 
 (* ::Text:: *)
-(*We can plot the phase space variable solution under various evolution schemes. Use these 7 indices in the graphing command DefPlot below in Sec. B-4 to select the evolution scheme.*)
+(*We can plot the phase space variable solution under various evolution schemes. Use these 7 indices in the graphing command DefPlot below in Sec. B-6-B to select the evolution scheme.*)
 (*Note: All models compute non-orbit averaged dynamics, except Index 3 which computes 'Orbit-Averaged' dynamics.*)
 
 
@@ -139,7 +150,7 @@
 
 
 (* ::Subsection:: *)
-(*Go to Sec. B-0 below and set things up.*)
+(*Go to Sec. B-1 below and set things up.*)
 
 
 (* ::Item:: *)
@@ -175,7 +186,7 @@
 
 
 (* ::Subsection:: *)
-(*Then go to Sec. B-4-B to set the plotting parameters, which we now explain. Here we plot using the function DefPlot*)
+(*Then go to Sec. B-6-B to set the plotting parameters, which we now explain. Here we plot using the function DefPlot*)
 
 
 (* ::Item:: *)
@@ -195,7 +206,7 @@
 
 
 (* ::Item:: *)
-(*Set parameters up in Secs. B-0 and B-4-B (to be found below), as explained above.*)
+(*Set parameters up in Secs. B-1 and B-6-B (to be found below), as explained above.*)
 
 
 (* ::Item:: *)
@@ -203,11 +214,15 @@
 
 
 (* ::Item:: *)
+(*Run the first cell (at the very top of the notebook) *manually* (i.e. via Shift + Enter), which has the following content: "SetOptions[$FrontEndSession ..."*)
+
+
+(* ::Item:: *)
 (*Run the entire notebook (Evaluation --> Evaluate Notebook). That's it! *)
 
 
 (* ::Item:: *)
-(*We have a summary table for the system. Sec. B-2-B-2 generates a summary table for the system with its important parameters displayed:       (a) mass ratio q              (b) angles b/w angular momenta \[Kappa]1 (L and Subscript[S, 1]), \[Kappa]2 (L and Subscript[S, 1]), \[Gamma] (Subscript[S, 1] and Subscript[S, 2])           (c) PN parameter PNa = G M/(c^2 Subscript[R, initial]), which does not take eccentricity into account                (d) PN parameter PNp = G M/(c^2 Subscript[a, N] (1-Subscript[e, N])), which takes eccentricity into account. Here M = total mass, G =1, Subscript[e, N] = Newtonian eccentricity, Subscript[a, n] = Newtonian semi major axis for the unscaled R. In this table, are also displayed       (e) dimensionless spins Subscript[\[Chi], 1] and Subscript[\[Chi], 2]             (f) Subscript[S, 1 or 2]/(\[Epsilon]^(1/2) L),        plus other QKP parameters like    scaled Hamiltonian, radial eccentricity, mean motion, orbital time period and spin-precession time period.        *)
+(*Sec. B-4 generates a summary table for the system with its important parameters displayed:       (a) mass ratio q              (b) angles b/w angular momenta \[Kappa]1 (L and Subscript[S, 1]), \[Kappa]2 (L and Subscript[S, 1]), \[Gamma] (Subscript[S, 1] and Subscript[S, 2])           (c) PN parameter PNa = G M/(c^2 Subscript[R, initial]), which does not take eccentricity into account                (d) PN parameter PNp = G M/(c^2 Subscript[a, N] (1-Subscript[e, N])), which takes eccentricity into account. Here M = total mass, G =1, Subscript[e, N] = Newtonian eccentricity, Subscript[a, n] = Newtonian semi major axis for the unscaled R. In this table, are also displayed       (e) dimensionless spins Subscript[\[Chi], 1] and Subscript[\[Chi], 2]             (f) Subscript[S, 1 or 2]/(\[Epsilon]^(1/2) L),        plus other QKP parameters like    scaled Hamiltonian, radial eccentricity, mean motion, orbital time period and spin-precession time period.        *)
 
 
 (* ::Item:: *)
@@ -219,7 +234,7 @@
 
 
 (* ::Section:: *)
-(*0. Choose Parameters*)
+(*1. Set Parameters*)
 
 
 (* ::Input:: *)
@@ -228,10 +243,8 @@
 (*QKP="SO";*)
 (*end[data_]:=  600Torb[data] *)
 (**)
-(*(* ====================*)(*INITIAL DATA INPUT*)(*Format:{m1,m2,R,P,Subscript[S, 1]/\[Epsilon]^(1/2),Subscript[S, 2]/\[Epsilon]^(1/2),\[Epsilon] = 1/c^2. Keep m1 > m2}*)(* ====================*)*)
-(**)
+(*(*Input initial data in the format: {m1,m2,R,P,Subscript[S, 1]/\[Epsilon]^(1/2),Subscript[S, 2]/\[Epsilon]^(1/2),\[Epsilon] = 1/c^2}.  Keep m1 > m2 *)*)
 (*userData={3.5,2.3,{-3,-5,3},-1/2 {2,1,2},-1 {-2,-3,-2} ,-1/2 {-4,-3,-1} ,0.008};*)
-(**)
 (**)
 (*accuracyGoal=14;*)
 (*precisionGoal=14;*)
@@ -239,14 +252,8 @@
 (*workingprecision =40;*)
 
 
-(* ::Input:: *)
-(*(*Validation:Ensure m1 is strictly greater than m2*)*)
-(*If[userData[[1]]<=userData[[2]],Print["Error: Mass m1 must be strictly greater than mass m2. Please adjust your parameters."];*)
-(*Abort[];];*)
-
-
 (* ::Section::Closed:: *)
-(*1. Analytical Solution*)
+(*2. Analytical Solution*)
 
 
 (* ::Subsection:: *)
@@ -922,8 +929,8 @@
 (**)
 
 
-(* ::Section:: *)
-(*2. Inputs*)
+(* ::Section::Closed:: *)
+(*3. Inputs*)
 
 
 (* ::Subsection::Closed:: *)
@@ -1043,23 +1050,33 @@
 (**)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*2) Choose Data*)
 
 
 (* ::Input:: *)
+(*CheckPhysicsConstraints[]:=If[userData[[1]]<=userData[[2]],Print[Style["CRITICAL PHYSICS ERROR: Mass m1 must be strictly greater than m2. Evaluation halted.","Message",Bold,Red]];*)
+(*Beep[];*)
+(*(*This tells the Front End to immediately drop all pending cells in the queue*)FrontEndExecute[FrontEndToken["EvaluatorAbort"]];];*)
+(**)
+(*(*Updated Outer Routine for the Summary Table*)*)
+(*DisplaySummaryTable[]:=(CheckPhysicsConstraints[];*)
 (*Inputs=<|data1->userData|>;*)
 (*G=1;*)
-(*Results=AssociationMap[Function[{data},Module[{m1,m2,R0,P0,S10,S20,\[Epsilon]},{m1,m2,R0,P0,S10,S20,\[Epsilon]}=Inputs[data];*)
-(*CheckInputs[1,m1,m2,R0,P0,S10,S20,\[Epsilon],data]]],Keys[Inputs]]//Quiet;*)
+(*Quiet[AssociationMap[Function[{data},Module[{m1,m2,R0,P0,S10,S20,e},{m1,m2,R0,P0,S10,S20,e}=Inputs[data];*)
+(*CheckInputs[1,m1,m2,R0,P0,S10,S20,e,data]]],Keys[Inputs]]]; (* <--Semicolon added here*))*)
+
+
+(* ::Section:: *)
+(*4. Summary Table*)
 
 
 (* ::Input:: *)
-(*(*1000  //Pause;*)*)
+(*DisplaySummaryTable[]*)
 
 
 (* ::Section::Closed:: *)
-(*3. Numerical Solution*)
+(*5. Numerical Solution*)
 
 
 (* ::Subsection::Closed:: *)
@@ -1251,7 +1268,7 @@
 
 
 (* ::Section:: *)
-(*4.Plots*)
+(*6. Final Plots*)
 
 
 (* ::Subsection::Closed:: *)
